@@ -3,7 +3,8 @@ import { CartItem } from '../models/models';
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
-  private cartItems: CartItem[] = [];
+  private readonly CART_KEY = 'mf_cart';
+  private cartItems: CartItem[] = this.loadCart();
 
   getItems(): CartItem[] {
     return this.cartItems;
@@ -22,6 +23,7 @@ export class CartService {
     } else {
       this.cartItems.push({ ...item });
     }
+    this.save();
   }
 
   updateQuantity(productId: number, storeId: number, quantity: number): void {
@@ -34,6 +36,7 @@ export class CartService {
     );
     if (item) {
       item.quantity = quantity;
+      this.save();
     }
   }
 
@@ -41,5 +44,20 @@ export class CartService {
     this.cartItems = this.cartItems.filter(
       i => !(i.productId === productId && i.storeId === storeId)
     );
+    this.save();
+  }
+
+  clear(): void {
+    this.cartItems = [];
+    this.save();
+  }
+
+  private save(): void {
+    localStorage.setItem(this.CART_KEY, JSON.stringify(this.cartItems));
+  }
+
+  private loadCart(): CartItem[] {
+    const raw = localStorage.getItem(this.CART_KEY);
+    return raw ? JSON.parse(raw) : [];
   }
 }

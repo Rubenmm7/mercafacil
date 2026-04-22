@@ -62,3 +62,29 @@ export interface CartItem {
   quantity: number;
   unit: string;
 }
+
+export type Role = 'ADMIN' | 'CLIENTE' | 'VENDEDOR' | 'REPARTIDOR' | 'PROVEEDOR';
+export type OrderStatus = 'PENDIENTE' | 'PREPARACION' | 'EN_RUTA' | 'ENTREGADO';
+
+export interface AuthResponse {
+  token: string;
+  email: string;
+  nombre: string;
+  apellidos: string;
+  rol: Role;
+}
+
+export interface OrderItemDto {
+  productId: number;
+  storeId: number;
+  quantity: number;
+  unitPrice: number;
+}
+
+export interface Order {
+  id: number;
+  clientEmail: string;
+  status: OrderStatus;
+  total: number;
+  items: OrderItemDto[];
+}

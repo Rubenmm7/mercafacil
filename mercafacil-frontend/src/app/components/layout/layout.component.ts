@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router';
 import { CartService } from '../../services/cart.service';
+import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -31,7 +32,11 @@ export class LayoutComponent {
   footerStores = ['Mercadona', 'Carrefour', 'Lidl', 'Dia', 'Alcampo', 'El Corte Inglés'];
   footerSupport = ['Ayuda y FAQ', 'Política de envíos', 'Devoluciones', 'Contacto', 'Términos de uso', 'Privacidad'];
 
-  constructor(public cartService: CartService, private router: Router) {}
+  constructor(
+    public cartService: CartService,
+    public authService: AuthService,
+    private router: Router
+  ) {}
 
   handleSearch(): void {
     if (this.searchQuery.trim()) {
@@ -39,11 +44,11 @@ export class LayoutComponent {
     }
   }
 
-  toggleMobileMenu(): void {
-    this.mobileMenuOpen = !this.mobileMenuOpen;
-  }
+  toggleMobileMenu(): void { this.mobileMenuOpen = !this.mobileMenuOpen; }
+  closeMobileMenu(): void  { this.mobileMenuOpen = false; }
 
-  closeMobileMenu(): void {
-    this.mobileMenuOpen = false;
+  logout(): void {
+    this.authService.logout();
+    this.closeMobileMenu();
   }
 }

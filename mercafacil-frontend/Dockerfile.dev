@@ -3,7 +3,7 @@ WORKDIR /app
 
 # Instalar dependencias primero (cache de capa Docker)
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 
 # Copiar configuración del proyecto (angular.json, tsconfig*, etc.)
 # El directorio src/ será sobreescrito por el volumen del host en dev

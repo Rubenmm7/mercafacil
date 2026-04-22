@@ -180,6 +180,44 @@
 }
 .footer-bottom p { color: #6b7280; font-size: 0.8rem; }
 
+.auth-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.user-greeting {
+  font-size: .85rem;
+  color: #374151;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.btn-login {
+  padding: 7px 14px;
+  background: #059669;
+  color: #fff;
+  border-radius: 8px;
+  font-size: .85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background .2s;
+}
+.btn-login:hover { background: #047857; }
+
+.btn-logout {
+  padding: 6px 12px;
+  background: transparent;
+  border: 1.5px solid #d1d5db;
+  color: #6b7280;
+  border-radius: 8px;
+  font-size: .8rem;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-logout:hover { border-color: #dc2626; color: #dc2626; }
+
 .desktop-only { display: flex; }
 .mobile-only { display: none; }
 

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Store, Product, Category, DeliveryZone } from '../models/models';
+import { Store, Product, Category, DeliveryZone, Order, CartItem } from '../models/models';
 import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -35,6 +35,24 @@ export class ApiService {
   getDeliveryZones(): Observable<DeliveryZone[]> {
     return this.http.get<DeliveryZone[]>(`${this.baseUrl}/delivery-zones`).pipe(
       catchError(this.handleError<DeliveryZone[]>([]))
+    );
+  }
+
+  createOrder(items: CartItem[]): Observable<Order> {
+    const payload = {
+      items: items.map(i => ({
+        productId: i.productId,
+        storeId: i.storeId,
+        quantity: i.quantity,
+        unitPrice: i.price
+      }))
+    };
+    return this.http.post<Order>(`${this.baseUrl}/orders`, payload);
+  }
+
+  getMyOrders(): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.baseUrl}/orders/my`).pipe(
+      catchError(this.handleError<Order[]>([]))
     );
   }
 

@@ -68,3 +68,39 @@ CREATE TABLE IF NOT EXISTS delivery_zones (
 CREATE INDEX idx_products_category    ON products(category);
 CREATE INDEX idx_store_offers_product ON store_offers(product_id);
 CREATE INDEX idx_store_offers_store   ON store_offers(store_id);
+
+CREATE TABLE IF NOT EXISTS users (
+    id         BIGINT       PRIMARY KEY AUTO_INCREMENT,
+    nombre     VARCHAR(100) NOT NULL,
+    apellidos  VARCHAR(100) NOT NULL,
+    email      VARCHAR(255) NOT NULL UNIQUE,
+    password   VARCHAR(255) NOT NULL,
+    rol        VARCHAR(20)  NOT NULL DEFAULT 'CLIENTE',
+    created_at TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS orders (
+    id            BIGINT      PRIMARY KEY AUTO_INCREMENT,
+    cliente_id    BIGINT      NOT NULL,
+    repartidor_id BIGINT      NULL,
+    estado        VARCHAR(20) NOT NULL DEFAULT 'PENDIENTE',
+    total         DOUBLE      NOT NULL,
+    created_at    TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cliente_id)    REFERENCES users(id),
+    FOREIGN KEY (repartidor_id) REFERENCES users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS order_items (
+    id         BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    order_id   BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    store_id   BIGINT NOT NULL,
+    quantity   INT    NOT NULL,
+    unit_price DOUBLE NOT NULL,
+    FOREIGN KEY (order_id)   REFERENCES orders(id)   ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id),
+    FOREIGN KEY (store_id)   REFERENCES stores(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE INDEX idx_orders_client       ON orders(cliente_id);
+CREATE INDEX idx_order_items_order   ON order_items(order_id);

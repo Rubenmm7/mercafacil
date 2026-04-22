@@ -39,6 +39,16 @@
         <span class="cart-badge" *ngIf="cartService.getCartCount() > 0">{{cartService.getCartCount()}}</span>
       </a>
 
+      <!-- Auth — desktop -->
+      <div class="auth-area desktop-only">
+        @if (authService.isLoggedIn()) {
+          <span class="user-greeting">Hola, {{ authService.getUser()?.nombre }}</span>
+          <button class="btn-logout" (click)="logout()">Salir</button>
+        } @else {
+          <a routerLink="/login" class="btn-login">Iniciar sesión</a>
+        }
+      </div>
+
       <!-- Mobile menu toggle -->
       <button class="mobile-menu-btn mobile-only" (click)="toggleMobileMenu()">
         <svg *ngIf="!mobileMenuOpen" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
