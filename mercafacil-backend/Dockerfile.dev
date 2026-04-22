@@ -1,0 +1,12 @@
+FROM maven:3.9-eclipse-temurin-21
+WORKDIR /app
+
+# Cache de dependencias (solo se re-descarga si cambia pom.xml)
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+EXPOSE 8080
+
+# Loop de fondo: recompila cada 2s los .java del host (montados vía volumen).
+# Spring DevTools detecta los .class nuevos y reinicia el contexto automáticamente.
+CMD ["sh", "-c", "(while sleep 2; do mvn compile -q; done) & mvn spring-boot:run"]

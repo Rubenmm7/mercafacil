@@ -92,10 +92,6 @@ export class CartComponent implements OnInit {
     this.cartService.removeItem(productId, storeId);
   }
 
-  goBack(): void {
-    this.router.navigate(['/buscar']);
-  }
-
   goToSearch(): void {
     this.router.navigate(['/buscar']);
   }

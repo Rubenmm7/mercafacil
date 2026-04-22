@@ -54,11 +54,13 @@ export class HomeComponent implements OnInit {
   }
 
   getMinPrice(product: Product): number {
-    return Math.min(...product.storeOffers.filter(o => o.inStock).map(o => o.price));
+    const prices = product.storeOffers.filter(o => o.inStock).map(o => o.price);
+    return prices.length ? Math.min(...prices) : 0;
   }
 
   getMaxPrice(product: Product): number {
-    return Math.max(...product.storeOffers.filter(o => o.inStock).map(o => o.price));
+    const prices = product.storeOffers.filter(o => o.inStock).map(o => o.price);
+    return prices.length ? Math.max(...prices) : 0;
   }
 
   getAvailableCount(product: Product): number {

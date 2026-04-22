@@ -9,7 +9,7 @@
 <!-- Cart content -->
 <div class="cart-page" *ngIf="!isEmpty">
   <div class="cart-header">
-    <button class="back-btn" (click)="goBack()">← </button>
+    <button class="back-btn" (click)="goToSearch()">← </button>
     <h1>Mi carrito <span class="item-count">({{cartItems.length}} {{cartItems.length === 1 ? 'producto' : 'productos'}})</span></h1>
   </div>
 

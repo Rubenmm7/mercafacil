@@ -41,8 +41,54 @@ services:
     networks:
       - mercafacil-network
 
+  backend:
+    build:
+      context: ./mercafacil-backend
+      dockerfile: Dockerfile.dev
+    container_name: mercafacil-backend
+    restart: unless-stopped
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: ${MYSQL_DATABASE}
+      DB_USER: ${MYSQL_USER}
+      DB_PASS: ${MYSQL_PASSWORD}
+      CORS_ORIGINS: http://localhost:4200
+    ports:
+      - "8080:8080"
+    volumes:
+      # Hot reload: el código fuente del host se monta sobre el del contenedor
+      - ./mercafacil-backend/src:/app/src
+      # Cache de Maven para no re-descargar dependencias entre reinicios
+      - maven_cache:/root/.m2
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - mercafacil-network
+
+  frontend:
+    build:
+      context: ./mercafacil-frontend
+      dockerfile: Dockerfile.dev
+    container_name: mercafacil-frontend
+    restart: unless-stopped
+    ports:
+      - "4200:4200"
+    volumes:
+      # Hot reload: cambios en src/ del host se reflejan dentro del contenedor
+      - ./mercafacil-frontend/src:/app/src
+      # Volumen anónimo: evita que el host sobreescriba el node_modules Linux del contenedor
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - mercafacil-network
+
 volumes:
   mysql_data:
+    driver: local
+  maven_cache:
     driver: local
 
 networks:
