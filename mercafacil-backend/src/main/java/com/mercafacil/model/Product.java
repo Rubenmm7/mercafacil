@@ -1,7 +1,16 @@
 package com.mercafacil.model;
 
-import jakarta.persistence.*;
 import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "products")
@@ -26,6 +35,16 @@ public class Product {
     private List<StoreOffer> storeOffers;
 
     public Product() {}
+
+    public Product(int id, String name, String category, String image, String description, String unit, List<StoreOffer> storeOffers) {
+        this.id = (long) id;
+        this.name = name;
+        this.category = category;
+        this.image = image;
+        this.description = description;
+        this.unit = unit;
+        this.storeOffers = storeOffers;
+    }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

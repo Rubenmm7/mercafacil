@@ -1,6 +1,11 @@
 package com.mercafacil.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "stores")
@@ -35,6 +40,23 @@ public class Store {
     private String category;
 
     public Store() {}
+
+    public Store(int id, String name, String logo, String color, String bgColor, String address, String city, String phone, String hours, double rating, String deliveryTime, int minOrder, double deliveryFee, String category) {
+        this.id = (long) id;
+        this.name = name;
+        this.logo = logo;
+        this.color = color;
+        this.bgColor = bgColor;
+        this.address = address;
+        this.city = city;
+        this.phone = phone;
+        this.hours = hours;
+        this.rating = rating;
+        this.deliveryTime = deliveryTime;
+        this.minOrder = minOrder;
+        this.deliveryFee = deliveryFee;
+        this.category = category;
+    }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

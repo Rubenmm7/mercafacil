@@ -1,7 +1,16 @@
 package com.mercafacil.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "store_offers")
@@ -34,6 +43,15 @@ public class StoreOffer {
     private String brand;
 
     public StoreOffer() {}
+
+    public StoreOffer(int storeId, String storeName, double price, Double originalPrice, boolean inStock, String brand) {
+        this.storeId = (long) storeId;
+        this.storeName = storeName;
+        this.price = price;
+        this.originalPrice = originalPrice;
+        this.inStock = inStock;
+        this.brand = brand;
+    }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

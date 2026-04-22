@@ -1,7 +1,13 @@
 package com.mercafacil.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "delivery_zones")
@@ -28,6 +34,14 @@ public class DeliveryZone {
     private Long storeId;
 
     public DeliveryZone() {}
+
+    public DeliveryZone(String zone, double fee, String minTime, String maxTime, boolean available) {
+        this.zone = zone;
+        this.fee = fee;
+        this.minTime = minTime;
+        this.maxTime = maxTime;
+        this.available = available;
+    }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
