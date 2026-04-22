@@ -1,0 +1,63 @@
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-content">
+    <h1>Nuestras tiendas asociadas</h1>
+    <p>Supermercados físicos en Jaén con servicio de envío a domicilio</p>
+  </div>
+</div>
+
+<div class="container">
+  <!-- Filters -->
+  <div class="filters">
+    <div class="search-wrap">
+      <input type="text" placeholder="Buscar tienda o dirección..." [(ngModel)]="searchStore" name="storeSearch" />
+    </div>
+    <div class="type-filters">
+      <button *ngFor="let type of filterTypes" [class.active]="filterType === type" (click)="filterType = type">{{type}}</button>
+    </div>
+  </div>
+
+  <!-- Stores grid -->
+  <div class="stores-grid">
+    <div *ngFor="let store of filteredStores" class="store-card">
+      <div class="store-header" [style.background-color]="store.bgColor">
+        <div class="store-logo" [style.background-color]="store.color">{{store.logo}}</div>
+        <div class="store-title">
+          <div class="name-row">
+            <h3>{{store.name}}</h3>
+            <span class="cat-badge" [style.color]="store.color" [style.border-color]="store.color + '40'">{{store.category}}</span>
+          </div>
+          <div class="stars">
+            <svg *ngFor="let filled of getStars(store.rating)" width="12" height="12" viewBox="0 0 24 24" [attr.fill]="filled ? store.color : 'transparent'" [attr.stroke]="store.color" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span>({{store.rating}})</span>
+          </div>
+        </div>
+      </div>
+      <div class="store-info">
+        <div class="info-row"><span class="info-icon orange">📍</span><div><div>{{store.address}}</div><div class="sub">{{store.city}}</div></div></div>
+        <div class="info-row"><span class="info-icon">🕐</span><span>{{store.hours}}</span></div>
+        <div class="info-row"><span class="info-icon">📞</span><span>{{store.phone}}</span></div>
+      </div>
+      <div class="delivery-info">
+        <div class="delivery-col"><div class="del-label">Envío en</div><div class="del-value">{{store.deliveryTime}}</div></div>
+        <div class="delivery-col"><div class="del-label">Pedido mín.</div><div class="del-value">{{store.minOrder}}€</div></div>
+        <div class="delivery-col"><div class="del-label">Precio envío</div><div class="del-value">{{store.deliveryFee | number:'1.2-2'}}€</div></div>
+      </div>
+      <div class="store-actions">
+        <button class="view-btn" [style.background-color]="store.color" (click)="viewProducts(store.name)">Ver productos ›</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty" *ngIf="filteredStores.length === 0">
+    <div>🏪</div>
+    <h3>No se encontraron tiendas</h3>
+    <p>Prueba con otro filtro</p>
+  </div>
+
+  <div class="join-section">
+    <h2>¿Tu supermercado no está aquí?</h2>
+    <p>Estamos ampliando nuestra red de tiendas continuamente. Si eres propietario de un supermercado y quieres unirte a MercaFácil, contacta con nosotros.</p>
+    <button class="join-btn">Quiero unirme a MercaFácil</button>
+  </div>
+</div>

@@ -1,0 +1,92 @@
+<div>
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge">🚚 Entrega en el mismo día disponible</div>
+    <h1>Información de envío y entrega</h1>
+    <p>Recibe tus productos del supermercado en la puerta de tu casa</p>
+  </div>
+
+  <div class="container">
+    <!-- Features -->
+    <div class="features-grid">
+      <div class="feature-card"><div class="feature-icon green">🚚</div><h4>Envío rápido</h4><p>Entrega en 1-6 horas</p></div>
+      <div class="feature-card"><div class="feature-icon blue">🛡️</div><h4>Pedido seguro</h4><p>Protección garantizada</p></div>
+      <div class="feature-card"><div class="feature-icon orange">🔄</div><h4>Fácil devolución</h4><p>En 24h sin preguntas</p></div>
+      <div class="feature-card"><div class="feature-icon purple">📅</div><h4>Horario flexible</h4><p>Elige tu franja horaria</p></div>
+    </div>
+
+    <div class="two-cols">
+      <!-- Zip checker -->
+      <div class="card">
+        <div class="card-header"><div class="icon-wrap green">📍</div><div><h3>Comprueba tu cobertura</h3><p>Introduce tu código postal de Jaén</p></div></div>
+        <form class="zip-form" (ngSubmit)="handleCheckZip()">
+          <input type="text" placeholder="Ej: 23001" [value]="zipCode" (input)="onZipInput($event)" maxlength="5" />
+          <button type="submit">Comprobar</button>
+        </form>
+        <div class="result-ok" *ngIf="checkResult === 'available'">✅ ¡Zona con cobertura! El código postal <strong>{{zipCode}}</strong> tiene entrega disponible. Tiempo estimado: 1-4h</div>
+        <div class="result-fail" *ngIf="checkResult === 'unavailable'">❌ Zona no disponible aún. Estamos expandiendo nuestra cobertura.</div>
+        <div class="zip-hints">
+          <div class="hint-label">Códigos postales con cobertura:</div>
+          <div class="hint-item">• 23001–23009 (Jaén Capital)</div>
+          <div class="hint-item">• 23100–23350 (Martos, Alcalá la Real)</div>
+          <div class="hint-item">• 23400–23500 (Úbeda, Baeza)</div>
+        </div>
+      </div>
+
+      <!-- Time slots -->
+      <div class="card">
+        <div class="card-header"><div class="icon-wrap blue">🕐</div><div><h3>Franjas horarias</h3><p>Disponibilidad para hoy</p></div></div>
+        <div class="slots">
+          <div *ngFor="let slot of timeSlots" class="slot" [class.unavailable]="!slot.available">
+            <span>🕐 {{slot.time}}</span>
+            <span class="slot-badge" [class.available]="slot.available">{{slot.available ? 'Disponible' : 'Ocupado'}}</span>
+          </div>
+        </div>
+        <p class="slot-note">* Las franjas horarias son orientativas y pueden variar según la tienda.</p>
+      </div>
+    </div>
+
+    <!-- Zones table -->
+    <div class="zones-section">
+      <h2>Zonas de reparto y tarifas</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Zona</th><th>Tiempo estimado</th><th>Coste de envío</th><th>Estado</th></tr></thead>
+          <tbody>
+            <tr *ngFor="let zone of deliveryZones">
+              <td>📍 {{zone.zone}}</td>
+              <td>{{zone.available ? zone.minTime : '—'}}</td>
+              <td><span [class.green-text]="zone.fee < 2">{{zone.available ? (zone.fee | number:'1.2-2') + '€' : 'No disponible'}}</span></td>
+              <td><span class="status-badge" [class.active]="zone.available">{{zone.available ? '✅ Activo' : 'Próximamente'}}</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-note">💡 Envío gratuito en todos los pedidos superiores a 40€</div>
+      </div>
+    </div>
+
+    <!-- Store delivery info -->
+    <div class="store-delivery-section">
+      <h2>Condiciones de envío por tienda</h2>
+      <div class="store-delivery-grid">
+        <div *ngFor="let store of stores" class="store-delivery-card">
+          <div class="sd-header"><div class="sd-logo" [style.background-color]="store.color">{{store.logo}}</div><h4>{{store.name}}</h4></div>
+          <div class="sd-row"><span>Tiempo de entrega</span><strong>{{store.deliveryTime}}</strong></div>
+          <div class="sd-row"><span>Pedido mínimo</span><strong>{{store.minOrder}}€</strong></div>
+          <div class="sd-row"><span>Coste de envío</span><strong class="green-text">{{store.deliveryFee | number:'1.2-2'}}€</strong></div>
+          <div class="sd-row"><span>Horario tienda</span><strong>{{store.hours}}</strong></div>
+          <div class="sd-note">Envío gratis con pedidos > 40€</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="faq-section">
+      <h2>Preguntas frecuentes sobre el envío</h2>
+      <details *ngFor="let faq of faqs" class="faq-item">
+        <summary>{{faq.q}} <span class="chevron">▼</span></summary>
+        <div class="faq-answer">{{faq.a}}</div>
+      </details>
+    </div>
+  </div>
+</div>

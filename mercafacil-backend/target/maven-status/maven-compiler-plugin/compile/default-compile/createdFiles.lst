@@ -1,0 +1,13 @@
+com\mercafacil\model\Product.class
+com\mercafacil\controller\CategoryController.class
+com\mercafacil\model\Category.class
+com\mercafacil\controller\DeliveryController.class
+com\mercafacil\model\StoreOffer.class
+com\mercafacil\config\CorsConfig$1.class
+com\mercafacil\controller\StoreController.class
+com\mercafacil\model\DeliveryZone.class
+com\mercafacil\MercafacilApplication.class
+com\mercafacil\model\Store.class
+com\mercafacil\controller\ProductController.class
+com\mercafacil\config\CorsConfig.class
+com\mercafacil\data\MockDataLoader.class

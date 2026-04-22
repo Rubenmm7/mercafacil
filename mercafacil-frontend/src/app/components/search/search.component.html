@@ -1,0 +1,122 @@
+<div class="search-page">
+  <!-- Search bar -->
+  <form class="search-bar" (ngSubmit)="handleSearch()">
+    <div class="search-input-wrap">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" placeholder="Buscar productos en todas las tiendas..." [(ngModel)]="localQuery" name="q" />
+      <button type="submit" class="search-submit">Buscar</button>
+    </div>
+  </form>
+
+  <div class="search-layout">
+    <!-- Sidebar filters (desktop) -->
+    <aside class="sidebar desktop-only">
+      <div class="filter-box">
+        <h3>Categorías</h3>
+        <div class="filter-list">
+          <button [class.active]="!selectedCategory" (click)="selectCategory('')">Todas</button>
+          <button *ngFor="let cat of categories" [class.active]="selectedCategory === cat.name" (click)="selectCategory(cat.name)">
+            {{cat.icon}} {{cat.name}}
+          </button>
+        </div>
+      </div>
+      <div class="filter-box">
+        <h3>Tiendas</h3>
+        <div class="filter-list">
+          <label *ngFor="let store of stores" class="store-filter">
+            <span class="checkbox" [class.checked]="isStoreSelected(store.id)" [style.border-color]="isStoreSelected(store.id) ? store.color : '#d1d5db'" [style.background-color]="isStoreSelected(store.id) ? store.color : 'white'" (click)="toggleStore(store.id)">
+              <svg *ngIf="isStoreSelected(store.id)" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span class="store-mini-logo" [style.background-color]="store.color">{{store.logo}}</span>
+            <span>{{store.name}}</span>
+          </label>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Results -->
+    <div class="results">
+      <div class="results-header">
+        <div>
+          <p *ngIf="query"><strong>{{filteredProducts.length}} resultados</strong> para <span class="highlight">"{{query}}"</span></p>
+          <p *ngIf="!query && selectedCategory"><strong>{{filteredProducts.length}} productos</strong> en <span class="highlight">{{selectedCategory}}</span></p>
+          <p *ngIf="!query && !selectedCategory"><strong>{{filteredProducts.length}} productos</strong> disponibles</p>
+        </div>
+        <div class="results-actions">
+          <select [(ngModel)]="sortBy" name="sort" class="sort-select">
+            <option value="relevance">Relevancia</option>
+            <option value="price_asc">Precio: menor a mayor</option>
+            <option value="price_desc">Precio: mayor a menor</option>
+            <option value="stores">Más tiendas</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Active filters -->
+      <div class="active-filters" *ngIf="selectedStores.length > 0 || selectedCategory">
+        <span class="filter-chip green" *ngIf="selectedCategory">
+          {{selectedCategory}} <button (click)="selectCategory('')">✕</button>
+        </span>
+        <span *ngFor="let sid of selectedStores" class="filter-chip" [style.background-color]="getStore(sid)?.bgColor" [style.color]="getStore(sid)?.color">
+          {{getStore(sid)?.name}} <button (click)="toggleStore(sid)">✕</button>
+        </span>
+        <button class="clear-link" (click)="clearFilters()">Limpiar filtros</button>
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state" *ngIf="filteredProducts.length === 0">
+        <div class="empty-icon">🔍</div>
+        <h3>No encontramos resultados</h3>
+        <p>Prueba con otro término o explora nuestras categorías</p>
+        <button class="btn-primary" (click)="clearAll()">Ver todos los productos</button>
+      </div>
+
+      <!-- Product list -->
+      <div class="product-list" *ngIf="filteredProducts.length > 0">
+        <div class="product-result" *ngFor="let product of filteredProducts">
+          <div class="product-header">
+            <div class="product-thumb">
+              <img [src]="product.image" [alt]="product.name" />
+            </div>
+            <div class="product-meta">
+              <span class="product-cat-badge">{{product.category}}</span>
+              <h3>{{product.name}}</h3>
+              <p class="product-desc">{{product.description}}</p>
+            </div>
+            <div class="product-price-summary">
+              <div class="discount-badge" *ngIf="hasDiscount(product)">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+                En oferta
+              </div>
+              <div class="price-from-label">Precio desde</div>
+              <div class="price-from-value">{{getMinPrice(product) | number:'1.2-2'}}€</div>
+              <div class="price-stores-count">en {{getAvailableCount(product)}} tiendas</div>
+            </div>
+          </div>
+
+          <div class="offers-grid">
+            <div *ngFor="let offer of product.storeOffers" class="offer-row" [class.best]="isLowest(product, offer.price, offer.inStock)" [class.out-of-stock]="!offer.inStock">
+              <div class="offer-store-logo" [style.background-color]="getStore(offer.storeId)?.color || '#999'">{{getStore(offer.storeId)?.logo}}</div>
+              <div class="offer-info">
+                <div class="offer-store-name">
+                  {{offer.storeName}}
+                  <span class="best-badge" *ngIf="isLowest(product, offer.price, offer.inStock)">MEJOR</span>
+                </div>
+                <div class="offer-brand">{{offer.brand}}</div>
+              </div>
+              <div class="offer-price-col">
+                <span class="original-price" *ngIf="offer.originalPrice">{{offer.originalPrice | number:'1.2-2'}}€</span>
+                <span class="offer-price" [class.best-price]="isLowest(product, offer.price, offer.inStock)">
+                  {{offer.inStock ? (offer.price | number:'1.2-2') + '€' : 'Agotado'}}
+                </span>
+                <button *ngIf="offer.inStock" class="add-btn" [class.added]="isAdded(product.id, offer.storeId)" (click)="addToCart(product, offer)">
+                  {{isAdded(product.id, offer.storeId) ? '✓ Añadido' : '🛒 Añadir'}}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

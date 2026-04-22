@@ -1,0 +1,54 @@
+package com.mercafacil.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "store_offers")
+public class StoreOffer {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    @JsonIgnore
+    private Product product;
+
+    @Column(name = "store_id")
+    private Long storeId;
+
+    @Column(name = "store_name")
+    private String storeName;
+
+    private Double price;
+
+    @Column(name = "original_price")
+    private Double originalPrice;
+
+    @Column(name = "in_stock")
+    private boolean inStock;
+
+    private String brand;
+
+    public StoreOffer() {}
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public Product getProduct() { return product; }
+    public void setProduct(Product product) { this.product = product; }
+    public Long getStoreId() { return storeId; }
+    public void setStoreId(Long storeId) { this.storeId = storeId; }
+    public String getStoreName() { return storeName; }
+    public void setStoreName(String storeName) { this.storeName = storeName; }
+    public Double getPrice() { return price; }
+    public void setPrice(Double price) { this.price = price; }
+    public Double getOriginalPrice() { return originalPrice; }
+    public void setOriginalPrice(Double originalPrice) { this.originalPrice = originalPrice; }
+    public boolean isInStock() { return inStock; }
+    public void setInStock(boolean inStock) { this.inStock = inStock; }
+    public String getBrand() { return brand; }
+    public void setBrand(String brand) { this.brand = brand; }
+}
