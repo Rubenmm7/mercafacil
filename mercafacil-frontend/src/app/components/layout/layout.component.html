@@ -1,4 +1,3 @@
-<!doctype html>
 <!-- Top bar -->
 <div class="top-bar">
   <span>🚚 Envío gratis en pedidos superiores a 40€ · Recoge en tienda sin coste adicional</span>
@@ -107,19 +106,25 @@
       <div>
         <h4 class="footer-title">Navegación</h4>
         <ul>
-          <li *ngFor="let link of footerNavLinks"><a [routerLink]="link.path">{{link.label}}</a></li>
+          @for (link of footerNavLinks; track link.path) {
+            <li><a [routerLink]="link.path">{{link.label}}</a></li>
+          }
         </ul>
       </div>
       <div>
         <h4 class="footer-title">Tiendas</h4>
         <ul>
-          <li *ngFor="let s of footerStores"><a routerLink="/tiendas">{{s}}</a></li>
+          @for (s of footerStores; track s) {
+            <li><a routerLink="/tiendas">{{s}}</a></li>
+          }
         </ul>
       </div>
       <div>
         <h4 class="footer-title">Soporte</h4>
         <ul>
-          <li *ngFor="let s of footerSupport"><a href="#">{{s}}</a></li>
+          @for (s of footerSupport; track s) {
+            <li><a href="#">{{s}}</a></li>
+          }
         </ul>
       </div>
     </div>
