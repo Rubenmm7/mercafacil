@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, computed, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,24 +13,40 @@ import { Store } from '../../models/models';
   styleUrl: './stores.component.css'
 })
 export class StoresComponent implements OnInit {
-  stores: Store[] = [];
-  filterType = 'Todos';
-  searchStore = '';
+  readonly stores = signal<Store[]>([]);
+  readonly loading = signal(true);
+  readonly filterType = signal<string>('Todos');
+  readonly searchStore = signal<string>('');
+
   filterTypes = ['Todos', 'Supermercado', 'Hipermercado', 'Gran Almacén'];
+
+  readonly filteredStores = computed(() => {
+    const type = this.filterType();
+    const search = this.searchStore().toLowerCase();
+    return this.stores().filter(s => {
+      const matchesType = type === 'Todos' || s.category === type;
+      const matchesSearch = s.name.toLowerCase().includes(search)
+        || s.address.toLowerCase().includes(search);
+      return matchesType && matchesSearch;
+    });
+  });
 
   constructor(private api: ApiService, private router: Router) {}
 
   ngOnInit(): void {
-    this.api.getStores().subscribe(s => this.stores = s);
+    this.api.getStores().subscribe({
+      next: s => this.stores.set(s),
+      complete: () => this.loading.set(false),
+      error: () => this.loading.set(false)
+    });
   }
 
-  get filteredStores(): Store[] {
-    return this.stores.filter(s => {
-      const matchesType = this.filterType === 'Todos' || s.category === this.filterType;
-      const matchesSearch = s.name.toLowerCase().includes(this.searchStore.toLowerCase())
-        || s.address.toLowerCase().includes(this.searchStore.toLowerCase());
-      return matchesType && matchesSearch;
-    });
+  setFilterType(type: string): void {
+    this.filterType.set(type);
+  }
+
+  onSearchInput(value: string): void {
+    this.searchStore.set(value);
   }
 
   viewProducts(storeName: string): void {

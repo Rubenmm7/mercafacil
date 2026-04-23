@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,9 +14,11 @@ import { Product, Store, Category } from '../../models/models';
 })
 export class HomeComponent implements OnInit {
   searchQuery = '';
-  categories: Category[] = [];
-  stores: Store[] = [];
-  featuredProducts: Product[] = [];
+  readonly categories = signal<Category[]>([]);
+  readonly stores = signal<Store[]>([]);
+  readonly featuredProducts = signal<Product[]>([]);
+  readonly loading = signal(true);
+
   popularTerms = ['Aceite de Oliva', 'Aceitunas', 'Pan', 'Naranjas', 'Chorizo'];
 
   heroImg = 'https://images.unsplash.com/photo-1741515042519-9b52d3ec2eaf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080&q=80';
@@ -34,9 +36,12 @@ export class HomeComponent implements OnInit {
   constructor(private api: ApiService, private router: Router) {}
 
   ngOnInit(): void {
-    this.api.getCategories().subscribe(c => this.categories = c);
-    this.api.getStores().subscribe(s => this.stores = s);
-    this.api.getProducts().subscribe(p => this.featuredProducts = p.slice(0, 4));
+    let pending = 3;
+    const done = () => { if (--pending === 0) this.loading.set(false); };
+
+    this.api.getCategories().subscribe({ next: c => this.categories.set(c), complete: done, error: done });
+    this.api.getStores().subscribe({ next: s => this.stores.set(s), complete: done, error: done });
+    this.api.getProducts().subscribe({ next: p => this.featuredProducts.set(p.slice(0, 4)), complete: done, error: done });
   }
 
   handleSearch(): void {

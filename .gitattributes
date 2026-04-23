@@ -1,0 +1,9 @@
+# Forzar que los finales de línea se manejen automáticamente
+* text=auto
+
+# Asegurar que archivos específicos siempre usen LF
+*.sh text eol=lf
+*.js text eol=lf
+*.ts text eol=lf
+*.css text eol=lf
+*.html text eol=lf

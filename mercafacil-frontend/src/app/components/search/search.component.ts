@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, computed, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { CartService } from '../../services/cart.service';
-import { Product, Store, Category } from '../../models/models';
+import { Product, Store, Category, StoreOffer } from '../../models/models';
 
 @Component({
   selector: 'app-search',
@@ -14,16 +14,38 @@ import { Product, Store, Category } from '../../models/models';
   styleUrl: './search.component.css'
 })
 export class SearchComponent implements OnInit {
-  allProducts: Product[] = [];
-  stores: Store[] = [];
-  categories: Category[] = [];
-  query = '';
+  readonly allProducts = signal<Product[]>([]);
+  readonly stores = signal<Store[]>([]);
+  readonly categories = signal<Category[]>([]);
+  readonly loading = signal(true);
+
+  readonly query = signal('');
   localQuery = '';
-  selectedCategory = '';
-  selectedStores: number[] = [];
-  sortBy = 'relevance';
-  showFilters = false;
-  addedItems = new Set<string>();
+  readonly selectedCategory = signal('');
+  readonly selectedStores = signal<number[]>([]);
+  sortBy: 'relevance' | 'price_asc' | 'price_desc' | 'stores' = 'relevance';
+  readonly addedItems = signal<Set<string>>(new Set());
+
+  readonly filteredProducts = computed(() => {
+    let result = this.allProducts();
+    const cat = this.selectedCategory();
+    const stores = this.selectedStores();
+
+    if (cat) {
+      result = result.filter(p => p.category === cat);
+    }
+    if (stores.length > 0) {
+      result = result.filter(p => p.storeOffers.some(o => stores.includes(o.storeId) && o.inStock));
+    }
+    if (this.sortBy === 'price_asc') {
+      result = [...result].sort((a, b) => this.getMinPrice(a) - this.getMinPrice(b));
+    } else if (this.sortBy === 'price_desc') {
+      result = [...result].sort((a, b) => this.getMinPrice(b) - this.getMinPrice(a));
+    } else if (this.sortBy === 'stores') {
+      result = [...result].sort((a, b) => b.storeOffers.length - a.storeOffers.length);
+    }
+    return result;
+  });
 
   constructor(
     private api: ApiService,
@@ -33,66 +55,54 @@ export class SearchComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.api.getStores().subscribe(s => this.stores = s);
-    this.api.getCategories().subscribe(c => this.categories = c);
+    this.api.getStores().subscribe(s => this.stores.set(s));
+    this.api.getCategories().subscribe(c => this.categories.set(c));
 
     this.route.queryParams.subscribe(params => {
-      this.query = params['q'] || '';
-      this.localQuery = this.query;
-      this.selectedCategory = params['categoria'] || '';
+      const q = params['q'] || '';
+      this.query.set(q);
+      this.localQuery = q;
+      this.selectedCategory.set(params['categoria'] || '');
       this.loadProducts();
     });
   }
 
   loadProducts(): void {
-    this.api.getProducts(this.query || undefined).subscribe(p => this.allProducts = p);
-  }
-
-  get filteredProducts(): Product[] {
-    let result = this.allProducts;
-
-    if (this.selectedCategory) {
-      result = result.filter(p => p.category === this.selectedCategory);
-    }
-
-    if (this.selectedStores.length > 0) {
-      result = result.filter(p =>
-        p.storeOffers.some(o => this.selectedStores.includes(o.storeId) && o.inStock)
-      );
-    }
-
-    if (this.sortBy === 'price_asc') {
-      result = [...result].sort((a, b) => this.getMinPrice(a) - this.getMinPrice(b));
-    } else if (this.sortBy === 'price_desc') {
-      result = [...result].sort((a, b) => this.getMinPrice(b) - this.getMinPrice(a));
-    } else if (this.sortBy === 'stores') {
-      result = [...result].sort((a, b) => b.storeOffers.length - a.storeOffers.length);
-    }
-
-    return result;
+    this.loading.set(true);
+    this.api.getProducts(this.query() || undefined).subscribe({
+      next: p => this.allProducts.set(p),
+      complete: () => this.loading.set(false),
+      error: () => this.loading.set(false)
+    });
   }
 
   handleSearch(): void {
     this.router.navigate(['/buscar'], { queryParams: { q: this.localQuery } });
   }
 
+  onSortChange(value: string): void {
+    this.sortBy = value as typeof this.sortBy;
+    this.allProducts.update(p => [...p]);
+  }
+
   toggleStore(storeId: number): void {
-    const idx = this.selectedStores.indexOf(storeId);
-    if (idx > -1) this.selectedStores.splice(idx, 1);
-    else this.selectedStores.push(storeId);
+    const current = this.selectedStores();
+    this.selectedStores.set(
+      current.includes(storeId) ? current.filter(id => id !== storeId) : [...current, storeId]
+    );
   }
 
   isStoreSelected(storeId: number): boolean {
-    return this.selectedStores.includes(storeId);
+    return this.selectedStores().includes(storeId);
   }
 
   selectCategory(name: string): void {
-    this.selectedCategory = this.selectedCategory === name ? '' : name;
+    this.selectedCategory.set(this.selectedCategory() === name ? '' : name);
   }
 
   clearFilters(): void {
-    this.selectedStores = [];
-    this.selectedCategory = '';
+    this.selectedStores.set([]);
+    this.selectedCategory.set('');
   }
 
   getMinPrice(product: Product): number {
@@ -109,7 +119,7 @@ export class SearchComponent implements OnInit {
   }
 
   getStore(storeId: number): Store | undefined {
-    return this.stores.find(s => s.id === storeId);
+    return this.stores().find(s => s.id === storeId);
   }
 
   isLowest(product: Product, price: number, inStock: boolean): boolean {
@@ -117,10 +127,10 @@ export class SearchComponent implements OnInit {
   }
 
   isAdded(productId: number, storeId: number): boolean {
-    return this.addedItems.has(`${productId}-${storeId}`);
+    return this.addedItems().has(`${productId}-${storeId}`);
   }
 
-  addToCart(product: Product, offer: any): void {
+  addToCart(product: Product, offer: StoreOffer): void {
     const key = `${product.id}-${offer.storeId}`;
     this.cartService.addToCart({
       productId: product.id,
@@ -133,16 +143,20 @@ export class SearchComponent implements OnInit {
       quantity: 1,
       unit: product.unit
     });
-    this.addedItems.add(key);
-    setTimeout(() => this.addedItems.delete(key), 2000);
+    this.addedItems.update(s => new Set(s).add(key));
+    setTimeout(() => this.addedItems.update(s => {
+      const next = new Set(s);
+      next.delete(key);
+      return next;
+    }), 2000);
   }
 
   clearAll(): void {
     this.localQuery = '';
-    this.query = '';
-    this.selectedCategory = '';
-    this.selectedStores = [];
+    this.query.set('');
+    this.selectedCategory.set('');
+    this.selectedStores.set([]);
     this.router.navigate(['/buscar']);
-    this.api.getProducts().subscribe(p => this.allProducts = p);
+    this.loadProducts();
   }
 }

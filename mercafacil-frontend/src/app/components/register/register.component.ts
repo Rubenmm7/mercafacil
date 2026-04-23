@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -17,23 +17,23 @@ export class RegisterComponent {
   email = '';
   password = '';
   confirmPassword = '';
-  errorMsg = '';
-  loading = false;
+  readonly errorMsg = signal('');
+  readonly loading = signal(false);
 
   constructor(private auth: AuthService, private router: Router) {}
 
   onSubmit(): void {
     if (this.password !== this.confirmPassword) {
-      this.errorMsg = 'Las contraseñas no coinciden.';
+      this.errorMsg.set('Las contraseñas no coinciden.');
       return;
     }
-    this.errorMsg = '';
-    this.loading = true;
+    this.errorMsg.set('');
+    this.loading.set(true);
     this.auth.register(this.nombre, this.apellidos, this.email, this.password).subscribe({
       next: () => this.router.navigate(['/']),
       error: err => {
-        this.errorMsg = err.error?.message || 'Error al registrarse. El email podría estar en uso.';
-        this.loading = false;
+        this.errorMsg.set(err.error?.message || 'Error al registrarse. El email podría estar en uso.');
+        this.loading.set(false);
       }
     });
   }

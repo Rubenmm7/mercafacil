@@ -1,3 +1,4 @@
+<!doctype html>
 <!-- Top bar -->
 <div class="top-bar">
   <span>🚚 Envío gratis en pedidos superiores a 40€ · Recoge en tienda sin coste adicional</span>
@@ -28,21 +29,25 @@
 
       <!-- Nav links desktop -->
       <nav class="nav-links desktop-only">
-        <a *ngFor="let link of navLinks" [routerLink]="link.path" routerLinkActive="active" [routerLinkActiveOptions]="{exact: link.path === '/'}">
-          {{link.label}}
-        </a>
+        @for (link of navLinks; track link.path) {
+          <a [routerLink]="link.path" routerLinkActive="active" [routerLinkActiveOptions]="{exact: link.path === '/'}">
+            {{link.label}}
+          </a>
+        }
       </nav>
 
       <!-- Cart -->
       <a routerLink="/carrito" class="cart-btn">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-        <span class="cart-badge" *ngIf="cartService.getCartCount() > 0">{{cartService.getCartCount()}}</span>
+        @if (cartService.count() > 0) {
+          <span class="cart-badge">{{cartService.count()}}</span>
+        }
       </a>
 
       <!-- Auth — desktop -->
       <div class="auth-area desktop-only">
-        @if (authService.isLoggedIn()) {
-          <span class="user-greeting">Hola, {{ authService.getUser()?.nombre }}</span>
+        @if (authService.loggedIn()) {
+          <span class="user-greeting">Hola, {{ authService.user()?.nombre }}</span>
           <button class="btn-logout" (click)="logout()">Salir</button>
         } @else {
           <a routerLink="/login" class="btn-login">Iniciar sesión</a>
@@ -51,8 +56,11 @@
 
       <!-- Mobile menu toggle -->
       <button class="mobile-menu-btn mobile-only" (click)="toggleMobileMenu()">
-        <svg *ngIf="!mobileMenuOpen" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-        <svg *ngIf="mobileMenuOpen" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        @if (!mobileMenuOpen) {
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        } @else {
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        }
       </button>
     </div>
 
@@ -69,11 +77,15 @@
   </div>
 
   <!-- Mobile nav -->
-  <div class="mobile-nav" *ngIf="mobileMenuOpen">
-    <a *ngFor="let link of navLinks" [routerLink]="link.path" (click)="closeMobileMenu()">
-      {{link.label}}
-    </a>
-  </div>
+  @if (mobileMenuOpen) {
+    <div class="mobile-nav">
+      @for (link of navLinks; track link.path) {
+        <a [routerLink]="link.path" (click)="closeMobileMenu()">
+          {{link.label}}
+        </a>
+      }
+    </div>
+  }
 </header>
 
 <!-- Main content -->
@@ -113,7 +125,7 @@
     </div>
     <div class="footer-bottom">
       <p>© 2026 MercaFácil. Todos los derechos reservados.</p>
-      <p>Precios actualizados a diario · Datos orientativos</p>
+      <p>Datos orientativos</p>
     </div>
   </div>
 </footer>

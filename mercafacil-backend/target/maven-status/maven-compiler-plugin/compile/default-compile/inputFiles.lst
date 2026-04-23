@@ -1,12 +1,41 @@
-C:\Users\Rubén\Desktop\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\config\CorsConfig.java
-C:\Users\Rubén\Desktop\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\controller\CategoryController.java
-C:\Users\Rubén\Desktop\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\controller\DeliveryController.java
-C:\Users\Rubén\Desktop\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\controller\ProductController.java
-C:\Users\Rubén\Desktop\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\controller\StoreController.java
-C:\Users\Rubén\Desktop\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\data\MockDataLoader.java
-C:\Users\Rubén\Desktop\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\MercafacilApplication.java
-C:\Users\Rubén\Desktop\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\model\Category.java
-C:\Users\Rubén\Desktop\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\model\DeliveryZone.java
-C:\Users\Rubén\Desktop\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\model\Product.java
-C:\Users\Rubén\Desktop\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\model\Store.java
-C:\Users\Rubén\Desktop\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\model\StoreOffer.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\config\CorsConfig.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\config\DataInitializer.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\config\SecurityConfig.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\controller\AuthController.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\controller\CategoryController.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\controller\DeliveryController.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\controller\OrderController.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\controller\ProductController.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\controller\StoreController.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\dto\AuthRequest.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\dto\AuthResponse.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\dto\OrderItemRequest.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\dto\OrderItemResponse.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\dto\OrderRequest.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\dto\OrderResponse.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\dto\RegisterRequest.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\MercafacilApplication.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\model\Category.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\model\DeliveryZone.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\model\Order.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\model\OrderItem.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\model\OrderStatus.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\model\Product.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\model\Role.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\model\Store.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\model\StoreOffer.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\model\User.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\repository\CategoryRepository.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\repository\DeliveryZoneRepository.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\repository\OrderRepository.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\repository\ProductRepository.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\repository\StoreRepository.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\repository\UserRepository.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\security\JwtAuthFilter.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\security\JwtUtil.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\service\CategoryService.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\service\DeliveryService.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\service\OrderService.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\service\ProductService.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\service\StoreService.java
+C:\Users\Rubén\Desktop\2DAW\Proyecto intermodular\Proyecto final\mercafacil\mercafacil-backend\src\main\java\com\mercafacil\service\UserService.java

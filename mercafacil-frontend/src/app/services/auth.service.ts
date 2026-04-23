@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, computed, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthResponse, Role } from '../models/models';
 import { environment } from '../../environments/environment';
@@ -8,8 +8,10 @@ import { environment } from '../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly USER_KEY = 'mf_user';
-  private userSubject = new BehaviorSubject<AuthResponse | null>(this.loadStored());
-  user$ = this.userSubject.asObservable();
+  private readonly _user = signal<AuthResponse | null>(this.loadStored());
+
+  readonly user = this._user.asReadonly();
+  readonly loggedIn = computed(() => this._user() !== null);
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -27,29 +29,29 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem(this.USER_KEY);
-    this.userSubject.next(null);
+    this._user.set(null);
     this.router.navigate(['/']);
   }
 
   getToken(): string | null {
-    return this.userSubject.value?.token ?? null;
+    return this._user()?.token ?? null;
   }
 
   isLoggedIn(): boolean {
-    return !!this.userSubject.value;
+    return this.loggedIn();
   }
 
   getUser(): AuthResponse | null {
-    return this.userSubject.value;
+    return this._user();
   }
 
   hasRole(role: Role): boolean {
-    return this.userSubject.value?.rol === role;
+    return this._user()?.rol === role;
   }
 
   private store(user: AuthResponse): void {
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
-    this.userSubject.next(user);
+    this._user.set(user);
   }
 
   private loadStored(): AuthResponse | null {

@@ -1,9 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, computed, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart.service';
 import { ApiService } from '../../services/api.service';
 import { CartItem, Store } from '../../models/models';
+
+interface StoreGroup {
+  storeId: number;
+  storeName: string;
+  items: CartItem[];
+  store: Store | undefined;
+}
 
 @Component({
   selector: 'app-cart',
@@ -13,7 +20,41 @@ import { CartItem, Store } from '../../models/models';
   styleUrl: './cart.component.css'
 })
 export class CartComponent implements OnInit {
-  stores: Store[] = [];
+  readonly stores = signal<Store[]>([]);
+
+  readonly cartItems = computed(() => this.cartService.items());
+  readonly isEmpty = computed(() => this.cartItems().length === 0);
+
+  readonly itemsByStore = computed<StoreGroup[]>(() => {
+    const groups: Record<number, { storeName: string; items: CartItem[] }> = {};
+    for (const item of this.cartItems()) {
+      if (!groups[item.storeId]) groups[item.storeId] = { storeName: item.storeName, items: [] };
+      groups[item.storeId].items.push(item);
+    }
+    const storeList = this.stores();
+    return Object.entries(groups).map(([id, g]) => ({
+      storeId: +id,
+      storeName: g.storeName,
+      items: g.items,
+      store: storeList.find(s => s.id === +id)
+    }));
+  });
+
+  readonly subtotal = computed(() =>
+    this.cartItems().reduce((sum, i) => sum + i.price * i.quantity, 0)
+  );
+
+  readonly deliveryFees = computed(() =>
+    this.itemsByStore().reduce((sum, g) => {
+      const storeSubtotal = g.items.reduce((s, i) => s + i.price * i.quantity, 0);
+      return sum + (g.store ? (storeSubtotal >= 40 ? 0 : g.store.deliveryFee) : 0);
+    }, 0)
+  );
+
+  readonly total = computed(() => this.subtotal() + this.deliveryFees());
+  readonly totalUnits = computed(() =>
+    this.cartItems().reduce((s, i) => s + i.quantity, 0)
+  );
 
   constructor(
     public cartService: CartService,
@@ -22,50 +63,7 @@ export class CartComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.api.getStores().subscribe(s => this.stores = s);
-  }
-
-  get cartItems(): CartItem[] {
-    return this.cartService.getItems();
-  }
-
-  get isEmpty(): boolean {
-    return this.cartItems.length === 0;
-  }
-
-  get itemsByStore(): { storeId: number; storeName: string; items: CartItem[]; store: Store | undefined }[] {
-    const groups: Record<number, { storeName: string; items: CartItem[] }> = {};
-    for (const item of this.cartItems) {
-      if (!groups[item.storeId]) {
-        groups[item.storeId] = { storeName: item.storeName, items: [] };
-      }
-      groups[item.storeId].items.push(item);
-    }
-    return Object.entries(groups).map(([id, g]) => ({
-      storeId: +id,
-      storeName: g.storeName,
-      items: g.items,
-      store: this.stores.find(s => s.id === +id)
-    }));
-  }
-
-  get subtotal(): number {
-    return this.cartItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  }
-
-  get deliveryFees(): number {
-    return this.itemsByStore.reduce((sum, g) => {
-      const storeSubtotal = g.items.reduce((s, i) => s + i.price * i.quantity, 0);
-      return sum + (g.store ? (storeSubtotal >= 40 ? 0 : g.store.deliveryFee) : 0);
-    }, 0);
-  }
-
-  get total(): number {
-    return this.subtotal + this.deliveryFees;
-  }
-
-  get totalUnits(): number {
-    return this.cartItems.reduce((s, i) => s + i.quantity, 0);
+    this.api.getStores().subscribe(s => this.stores.set(s));
   }
 
   storeSubtotal(items: CartItem[]): number {

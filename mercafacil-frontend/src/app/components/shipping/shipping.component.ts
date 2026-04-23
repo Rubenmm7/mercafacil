@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
@@ -12,10 +12,11 @@ import { Store, DeliveryZone } from '../../models/models';
   styleUrl: './shipping.component.css'
 })
 export class ShippingComponent implements OnInit {
-  stores: Store[] = [];
-  deliveryZones: DeliveryZone[] = [];
-  zipCode = '';
-  checkResult: 'available' | 'unavailable' | null = null;
+  readonly stores = signal<Store[]>([]);
+  readonly deliveryZones = signal<DeliveryZone[]>([]);
+  readonly loading = signal(true);
+  readonly zipCode = signal('');
+  readonly checkResult = signal<'available' | 'unavailable' | null>(null);
 
   timeSlots = [
     { time: '09:00 - 12:00', available: true },
@@ -35,19 +36,22 @@ export class ShippingComponent implements OnInit {
   constructor(private api: ApiService) {}
 
   ngOnInit(): void {
-    this.api.getStores().subscribe(s => this.stores = s);
-    this.api.getDeliveryZones().subscribe(z => this.deliveryZones = z);
+    let pending = 2;
+    const done = () => { if (--pending === 0) this.loading.set(false); };
+    this.api.getStores().subscribe({ next: s => this.stores.set(s), complete: done, error: done });
+    this.api.getDeliveryZones().subscribe({ next: z => this.deliveryZones.set(z), complete: done, error: done });
   }
 
   handleCheckZip(): void {
-    if (this.zipCode.length === 5) {
+    const code = this.zipCode();
+    if (code.length === 5) {
       const jaenPrefixes = ['230', '231', '232', '233', '234', '235'];
-      this.checkResult = jaenPrefixes.some(p => this.zipCode.startsWith(p)) ? 'available' : 'unavailable';
+      this.checkResult.set(jaenPrefixes.some(p => code.startsWith(p)) ? 'available' : 'unavailable');
     }
   }
 
   onZipInput(event: Event): void {
     const input = event.target as HTMLInputElement;
-    this.zipCode = input.value.replace(/\D/g, '').slice(0, 5);
+    this.zipCode.set(input.value.replace(/\D/g, '').slice(0, 5));
   }
 }

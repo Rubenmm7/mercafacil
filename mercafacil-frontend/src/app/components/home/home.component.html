@@ -20,17 +20,21 @@
 
       <div class="popular-terms">
         <span class="popular-label">Popular:</span>
-        <button *ngFor="let term of popularTerms" class="popular-tag" (click)="searchTerm(term)">{{term}}</button>
+        @for (term of popularTerms; track term) {
+          <button class="popular-tag" (click)="searchTerm(term)">{{term}}</button>
+        }
       </div>
     </div>
   </div>
 
   <div class="stats-bar">
     <div class="stats-inner">
-      <div class="stat-item" *ngFor="let stat of stats">
-        <div class="stat-value">{{stat.value}}</div>
-        <div class="stat-label">{{stat.label}}</div>
-      </div>
+      @for (stat of stats; track stat.label) {
+        <div class="stat-item">
+          <div class="stat-value">{{stat.value}}</div>
+          <div class="stat-label">{{stat.label}}</div>
+        </div>
+      }
     </div>
   </div>
 </section>
@@ -42,11 +46,19 @@
     <a routerLink="/buscar" class="see-all">Ver todas ›</a>
   </div>
   <div class="categories-grid">
-    <button *ngFor="let cat of categories" class="category-card" [style.background-color]="cat.bgColor" (click)="searchCategory(cat.name)">
-      <div class="cat-icon">{{cat.icon}}</div>
-      <div class="cat-name">{{cat.name}}</div>
-      <div class="cat-count">{{cat.count}} productos</div>
-    </button>
+    @if (categories().length === 0 && loading()) {
+      @for (i of [1,2,3,4,5,6]; track i) {
+        <div class="category-card skeleton-card"></div>
+      }
+    } @else {
+      @for (cat of categories(); track cat.id) {
+        <button class="category-card" [style.background-color]="cat.bgColor" (click)="searchCategory(cat.name)">
+          <div class="cat-icon">{{cat.icon}}</div>
+          <div class="cat-name">{{cat.name}}</div>
+          <div class="cat-count">{{cat.count}} productos</div>
+        </button>
+      }
+    }
   </div>
 </section>
 
@@ -58,15 +70,23 @@
       <a routerLink="/tiendas" class="see-all">Ver todas ›</a>
     </div>
     <div class="stores-grid">
-      <a *ngFor="let store of stores" routerLink="/tiendas" class="store-card">
-        <div class="store-logo" [style.background-color]="store.color">{{store.logo}}</div>
-        <div class="store-name">{{store.name}}</div>
-        <div class="store-rating">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="#f97316" stroke="#f97316" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <span>{{store.rating}}</span>
-        </div>
-        <div class="store-delivery">🕐 {{store.deliveryTime}}</div>
-      </a>
+      @if (stores().length === 0 && loading()) {
+        @for (i of [1,2,3,4,5]; track i) {
+          <div class="store-card skeleton-card"></div>
+        }
+      } @else {
+        @for (store of stores(); track store.id) {
+          <a routerLink="/tiendas" class="store-card">
+            <div class="store-logo" [style.background-color]="store.color">{{store.logo}}</div>
+            <div class="store-name">{{store.name}}</div>
+            <div class="store-rating">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="#f97316" stroke="#f97316" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <span>{{store.rating}}</span>
+            </div>
+            <div class="store-delivery">🕐 {{store.deliveryTime}}</div>
+          </a>
+        }
+      }
     </div>
   </div>
 </section>
@@ -78,20 +98,30 @@
     <a routerLink="/buscar" class="see-all">Ver todos ›</a>
   </div>
   <div class="products-grid">
-    <a *ngFor="let product of featuredProducts" [routerLink]="['/buscar']" [queryParams]="{q: product.name}" class="product-card">
-      <div class="product-image">
-        <img [src]="product.image" [alt]="product.name" />
-        <div class="product-stores-badge">{{getAvailableCount(product)}} tiendas</div>
-      </div>
-      <div class="product-info">
-        <div class="product-category">{{product.category}}</div>
-        <h4>{{product.name}}</h4>
-        <div class="product-price">
-          Desde <span class="price-value">{{getMinPrice(product) | number:'1.2-2'}}€</span>
-          <span *ngIf="getMinPrice(product) !== getMaxPrice(product)"> hasta {{getMaxPrice(product) | number:'1.2-2'}}€</span>
-        </div>
-      </div>
-    </a>
+    @if (featuredProducts().length === 0 && loading()) {
+      @for (i of [1,2,3,4]; track i) {
+        <div class="product-card skeleton-card skeleton-product"></div>
+      }
+    } @else {
+      @for (product of featuredProducts(); track product.id) {
+        <a [routerLink]="['/buscar']" [queryParams]="{q: product.name}" class="product-card">
+          <div class="product-image">
+            <img [src]="product.image" [alt]="product.name" />
+            <div class="product-stores-badge">{{getAvailableCount(product)}} tiendas</div>
+          </div>
+          <div class="product-info">
+            <div class="product-category">{{product.category}}</div>
+            <h4>{{product.name}}</h4>
+            <div class="product-price">
+              Desde <span class="price-value">{{getMinPrice(product) | number:'1.2-2'}}€</span>
+              @if (getMinPrice(product) !== getMaxPrice(product)) {
+                <span> hasta {{getMaxPrice(product) | number:'1.2-2'}}€</span>
+              }
+            </div>
+          </div>
+        </a>
+      }
+    }
   </div>
 </section>
 

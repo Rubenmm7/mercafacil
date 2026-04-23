@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
@@ -14,8 +14,8 @@ import { AuthService } from '../../services/auth.service';
 export class LoginComponent {
   email = '';
   password = '';
-  errorMsg = '';
-  loading = false;
+  readonly errorMsg = signal('');
+  readonly loading = signal(false);
 
   constructor(
     private auth: AuthService,
@@ -24,16 +24,16 @@ export class LoginComponent {
   ) {}
 
   onSubmit(): void {
-    this.errorMsg = '';
-    this.loading = true;
+    this.errorMsg.set('');
+    this.loading.set(true);
     this.auth.login(this.email, this.password).subscribe({
       next: () => {
         const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
         this.router.navigateByUrl(returnUrl);
       },
       error: () => {
-        this.errorMsg = 'Credenciales incorrectas. Inténtalo de nuevo.';
-        this.loading = false;
+        this.errorMsg.set('Credenciales incorrectas. Inténtalo de nuevo.');
+        this.loading.set(false);
       }
     });
   }

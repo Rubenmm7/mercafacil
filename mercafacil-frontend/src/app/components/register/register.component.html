@@ -35,10 +35,12 @@
                placeholder="Repite la contraseña" required autocomplete="new-password" />
       </div>
 
-      <div class="error-msg" *ngIf="errorMsg">{{ errorMsg }}</div>
+      @if (errorMsg()) {
+        <div class="error-msg">{{ errorMsg() }}</div>
+      }
 
-      <button type="submit" class="btn-primary" [disabled]="loading">
-        {{ loading ? 'Creando cuenta...' : 'Crear cuenta' }}
+      <button type="submit" class="btn-primary" [disabled]="loading()">
+        {{ loading() ? 'Creando cuenta...' : 'Crear cuenta' }}
       </button>
     </form>
 

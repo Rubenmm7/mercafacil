@@ -20,11 +20,15 @@
       <div class="card">
         <div class="card-header"><div class="icon-wrap green">📍</div><div><h3>Comprueba tu cobertura</h3><p>Introduce tu código postal de Jaén</p></div></div>
         <form class="zip-form" (ngSubmit)="handleCheckZip()">
-          <input type="text" placeholder="Ej: 23001" [value]="zipCode" (input)="onZipInput($event)" maxlength="5" />
+          <input type="text" placeholder="Ej: 23001" [value]="zipCode()" (input)="onZipInput($event)" maxlength="5" />
           <button type="submit">Comprobar</button>
         </form>
-        <div class="result-ok" *ngIf="checkResult === 'available'">✅ ¡Zona con cobertura! El código postal <strong>{{zipCode}}</strong> tiene entrega disponible. Tiempo estimado: 1-4h</div>
-        <div class="result-fail" *ngIf="checkResult === 'unavailable'">❌ Zona no disponible aún. Estamos expandiendo nuestra cobertura.</div>
+        @if (checkResult() === 'available') {
+          <div class="result-ok">✅ ¡Zona con cobertura! El código postal <strong>{{zipCode()}}</strong> tiene entrega disponible. Tiempo estimado: 1-4h</div>
+        }
+        @if (checkResult() === 'unavailable') {
+          <div class="result-fail">❌ Zona no disponible aún. Estamos expandiendo nuestra cobertura.</div>
+        }
         <div class="zip-hints">
           <div class="hint-label">Códigos postales con cobertura:</div>
           <div class="hint-item">• 23001–23009 (Jaén Capital)</div>
@@ -37,10 +41,12 @@
       <div class="card">
         <div class="card-header"><div class="icon-wrap blue">🕐</div><div><h3>Franjas horarias</h3><p>Disponibilidad para hoy</p></div></div>
         <div class="slots">
-          <div *ngFor="let slot of timeSlots" class="slot" [class.unavailable]="!slot.available">
-            <span>🕐 {{slot.time}}</span>
-            <span class="slot-badge" [class.available]="slot.available">{{slot.available ? 'Disponible' : 'Ocupado'}}</span>
-          </div>
+          @for (slot of timeSlots; track slot.time) {
+            <div class="slot" [class.unavailable]="!slot.available">
+              <span>🕐 {{slot.time}}</span>
+              <span class="slot-badge" [class.available]="slot.available">{{slot.available ? 'Disponible' : 'Ocupado'}}</span>
+            </div>
+          }
         </div>
         <p class="slot-note">* Las franjas horarias son orientativas y pueden variar según la tienda.</p>
       </div>
@@ -53,12 +59,20 @@
         <table>
           <thead><tr><th>Zona</th><th>Tiempo estimado</th><th>Coste de envío</th><th>Estado</th></tr></thead>
           <tbody>
-            <tr *ngFor="let zone of deliveryZones">
-              <td>📍 {{zone.zone}}</td>
-              <td>{{zone.available ? zone.minTime : '—'}}</td>
-              <td><span [class.green-text]="zone.fee < 2">{{zone.available ? (zone.fee | number:'1.2-2') + '€' : 'No disponible'}}</span></td>
-              <td><span class="status-badge" [class.active]="zone.available">{{zone.available ? '✅ Activo' : 'Próximamente'}}</span></td>
-            </tr>
+            @if (deliveryZones().length === 0 && loading()) {
+              @for (i of [1,2,3,4,5]; track i) {
+                <tr><td colspan="4"><div class="skeleton-row"></div></td></tr>
+              }
+            } @else {
+              @for (zone of deliveryZones(); track zone.zone) {
+                <tr>
+                  <td>📍 {{zone.zone}}</td>
+                  <td>{{zone.available ? zone.minTime : '—'}}</td>
+                  <td><span [class.green-text]="zone.fee < 2">{{zone.available ? (zone.fee | number:'1.2-2') + '€' : 'No disponible'}}</span></td>
+                  <td><span class="status-badge" [class.active]="zone.available">{{zone.available ? '✅ Activo' : 'Próximamente'}}</span></td>
+                </tr>
+              }
+            }
           </tbody>
         </table>
         <div class="table-note">💡 Envío gratuito en todos los pedidos superiores a 40€</div>
@@ -69,24 +83,34 @@
     <div class="store-delivery-section">
       <h2>Condiciones de envío por tienda</h2>
       <div class="store-delivery-grid">
-        <div *ngFor="let store of stores" class="store-delivery-card">
-          <div class="sd-header"><div class="sd-logo" [style.background-color]="store.color">{{store.logo}}</div><h4>{{store.name}}</h4></div>
-          <div class="sd-row"><span>Tiempo de entrega</span><strong>{{store.deliveryTime}}</strong></div>
-          <div class="sd-row"><span>Pedido mínimo</span><strong>{{store.minOrder}}€</strong></div>
-          <div class="sd-row"><span>Coste de envío</span><strong class="green-text">{{store.deliveryFee | number:'1.2-2'}}€</strong></div>
-          <div class="sd-row"><span>Horario tienda</span><strong>{{store.hours}}</strong></div>
-          <div class="sd-note">Envío gratis con pedidos > 40€</div>
-        </div>
+        @if (stores().length === 0 && loading()) {
+          @for (i of [1,2,3]; track i) {
+            <div class="store-delivery-card skeleton-card" style="min-height: 220px;"></div>
+          }
+        } @else {
+          @for (store of stores(); track store.id) {
+            <div class="store-delivery-card">
+              <div class="sd-header"><div class="sd-logo" [style.background-color]="store.color">{{store.logo}}</div><h4>{{store.name}}</h4></div>
+              <div class="sd-row"><span>Tiempo de entrega</span><strong>{{store.deliveryTime}}</strong></div>
+              <div class="sd-row"><span>Pedido mínimo</span><strong>{{store.minOrder}}€</strong></div>
+              <div class="sd-row"><span>Coste de envío</span><strong class="green-text">{{store.deliveryFee | number:'1.2-2'}}€</strong></div>
+              <div class="sd-row"><span>Horario tienda</span><strong>{{store.hours}}</strong></div>
+              <div class="sd-note">Envío gratis con pedidos > 40€</div>
+            </div>
+          }
+        }
       </div>
     </div>
 
     <!-- FAQ -->
     <div class="faq-section">
       <h2>Preguntas frecuentes sobre el envío</h2>
-      <details *ngFor="let faq of faqs" class="faq-item">
-        <summary>{{faq.q}} <span class="chevron">▼</span></summary>
-        <div class="faq-answer">{{faq.a}}</div>
-      </details>
+      @for (faq of faqs; track faq.q) {
+        <details class="faq-item">
+          <summary>{{faq.q}} <span class="chevron">▼</span></summary>
+          <div class="faq-answer">{{faq.a}}</div>
+        </details>
+      }
     </div>
   </div>
 </div>

@@ -18,10 +18,12 @@
                placeholder="••••••••" required autocomplete="current-password" />
       </div>
 
-      <div class="error-msg" *ngIf="errorMsg">{{ errorMsg }}</div>
+      @if (errorMsg()) {
+        <div class="error-msg">{{ errorMsg() }}</div>
+      }
 
-      <button type="submit" class="btn-primary" [disabled]="loading">
-        {{ loading ? 'Iniciando sesión...' : 'Iniciar sesión' }}
+      <button type="submit" class="btn-primary" [disabled]="loading()">
+        {{ loading() ? 'Iniciando sesión...' : 'Iniciar sesión' }}
       </button>
     </form>
 
