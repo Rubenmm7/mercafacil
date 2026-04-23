@@ -106,3 +106,18 @@ CREATE TABLE IF NOT EXISTS order_items (
 
 CREATE INDEX idx_orders_client       ON orders(cliente_id);
 CREATE INDEX idx_order_items_order   ON order_items(order_id);
+
+CREATE TABLE IF NOT EXISTS messages (
+    id           BIGINT       PRIMARY KEY AUTO_INCREMENT,
+    chat_type    ENUM('CLIENTE_REPARTIDOR','VENDEDOR_REPARTIDOR','PROVEEDOR_VENDEDOR') NOT NULL,
+    order_id     BIGINT       NULL,
+    shop_id      BIGINT       NULL,
+    remitente_id BIGINT       NOT NULL,
+    mensaje      TEXT         NOT NULL,
+    fecha        DATETIME     DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_msg_order  FOREIGN KEY (order_id)     REFERENCES orders(id)  ON DELETE CASCADE,
+    CONSTRAINT fk_msg_shop   FOREIGN KEY (shop_id)      REFERENCES stores(id)  ON DELETE CASCADE,
+    CONSTRAINT fk_msg_sender FOREIGN KEY (remitente_id) REFERENCES users(id),
+    INDEX idx_msg_order_type (order_id, chat_type),
+    INDEX idx_msg_shop_type  (shop_id, chat_type)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
