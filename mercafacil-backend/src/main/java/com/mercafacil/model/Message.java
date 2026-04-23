@@ -1,0 +1,53 @@
+package com.mercafacil.model;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "messages")
+public class Message {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "chat_type", nullable = false, length = 30)
+    private ChatType chatType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shop_id")
+    private Store shop;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "remitente_id", nullable = false)
+    private User sender;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String mensaje;
+
+    @Column(nullable = false)
+    private LocalDateTime fecha;
+
+    @PrePersist
+    protected void prePersist() {
+        fecha = LocalDateTime.now();
+    }
+
+    public Long getId()                        { return id; }
+    public ChatType getChatType()              { return chatType; }
+    public void setChatType(ChatType t)        { this.chatType = t; }
+    public Order getOrder()                    { return order; }
+    public void setOrder(Order order)          { this.order = order; }
+    public Store getShop()                     { return shop; }
+    public void setShop(Store shop)            { this.shop = shop; }
+    public User getSender()                    { return sender; }
+    public void setSender(User sender)         { this.sender = sender; }
+    public String getMensaje()                 { return mensaje; }
+    public void setMensaje(String mensaje)     { this.mensaje = mensaje; }
+    public LocalDateTime getFecha()            { return fecha; }
+}
