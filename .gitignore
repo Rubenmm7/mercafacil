@@ -8,6 +8,7 @@ Thumbs.db
 CLAUDE.md
 .claude/
 .claudeignore
+MEMORIA_PROYECTO.MD
 
 # --- IDEs (VS Code & IntelliJ) ---
 .vscode/
@@ -41,3 +42,4 @@ yarn-error.log*
 
 # --- ESPECÍFICOS DEL PROYECTO ---
 docs/
+.continue

@@ -1,6 +1,6 @@
 import {
   Component, OnInit, OnDestroy,
-  signal, computed, ViewChild, ElementRef, AfterViewChecked
+  signal, computed, ViewChild, ElementRef
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -19,7 +19,7 @@ import { environment } from '../../../environments/environment';
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css'
 })
-export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class ChatComponent implements OnInit, OnDestroy {
   @ViewChild('messagesArea') private messagesArea!: ElementRef<HTMLElement>;
 
   orderId  = signal<number | null>(null);
@@ -41,8 +41,12 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   });
 
+  isAtBottom     = signal(true);
+  autoScrollLock = signal(true);
+  unreadCount    = signal(0);
+
   private subscription?: Subscription;
-  private shouldScroll = false;
+  private readonly BOTTOM_THRESHOLD = 80;
 
   constructor(
     private route: ActivatedRoute,
@@ -72,11 +76,28 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.chatService.disconnect();
   }
 
-  ngAfterViewChecked(): void {
-    if (this.shouldScroll) {
-      this.scrollToBottom();
-      this.shouldScroll = false;
+  onScroll(): void {
+    const el = this.messagesArea?.nativeElement;
+    if (!el) return;
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    const atBottom = distanceFromBottom <= this.BOTTOM_THRESHOLD;
+    this.isAtBottom.set(atBottom);
+    if (atBottom) this.unreadCount.set(0);
+  }
+
+  toggleAutoScrollLock(): void {
+    const next = !this.autoScrollLock();
+    this.autoScrollLock.set(next);
+    if (next) {
+      this.unreadCount.set(0);
+      this.scheduleScrollToBottom();
     }
+  }
+
+  jumpToBottom(): void {
+    this.unreadCount.set(0);
+    this.isAtBottom.set(true);
+    this.scheduleScrollToBottom();
   }
 
   private loadHistory(): void {
@@ -97,7 +118,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
       next: msgs => {
         this.messages.set(msgs);
         this.loading.set(false);
-        this.shouldScroll = true;
+        this.scheduleScrollToBottom();
       },
       error: () => {
         this.error.set('No se pudo cargar el historial');
@@ -124,8 +145,13 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
 
       this.subscription = obs$.subscribe(msg => {
+        const own = this.isOwnMessage(msg);
         this.messages.update(list => [...list, msg]);
-        this.shouldScroll = true;
+        if (own || this.autoScrollLock() || this.isAtBottom()) {
+          this.scheduleScrollToBottom();
+        } else {
+          this.unreadCount.update(n => n + 1);
+        }
       });
     }).catch(() => {
       this.error.set('No se pudo conectar al chat');
@@ -158,6 +184,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     this.newMessage.set('');
+    this.scheduleScrollToBottom();
   }
 
   onKeyDown(event: KeyboardEvent): void {
@@ -197,8 +224,16 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     });
   }
 
+  private scheduleScrollToBottom(): void {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => this.scrollToBottom());
+    });
+  }
+
   private scrollToBottom(): void {
     const el = this.messagesArea?.nativeElement;
-    if (el) el.scrollTop = el.scrollHeight;
+    if (!el) return;
+    el.scrollTop = el.scrollHeight;
+    this.isAtBottom.set(true);
   }
 }

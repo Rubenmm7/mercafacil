@@ -11,10 +11,23 @@
         <span class="chat-subtitle">{{ chatSubtitle() }}</span>
       </div>
     </div>
+
+    <button
+      type="button"
+      class="lock-btn"
+      [class.active]="autoScrollLock()"
+      (click)="toggleAutoScrollLock()"
+      [title]="autoScrollLock() ? 'Auto-scroll activado · seguir el chat' : 'Auto-scroll desactivado · no seguir'">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="6" y1="19" x2="18" y2="19"/>
+      </svg>
+    </button>
   </div>
 
   <!-- Messages area -->
-  <div class="messages-area" #messagesArea>
+  <div class="messages-wrapper">
+  <div class="messages-area" #messagesArea (scroll)="onScroll()">
 
     @if (loading()) {
       <div class="state-center">
@@ -49,6 +62,18 @@
       }
     }
 
+  </div>
+
+    @if (!isAtBottom() && !loading() && !error()) {
+      <button type="button" class="jump-bottom-btn" (click)="jumpToBottom()" title="Ir al último mensaje">
+        @if (unreadCount() > 0) {
+          <span class="jump-badge">{{ unreadCount() }}</span>
+        }
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+    }
   </div>
 
   <!-- Input area -->
