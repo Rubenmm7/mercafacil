@@ -27,7 +27,9 @@ CREATE TABLE IF NOT EXISTS stores (
     min_order     INT,
     delivery_fee  DOUBLE,
     category      VARCHAR(50),
-    created_at    TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
+    vendedor_id   BIGINT       NULL,
+    created_at    TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_stores_vendedor (vendedor_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS products (
@@ -48,6 +50,7 @@ CREATE TABLE IF NOT EXISTS store_offers (
     price          DOUBLE       NOT NULL,
     original_price DOUBLE,
     in_stock       BOOLEAN      DEFAULT TRUE,
+    stock          INT          NOT NULL DEFAULT 0,
     brand          VARCHAR(100),
     created_at     TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,

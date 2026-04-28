@@ -9,6 +9,14 @@ import { RegisterComponent } from './components/register/register.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { ChatsListComponent } from './components/chats-list/chats-list.component';
 import { OrdersComponent } from './components/orders/orders.component';
+import { VendedorComponent } from './components/vendedor/vendedor.component';
+import { ResumenComponent } from './components/vendedor/resumen/resumen.component';
+import { PedidosComponent } from './components/vendedor/pedidos/pedidos.component';
+import { ProductosComponent } from './components/vendedor/productos/productos.component';
+import { OfertasComponent } from './components/vendedor/ofertas/ofertas.component';
+import { RepartidorComponent } from './components/repartidor/repartidor.component';
+import { ResumenRepartidorComponent } from './components/repartidor/resumen/resumen.component';
+import { EntregasComponent } from './components/repartidor/entregas/entregas.component';
 import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
 
@@ -21,6 +29,32 @@ export const routes: Routes = [
   { path: 'pedidos', component: OrdersComponent, canActivate: [roleGuard('CLIENTE')] },
   { path: 'login',   component: LoginComponent },
   { path: 'registro', component: RegisterComponent },
+
+  // Dashboard Vendedor
+  {
+    path: 'vendedor',
+    component: VendedorComponent,
+    canActivate: [roleGuard('VENDEDOR')],
+    children: [
+      { path: '',        redirectTo: 'resumen', pathMatch: 'full' },
+      { path: 'resumen',   component: ResumenComponent },
+      { path: 'pedidos',   component: PedidosComponent },
+      { path: 'productos', component: ProductosComponent },
+      { path: 'ofertas',   component: OfertasComponent }
+    ]
+  },
+
+  // Dashboard Repartidor
+  {
+    path: 'repartidor',
+    component: RepartidorComponent,
+    canActivate: [roleGuard('REPARTIDOR')],
+    children: [
+      { path: '',         redirectTo: 'resumen', pathMatch: 'full' },
+      { path: 'resumen',  component: ResumenRepartidorComponent },
+      { path: 'entregas', component: EntregasComponent }
+    ]
+  },
 
   // Bandeja de chats
   {

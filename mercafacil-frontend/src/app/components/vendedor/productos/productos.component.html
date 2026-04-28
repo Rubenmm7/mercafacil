@@ -1,0 +1,77 @@
+<div class="section-header">
+  <h1 class="page-title">Productos</h1>
+  <button class="btn-primary" (click)="openCreate()">+ Nuevo producto</button>
+</div>
+
+@if (error()) { <div class="error-msg">{{ error() }}</div> }
+
+<!-- Formulario crear/editar -->
+@if (showForm()) {
+  <div class="form-card">
+    <h2 class="form-title">{{ editing() ? 'Editar producto' : 'Nuevo producto' }}</h2>
+    <form [formGroup]="form" (ngSubmit)="save()" class="product-form">
+      <div class="form-row">
+        <label>Nombre *
+          <input formControlName="name" type="text" placeholder="Ej. Manzanas Fuji" />
+        </label>
+        <label>Categoría *
+          <input formControlName="category" type="text" placeholder="Ej. Alimentación" />
+        </label>
+      </div>
+      <div class="form-row">
+        <label>Unidad *
+          <input formControlName="unit" type="text" placeholder="Ej. kg, unidad, 1L" />
+        </label>
+        <label>Imagen (emoji o URL)
+          <input formControlName="image" type="text" placeholder="🍎" />
+        </label>
+      </div>
+      <label>Descripción
+        <textarea formControlName="description" rows="2" placeholder="Descripción breve del producto"></textarea>
+      </label>
+      @if (!editing()) {
+        <label>Tienda *
+          <select formControlName="storeId">
+            <option [value]="null" disabled>Selecciona tienda</option>
+            @for (s of stores(); track s.id) {
+              <option [value]="s.id">{{ s.name }}</option>
+            }
+          </select>
+        </label>
+      }
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" (click)="cancel()">Cancelar</button>
+        <button type="submit" class="btn-primary" [disabled]="form.invalid || saving()">
+          @if (saving()) { Guardando... } @else { Guardar }
+        </button>
+      </div>
+    </form>
+  </div>
+}
+
+<!-- Lista de productos -->
+@if (loading()) {
+  <div class="loading">Cargando productos...</div>
+} @else if (products().length === 0 && !showForm()) {
+  <div class="empty">No tienes productos. ¡Crea el primero!</div>
+} @else {
+  <div class="products-grid">
+    @for (p of products(); track p.id) {
+      <div class="product-card">
+        <div class="product-image">{{ p.image || '📦' }}</div>
+        <div class="product-body">
+          <div class="product-name">{{ p.name }}</div>
+          <div class="product-meta">{{ p.category }} · {{ p.unit }}</div>
+          @if (p.description) {
+            <div class="product-desc">{{ p.description }}</div>
+          }
+          <div class="offer-count">{{ p.offers.length }} oferta(s) en tus tiendas</div>
+        </div>
+        <div class="product-actions">
+          <button class="btn-icon" title="Editar" (click)="openEdit(p)">✏️</button>
+          <button class="btn-icon btn-danger" title="Eliminar" (click)="delete(p)">🗑️</button>
+        </div>
+      </div>
+    }
+  </div>
+}

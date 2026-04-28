@@ -36,6 +36,12 @@
         @if (authService.user()?.rol === 'CLIENTE') {
           <a routerLink="/pedidos" routerLinkActive="active">Mis pedidos</a>
         }
+        @if (authService.user()?.rol === 'VENDEDOR') {
+          <a routerLink="/vendedor" routerLinkActive="active">Mi panel</a>
+        }
+        @if (authService.user()?.rol === 'REPARTIDOR') {
+          <a routerLink="/repartidor" routerLinkActive="active">Mi panel</a>
+        }
         @if (showChatsLink) {
           <a routerLink="/chats" routerLinkActive="active">Chats</a>
         }
@@ -100,6 +106,12 @@
       }
       @if (authService.user()?.rol === 'CLIENTE') {
         <a routerLink="/pedidos" (click)="closeMobileMenu()">Mis pedidos</a>
+      }
+      @if (authService.user()?.rol === 'VENDEDOR') {
+        <a routerLink="/vendedor" (click)="closeMobileMenu()">Mi panel</a>
+      }
+      @if (authService.user()?.rol === 'REPARTIDOR') {
+        <a routerLink="/repartidor" (click)="closeMobileMenu()">Mi panel</a>
       }
       @if (showChatsLink) {
         <a routerLink="/chats" (click)="closeMobileMenu()">Chats</a>

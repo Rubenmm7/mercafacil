@@ -1,0 +1,42 @@
+<h1 class="page-title">Pedidos</h1>
+
+@if (loading()) {
+  <div class="loading">Cargando pedidos...</div>
+} @else if (error()) {
+  <div class="error-msg">{{ error() }}</div>
+} @else if (orders().length === 0) {
+  <div class="empty">No hay pedidos que afecten a tus tiendas.</div>
+} @else {
+  <div class="orders-list">
+    @for (order of orders(); track order.id) {
+      <div class="order-card" [class]="'order-card status-' + order.status.toLowerCase()">
+        <div class="order-header">
+          <span class="order-id">#{{ order.id }}</span>
+          <span class="status-badge">{{ statusLabels[order.status] }}</span>
+          <span class="order-total">{{ order.total | number:'1.2-2' }} €</span>
+          <span class="order-date">{{ formatDate(order.createdAt) }}</span>
+        </div>
+
+        <div class="order-items">
+          @for (item of order.items; track item.productId) {
+            <span class="item-chip">{{ item.quantity }}× prod. #{{ item.productId }}</span>
+          }
+        </div>
+
+        <div class="order-client">Cliente: {{ order.clientEmail }}</div>
+
+        <div class="order-actions">
+          @if (nextStatus[order.status]) {
+            <button class="btn-advance"
+                    [disabled]="updating() === order.id"
+                    (click)="advance(order)">
+              @if (updating() === order.id) { Actualizando... }
+              @else { {{ nextStatusLabel[order.status] }} }
+            </button>
+          }
+          <button class="btn-chat" (click)="openChat(order.id)">💬 Chat repartidor</button>
+        </div>
+      </div>
+    }
+  </div>
+}

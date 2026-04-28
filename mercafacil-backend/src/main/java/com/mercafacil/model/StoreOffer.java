@@ -40,6 +40,9 @@ public class StoreOffer {
     @Column(name = "in_stock")
     private boolean inStock;
 
+    @Column(nullable = false)
+    private Integer stock = 0;
+
     private String brand;
 
     public StoreOffer() {}
@@ -67,6 +70,8 @@ public class StoreOffer {
     public void setOriginalPrice(Double originalPrice) { this.originalPrice = originalPrice; }
     public boolean isInStock() { return inStock; }
     public void setInStock(boolean inStock) { this.inStock = inStock; }
+    public Integer getStock() { return stock; }
+    public void setStock(Integer stock) { this.stock = stock; }
     public String getBrand() { return brand; }
     public void setBrand(String brand) { this.brand = brand; }
 }

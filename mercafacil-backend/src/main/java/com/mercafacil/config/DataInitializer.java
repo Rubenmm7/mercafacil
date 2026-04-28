@@ -55,6 +55,10 @@ public class DataInitializer implements CommandLineRunner {
         seedDeliveryZones();
     }
 
+    private User vendedorUser() {
+        return userRepository.findByEmail("vendedor@mercafacil.com").orElse(null);
+    }
+
     private void seedUsers() {
         if (userRepository.count() > 0) return;
         userRepository.saveAll(List.of(
@@ -80,44 +84,45 @@ public class DataInitializer implements CommandLineRunner {
 
     private void seedStores() {
         if (storeRepository.count() > 0) return;
+        var vendedor = vendedorUser();
         storeRepository.saveAll(List.of(
-            store("FrutasVerde", "🌿", "#16a34a", "#dcfce7", "Pasillo A, Local 12", "Madrid", "91 123 45 67", "9:00-21:00",  4.8, "20-35 min", 15,  1.99, "Alimentación"),
-            store("TechZone",   "💻", "#2563eb", "#dbeafe", "Pasillo B, Local 5",  "Madrid", "91 234 56 78", "10:00-20:00", 4.5, "30-50 min", 50,  2.99, "Electrónica"),
-            store("MercaFresh", "🥩", "#dc2626", "#fee2e2", "Pasillo A, Local 3",  "Madrid", "91 345 67 89", "8:00-22:00",  4.9, "15-25 min", 10,  0.99, "Alimentación"),
-            store("CleanHome",  "🧹", "#0891b2", "#cffafe", "Pasillo C, Local 8",  "Madrid", "91 456 78 90", "9:00-20:00",  4.3, "25-40 min", 20,  1.49, "Limpieza")
+            store("FrutasVerde", "🌿", "#16a34a", "#dcfce7", "Pasillo A, Local 12", "Madrid", "91 123 45 67", "9:00-21:00",  4.8, "20-35 min", 15,  1.99, "Alimentación", vendedor),
+            store("TechZone",   "💻", "#2563eb", "#dbeafe", "Pasillo B, Local 5",  "Madrid", "91 234 56 78", "10:00-20:00", 4.5, "30-50 min", 50,  2.99, "Electrónica",  vendedor),
+            store("MercaFresh", "🥩", "#dc2626", "#fee2e2", "Pasillo A, Local 3",  "Madrid", "91 345 67 89", "8:00-22:00",  4.9, "15-25 min", 10,  0.99, "Alimentación", vendedor),
+            store("CleanHome",  "🧹", "#0891b2", "#cffafe", "Pasillo C, Local 8",  "Madrid", "91 456 78 90", "9:00-20:00",  4.3, "25-40 min", 20,  1.49, "Limpieza",     vendedor)
         ));
     }
 
     private void seedProducts() {
         if (productRepository.count() > 0) return;
         productRepository.saveAll(List.of(
-            product("Manzanas Fuji",       "Alimentación", "🍎", "Manzanas dulces de origen español, calibre 70+",         "kg",
-                offer(1L, "FrutasVerde",  1.99,   2.49, true,  "Huerta El Sol"),
-                offer(3L, "MercaFresh",   2.19,   null, true,  "Frutas del Norte")),
+            product("Manzanas Fuji",        "Alimentación", "🍎", "Manzanas dulces de origen español, calibre 70+",   "kg",
+                offer(1L, "FrutasVerde", 1.99,   2.49, 45, "Huerta El Sol"),
+                offer(3L, "MercaFresh",  2.19,   null, 30, "Frutas del Norte")),
 
-            product("Plátanos de Canarias", "Alimentación", "🍌", "Plátanos IGP de Canarias, racimo aprox. 1kg",           "kg",
-                offer(1L, "FrutasVerde",  1.49,   1.89, true,  "Plátanos Canarias"),
-                offer(3L, "MercaFresh",   1.59,   null, true,  "Plátanos Canarias")),
+            product("Plátanos de Canarias", "Alimentación", "🍌", "Plátanos IGP de Canarias, racimo aprox. 1kg",      "kg",
+                offer(1L, "FrutasVerde", 1.49,   1.89,  7, "Plátanos Canarias"),
+                offer(3L, "MercaFresh",  1.59,   null, 20, "Plátanos Canarias")),
 
-            product("Leche Entera",        "Alimentación", "🥛", "Leche entera UHT, 1 litro",                              "1L",
-                offer(3L, "MercaFresh",   0.99,   1.19, true,  "Pascual"),
-                offer(1L, "FrutasVerde",  1.09,   null, true,  "Central Lechera")),
+            product("Leche Entera",         "Alimentación", "🥛", "Leche entera UHT, 1 litro",                        "1L",
+                offer(3L, "MercaFresh",  0.99,   1.19, 60, "Pascual"),
+                offer(1L, "FrutasVerde", 1.09,   null,  4, "Central Lechera")),
 
-            product("Pan de Barra",        "Panadería",    "🍞", "Pan de barra artesano, horneado en el día",              "unidad",
-                offer(3L, "MercaFresh",   0.89,   null, true,  "Panadería Local")),
+            product("Pan de Barra",         "Panadería",    "🍞", "Pan de barra artesano, horneado en el día",        "unidad",
+                offer(3L, "MercaFresh",  0.89,   null, 15, "Panadería Local")),
 
-            product("Detergente Ariel",    "Limpieza",     "🧺", "Detergente líquido Ariel, 30 lavados",                   "3L",
-                offer(4L, "CleanHome",    8.99,  11.99, true,  "Ariel"),
-                offer(3L, "MercaFresh",   9.49,   null, true,  "Ariel")),
+            product("Detergente Ariel",     "Limpieza",     "🧺", "Detergente líquido Ariel, 30 lavados",             "3L",
+                offer(4L, "CleanHome",   8.99,  11.99, 25, "Ariel"),
+                offer(3L, "MercaFresh",  9.49,   null,  8, "Ariel")),
 
-            product("Jabón Fairy Limón",   "Limpieza",     "🍋", "Lavavajillas Fairy limón 780ml",                         "780ml",
-                offer(4L, "CleanHome",    2.49,   2.99, true,  "Fairy")),
+            product("Jabón Fairy Limón",    "Limpieza",     "🍋", "Lavavajillas Fairy limón 780ml",                   "780ml",
+                offer(4L, "CleanHome",   2.49,   2.99,  3, "Fairy")),
 
-            product("Samsung TV 55\"",     "Electrónica",  "📺", "Smart TV Samsung QLED 55 pulgadas 4K",                  "unidad",
-                offer(2L, "TechZone",   549.99, 699.99, true,  "Samsung")),
+            product("Samsung TV 55\"",      "Electrónica",  "📺", "Smart TV Samsung QLED 55 pulgadas 4K",            "unidad",
+                offer(2L, "TechZone",  549.99, 699.99,  9, "Samsung")),
 
-            product("Auriculares Sony",    "Electrónica",  "🎧", "Sony WH-1000XM5 con cancelación de ruido activa",        "unidad",
-                offer(2L, "TechZone",   279.99, 349.99, true,  "Sony"))
+            product("Auriculares Sony",     "Electrónica",  "🎧", "Sony WH-1000XM5 con cancelación de ruido activa", "unidad",
+                offer(2L, "TechZone",  279.99, 349.99, 18, "Sony"))
         ));
     }
 
@@ -156,7 +161,7 @@ public class DataInitializer implements CommandLineRunner {
 
     private Store store(String name, String logo, String color, String bgColor, String address, String city,
                         String phone, String hours, double rating, String deliveryTime, int minOrder,
-                        double deliveryFee, String category) {
+                        double deliveryFee, String category, User vendedor) {
         Store s = new Store();
         s.setName(name);
         s.setLogo(logo);
@@ -171,6 +176,7 @@ public class DataInitializer implements CommandLineRunner {
         s.setMinOrder(minOrder);
         s.setDeliveryFee(deliveryFee);
         s.setCategory(category);
+        s.setVendedor(vendedor);
         return s;
     }
 
@@ -189,13 +195,14 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private StoreOffer offer(Long storeId, String storeName, double price, Double originalPrice,
-                             boolean inStock, String brand) {
+                             int stock, String brand) {
         StoreOffer o = new StoreOffer();
         o.setStoreId(storeId);
         o.setStoreName(storeName);
         o.setPrice(price);
         o.setOriginalPrice(originalPrice);
-        o.setInStock(inStock);
+        o.setStock(stock);
+        o.setInStock(stock > 0);
         o.setBrand(brand);
         return o;
     }

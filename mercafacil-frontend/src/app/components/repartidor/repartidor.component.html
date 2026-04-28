@@ -1,0 +1,26 @@
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-icon">🚚</span>
+      <div>
+        <div class="sidebar-title">Panel Repartidor</div>
+        <div class="sidebar-user">{{ authService.user()?.nombre }}</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a routerLink="resumen" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">📊</span> Resumen
+      </a>
+      <a routerLink="entregas" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">📦</span> Entregas
+      </a>
+    </nav>
+
+    <a routerLink="/" class="sidebar-back">← Volver al inicio</a>
+  </aside>
+
+  <main class="dashboard-content">
+    <router-outlet />
+  </main>
+</div>

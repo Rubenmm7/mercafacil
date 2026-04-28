@@ -1,0 +1,68 @@
+<h1 class="page-title">Entregas</h1>
+
+@if (error()) { <div class="error-msg">{{ error() }}</div> }
+
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab" [class.active]="activeTab() === 'mis'" (click)="setTab('mis')">
+    📦 Mis entregas
+    @if (myOrders().length > 0) { <span class="badge">{{ myOrders().length }}</span> }
+  </button>
+  <button class="tab" [class.active]="activeTab() === 'disponibles'" (click)="setTab('disponibles')">
+    🔍 Disponibles
+    @if (available().length > 0) { <span class="badge badge-green">{{ available().length }}</span> }
+  </button>
+</div>
+
+@if (loading()) {
+  <div class="loading">Cargando entregas...</div>
+} @else if (shownOrders().length === 0) {
+  <div class="empty">
+    @if (activeTab() === 'mis') { No tienes entregas asignadas. }
+    @else { No hay pedidos disponibles en este momento. }
+  </div>
+} @else {
+  <div class="orders-list">
+    @for (order of shownOrders(); track order.id) {
+      <div class="order-card" [class]="'order-card status-' + order.status.toLowerCase()">
+
+        <div class="order-header">
+          <div class="order-id">#{{ order.id }}</div>
+          <span class="status-badge">{{ statusLabels[order.status] }}</span>
+          <span class="order-total">{{ order.total | number:'1.2-2' }} €</span>
+        </div>
+
+        <div class="order-meta">
+          <span>👤 {{ order.clientEmail }}</span>
+          <span>🕐 {{ formatDate(order.createdAt) }}</span>
+          <span>🛍️ {{ order.items.length }} artículo(s)</span>
+        </div>
+
+        <div class="order-actions">
+          @if (activeTab() === 'disponibles') {
+            <button class="btn-accept"
+                    [disabled]="updating() === order.id"
+                    (click)="accept(order)">
+              @if (updating() === order.id) { Aceptando... } @else { ✅ Aceptar entrega }
+            </button>
+          } @else {
+            @if (nextStatus[order.status]) {
+              <button class="btn-advance"
+                      [disabled]="updating() === order.id"
+                      (click)="advance(order)">
+                @if (updating() === order.id) { Actualizando... } @else { {{ nextStatusLabel[order.status] }} }
+              </button>
+            }
+            <button class="btn-chat" (click)="openClientChat(order.id)" title="Chat con cliente">
+              💬 Cliente
+            </button>
+            <button class="btn-chat" (click)="openVendedorChat(order.id)" title="Chat con vendedor">
+              🏪 Tienda
+            </button>
+          }
+        </div>
+
+      </div>
+    }
+  </div>
+}

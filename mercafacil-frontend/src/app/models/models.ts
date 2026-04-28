@@ -24,6 +24,45 @@ export interface StoreOffer {
   brand: string;
 }
 
+// --- Repartidor dashboard ---
+export interface RepartidorStats {
+  myOrders: number;
+  enRutaCount: number;
+  deliveredToday: number;
+}
+
+// --- Vendedor dashboard ---
+export interface VendedorStats {
+  totalStores: number;
+  pendingOrders: number;
+  lowStockOffers: number;
+  todayRevenue: number;
+}
+
+export interface StoreOfferDetail {
+  id: number;
+  productId: number;
+  productName: string;
+  productUnit: string;
+  storeId: number;
+  storeName: string;
+  price: number;
+  originalPrice?: number;
+  stock: number;
+  inStock: boolean;
+  brand: string;
+}
+
+export interface ProductDetail {
+  id: number;
+  name: string;
+  category: string;
+  image: string;
+  description: string;
+  unit: string;
+  offers: StoreOfferDetail[];
+}
+
 export interface Product {
   id: number;
   name: string;
