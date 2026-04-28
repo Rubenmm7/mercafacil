@@ -11,18 +11,6 @@
         <span class="chat-subtitle">{{ chatSubtitle() }}</span>
       </div>
     </div>
-
-    <button
-      type="button"
-      class="lock-btn"
-      [class.active]="autoScrollLock()"
-      (click)="toggleAutoScrollLock()"
-      [title]="autoScrollLock() ? 'Auto-scroll activado · seguir el chat' : 'Auto-scroll desactivado · no seguir'">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="7 10 12 15 17 10"/>
-        <line x1="6" y1="19" x2="18" y2="19"/>
-      </svg>
-    </button>
   </div>
 
   <!-- Messages area -->
