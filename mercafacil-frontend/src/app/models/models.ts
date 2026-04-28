@@ -24,6 +24,13 @@ export interface StoreOffer {
   brand: string;
 }
 
+// --- Proveedor dashboard ---
+export interface ProveedorStats {
+  totalStores: number;
+  activeChats: number;
+  totalProducts: number;
+}
+
 // --- Repartidor dashboard ---
 export interface RepartidorStats {
   myOrders: number;

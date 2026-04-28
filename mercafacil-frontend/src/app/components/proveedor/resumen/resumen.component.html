@@ -1,0 +1,45 @@
+@if (loading()) {
+  <div class="loading">Cargando estadísticas...</div>
+} @else if (error()) {
+  <div class="error-msg">{{ error() }}</div>
+} @else {
+  <h1 class="page-title">Resumen</h1>
+
+  <!-- KPI cards -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon">🏪</div>
+      <div class="kpi-value">{{ stats()?.totalStores }}</div>
+      <div class="kpi-label">Tiendas del centro</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">💬</div>
+      <div class="kpi-value">{{ stats()?.activeChats }}</div>
+      <div class="kpi-label">Chats activos</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">📦</div>
+      <div class="kpi-value">{{ stats()?.totalProducts }}</div>
+      <div class="kpi-label">Tiendas suministradas</div>
+    </div>
+  </div>
+
+  <!-- Info box -->
+  <div class="info-box">
+    <div class="info-header">
+      <span class="info-icon">ℹ️</span>
+      <strong>Panel de proveedor</strong>
+    </div>
+    <p class="info-text">
+      Desde este panel puedes ver todas las tiendas del centro comercial y comunicarte con
+      sus vendedores a traves del chat. Usa la seccion "Tiendas" para ver la lista completa
+      y abrir una conversacion con cualquier vendedor.
+    </p>
+  </div>
+
+  <!-- Accesos rápidos -->
+  <div class="quick-links">
+    <a routerLink="../tiendas" class="quick-card">🏪 Ver tiendas</a>
+    <a routerLink="/chats"     class="quick-card">💬 Mis conversaciones</a>
+  </div>
+}
