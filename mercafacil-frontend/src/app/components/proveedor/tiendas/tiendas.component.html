@@ -1,0 +1,43 @@
+@if (loading()) {
+  <div class="loading">Cargando tiendas...</div>
+} @else if (error()) {
+  <div class="error-msg">{{ error() }}</div>
+} @else {
+  <h1 class="page-title">Tiendas del centro</h1>
+  <p class="page-subtitle">Contacta con cualquier vendedor para coordinar suministros</p>
+
+  @if (stores().length === 0) {
+    <div class="empty-state">No hay tiendas registradas.</div>
+  } @else {
+    <div class="stores-grid">
+      @for (store of stores(); track store.id) {
+        <div class="store-card">
+          <div class="store-header" [style.background]="store.bgColor">
+            <span class="store-logo">{{ store.logo }}</span>
+            <div class="store-info">
+              <div class="store-name" [style.color]="store.color">{{ store.name }}</div>
+              <div class="store-category">{{ store.category }}</div>
+            </div>
+          </div>
+          <div class="store-body">
+            <div class="store-detail">
+              <span class="detail-label">Direccion</span>
+              <span class="detail-value">{{ store.address }}</span>
+            </div>
+            <div class="store-detail">
+              <span class="detail-label">Telefono</span>
+              <span class="detail-value">{{ store.phone }}</span>
+            </div>
+            <div class="store-detail">
+              <span class="detail-label">Horario</span>
+              <span class="detail-value">{{ store.hours }}</span>
+            </div>
+            <button class="chat-btn" (click)="openChat(store.id)">
+              💬 Chatear con vendedor
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+}

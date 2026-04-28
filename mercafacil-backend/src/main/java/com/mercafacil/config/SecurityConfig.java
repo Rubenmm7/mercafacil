@@ -54,6 +54,7 @@ public class SecurityConfig {
                                 .hasAnyRole("CLIENTE", "VENDEDOR", "REPARTIDOR", "PROVEEDOR")
                         .requestMatchers("/api/vendedor/**").hasRole("VENDEDOR")
                         .requestMatchers("/api/repartidor/**").hasRole("REPARTIDOR")
+                        .requestMatchers("/api/proveedor/**").hasRole("PROVEEDOR")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

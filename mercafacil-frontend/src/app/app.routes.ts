@@ -17,6 +17,9 @@ import { OfertasComponent } from './components/vendedor/ofertas/ofertas.componen
 import { RepartidorComponent } from './components/repartidor/repartidor.component';
 import { ResumenRepartidorComponent } from './components/repartidor/resumen/resumen.component';
 import { EntregasComponent } from './components/repartidor/entregas/entregas.component';
+import { ProveedorComponent } from './components/proveedor/proveedor.component';
+import { ResumenProveedorComponent } from './components/proveedor/resumen/resumen.component';
+import { TiendasProveedorComponent } from './components/proveedor/tiendas/tiendas.component';
 import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
 
@@ -53,6 +56,18 @@ export const routes: Routes = [
       { path: '',         redirectTo: 'resumen', pathMatch: 'full' },
       { path: 'resumen',  component: ResumenRepartidorComponent },
       { path: 'entregas', component: EntregasComponent }
+    ]
+  },
+
+  // Dashboard Proveedor
+  {
+    path: 'proveedor',
+    component: ProveedorComponent,
+    canActivate: [roleGuard('PROVEEDOR')],
+    children: [
+      { path: '',        redirectTo: 'resumen', pathMatch: 'full' },
+      { path: 'resumen', component: ResumenProveedorComponent },
+      { path: 'tiendas', component: TiendasProveedorComponent }
     ]
   },
 

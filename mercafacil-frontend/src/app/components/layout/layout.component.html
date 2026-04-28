@@ -42,6 +42,9 @@
         @if (authService.user()?.rol === 'REPARTIDOR') {
           <a routerLink="/repartidor" routerLinkActive="active">Mi panel</a>
         }
+        @if (authService.user()?.rol === 'PROVEEDOR') {
+          <a routerLink="/proveedor" routerLinkActive="active">Mi panel</a>
+        }
         @if (showChatsLink) {
           <a routerLink="/chats" routerLinkActive="active">Chats</a>
         }
@@ -112,6 +115,9 @@
       }
       @if (authService.user()?.rol === 'REPARTIDOR') {
         <a routerLink="/repartidor" (click)="closeMobileMenu()">Mi panel</a>
+      }
+      @if (authService.user()?.rol === 'PROVEEDOR') {
+        <a routerLink="/proveedor" (click)="closeMobileMenu()">Mi panel</a>
       }
       @if (showChatsLink) {
         <a routerLink="/chats" (click)="closeMobileMenu()">Chats</a>
