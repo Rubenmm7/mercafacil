@@ -13,4 +13,5 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findByOrder_Client_IdOrderByFechaDesc(Long clientId);
     List<Message> findByOrder_Deliverer_IdOrderByFechaDesc(Long delivererId);
     List<Message> findBySender_IdOrderByFechaDesc(Long senderId);
+    List<Message> findByChatTypeInOrderByFechaDesc(List<ChatType> chatTypes);
 }
