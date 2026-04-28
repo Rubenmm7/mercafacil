@@ -85,7 +85,12 @@ public class MessageService {
             all.addAll(messageRepository.findByOrder_Client_IdOrderByFechaDesc(user.getId()));
         }
         if (user.getRol() == Role.REPARTIDOR) {
+            // Include messages from orders with an assigned deliverer...
             all.addAll(messageRepository.findByOrder_Deliverer_IdOrderByFechaDesc(user.getId()));
+            // ...and also all chats of types involving a deliverer, so the
+            // repartidor can see conversations even when order.deliverer is not set.
+            all.addAll(messageRepository.findByChatTypeInOrderByFechaDesc(
+                    List.of(ChatType.CLIENTE_REPARTIDOR, ChatType.VENDEDOR_REPARTIDOR)));
         }
         all.addAll(messageRepository.findBySender_IdOrderByFechaDesc(user.getId()));
 
