@@ -218,6 +218,14 @@
 }
 .btn-logout:hover { border-color: #dc2626; color: #dc2626; }
 
+.chat-nav-btn {
+  padding: 8px;
+  border-radius: 12px;
+  color: #4b5563;
+  transition: background .2s, color .2s;
+}
+.chat-nav-btn:hover { background: #f3f4f6; color: #16a34a; }
+
 .desktop-only { display: flex; }
 .mobile-only { display: none; }
 

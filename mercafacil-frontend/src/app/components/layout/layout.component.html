@@ -33,6 +33,12 @@
             {{link.label}}
           </a>
         }
+        @if (authService.user()?.rol === 'CLIENTE') {
+          <a routerLink="/pedidos" routerLinkActive="active">Mis pedidos</a>
+        }
+        @if (showChatsLink) {
+          <a routerLink="/chats" routerLinkActive="active">Chats</a>
+        }
       </nav>
 
       <!-- Cart -->
@@ -42,6 +48,15 @@
           <span class="cart-badge">{{cartService.count()}}</span>
         }
       </a>
+
+      <!-- Chat icon — desktop (acceso desde mis pedidos) -->
+      @if (authService.user()?.rol === 'CLIENTE') {
+        <a routerLink="/pedidos" class="chat-nav-btn desktop-only" title="Mis pedidos / Chat">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </a>
+      }
 
       <!-- Auth — desktop -->
       <div class="auth-area desktop-only">
@@ -82,6 +97,12 @@
         <a [routerLink]="link.path" (click)="closeMobileMenu()">
           {{link.label}}
         </a>
+      }
+      @if (authService.user()?.rol === 'CLIENTE') {
+        <a routerLink="/pedidos" (click)="closeMobileMenu()">Mis pedidos</a>
+      }
+      @if (showChatsLink) {
+        <a routerLink="/chats" (click)="closeMobileMenu()">Chats</a>
       }
     </div>
   }

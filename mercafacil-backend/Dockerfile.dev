@@ -9,4 +9,4 @@ EXPOSE 8080
 
 # Loop de fondo: recompila cada 2s los .java del host (montados vía volumen).
 # Spring DevTools detecta los .class nuevos y reinicia el contexto automáticamente.
-CMD ["sh", "-c", "(while sleep 2; do mvn compile -q; done) & mvn spring-boot:run"]
+CMD ["sh", "-c", "(sleep 30 && while true; do mvn compile -q; sleep 5; done) & mvn spring-boot:run"]

@@ -65,6 +65,35 @@ export interface CartItem {
 
 export type Role = 'ADMIN' | 'CLIENTE' | 'VENDEDOR' | 'REPARTIDOR' | 'PROVEEDOR';
 export type OrderStatus = 'PENDIENTE' | 'PREPARACION' | 'EN_RUTA' | 'ENTREGADO';
+export type ChatType = 'CLIENTE_REPARTIDOR' | 'VENDEDOR_REPARTIDOR' | 'PROVEEDOR_VENDEDOR';
+
+export interface MessageRequest {
+  chatType: ChatType;
+  orderId?: number;
+  shopId?: number;
+  mensaje: string;
+}
+
+export interface ChatThread {
+  chatType: ChatType;
+  orderId?: number;
+  shopId?: number;
+  title: string;
+  lastMessage: string;
+  lastSenderName: string;
+  lastMessageDate: string;
+}
+
+export interface MessageResponse {
+  id: number;
+  chatType: ChatType;
+  orderId?: number;
+  shopId?: number;
+  senderId: number;
+  senderName: string;
+  mensaje: string;
+  fecha: string;
+}
 
 export interface AuthResponse {
   token: string;
@@ -87,4 +116,5 @@ export interface Order {
   status: OrderStatus;
   total: number;
   items: OrderItemDto[];
+  createdAt?: string;
 }

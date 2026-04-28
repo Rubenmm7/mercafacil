@@ -1,6 +1,8 @@
 package com.mercafacil.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,10 @@ public class Order {
     @Column(nullable = false)
     private Double total;
 
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<OrderItem> items = new ArrayList<>();
 
@@ -43,4 +49,5 @@ public class Order {
     public void        setTotal(Double total)            { this.total = total; }
     public List<OrderItem> getItems()                    { return items; }
     public void        setItems(List<OrderItem> items)   { this.items = items; }
+    public LocalDateTime getCreatedAt()                  { return createdAt; }
 }

@@ -77,8 +77,8 @@ services:
     ports:
       - "4200:4200"
     volumes:
-      # Hot reload: cambios en src/ del host se reflejan dentro del contenedor
-      - ./mercafacil-frontend/src:/app/src
+      # Hot reload completo: también refleja angular.json, tsconfig, etc.
+      - ./mercafacil-frontend:/app
       # Volumen anónimo: evita que el host sobreescriba el node_modules Linux del contenedor
       - /app/node_modules
     depends_on:

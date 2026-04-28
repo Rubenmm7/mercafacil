@@ -51,9 +51,7 @@ export class ApiService {
   }
 
   getMyOrders(): Observable<Order[]> {
-    return this.http.get<Order[]>(`${this.baseUrl}/orders/my`).pipe(
-      catchError(this.handleError<Order[]>([]))
-    );
+    return this.http.get<Order[]>(`${this.baseUrl}/orders/my`);
   }
 
   private handleError<T>(fallback: T) {

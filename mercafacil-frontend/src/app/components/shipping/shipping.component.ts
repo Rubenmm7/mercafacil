@@ -33,7 +33,7 @@ export class ShippingComponent implements OnInit {
     { q: '¿Cómo funciona la política de devoluciones?', a: 'Si un producto llega en mal estado o no es lo que pediste, contáctanos en las primeras 24h y te gestionamos un reembolso o sustitución sin coste.' }
   ];
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   ngOnInit(): void {
     let pending = 2;

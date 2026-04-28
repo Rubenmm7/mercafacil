@@ -6,6 +6,7 @@ import com.mercafacil.model.OrderItem;
 import com.mercafacil.model.User;
 import com.mercafacil.repository.OrderRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class OrderService {
         return toResponse(orderRepository.save(order));
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponse> findByClient(User client) {
         return orderRepository.findByClientOrderByIdDesc(client)
                 .stream().map(this::toResponse).toList();
@@ -55,6 +57,7 @@ public class OrderService {
                         i.getProductId(), i.getStoreId(), i.getQuantity(), i.getUnitPrice()))
                 .toList();
         String clientEmail = o.getClient() != null ? o.getClient().getEmail() : null;
-        return new OrderResponse(o.getId(), clientEmail, o.getStatus().name(), o.getTotal(), items);
+        String createdAt = o.getCreatedAt() != null ? o.getCreatedAt().toString() : null;
+        return new OrderResponse(o.getId(), clientEmail, o.getStatus().name(), o.getTotal(), items, createdAt);
     }
 }

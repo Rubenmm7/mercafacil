@@ -55,7 +55,9 @@
 .summary-total span:first-child { font-weight: 600; color: #1a2e1f; }
 .total-value { font-weight: 700; font-size: 1.2rem; color: #1a7a4a; }
 .checkout-btn { width: 100%; padding: 14px; background: #1a7a4a; color: white; border-radius: 12px; font-weight: 600; font-size: 0.95rem; margin-top: 8px; transition: background 0.2s; }
-.checkout-btn:hover { background: #145e38; }
+.checkout-btn:hover:not(:disabled) { background: #145e38; }
+.checkout-btn:disabled { background: #6b7280; cursor: not-allowed; opacity: 0.7; }
+.checkout-error { margin-top: 10px; padding: 10px 14px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; color: #dc2626; font-size: 0.875rem; text-align: center; }
 .continue-btn { width: 100%; padding: 10px; margin-top: 8px; color: #6b7280; font-size: 0.875rem; }
 .continue-btn:hover { color: #374151; }
 .trust-badges { margin-top: 20px; padding-top: 16px; border-top: 1px solid #e5e7eb; display: flex; flex-direction: column; gap: 8px; font-size: 0.78rem; color: #6b7280; }

@@ -22,6 +22,16 @@ export class LayoutComponent {
     { path: '/envio', label: 'Envío' }
   ];
 
+  get chatVisible(): boolean {
+    const rol = this.authService.user()?.rol;
+    return !!rol && rol !== 'ADMIN';
+  }
+
+  get showChatsLink(): boolean {
+    const rol = this.authService.user()?.rol;
+    return rol === 'VENDEDOR' || rol === 'REPARTIDOR' || rol === 'PROVEEDOR';
+  }
+
   footerNavLinks = [
     { path: '/', label: 'Inicio' },
     { path: '/tiendas', label: 'Tiendas' },

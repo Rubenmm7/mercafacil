@@ -7,5 +7,6 @@ public record OrderResponse(
         String clientEmail,
         String status,
         Double total,
-        List<OrderItemResponse> items
+        List<OrderItemResponse> items,
+        String createdAt
 ) {}
