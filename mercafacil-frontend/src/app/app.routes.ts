@@ -20,6 +20,9 @@ import { EntregasComponent } from './components/repartidor/entregas/entregas.com
 import { ProveedorComponent } from './components/proveedor/proveedor.component';
 import { ResumenProveedorComponent } from './components/proveedor/resumen/resumen.component';
 import { TiendasProveedorComponent } from './components/proveedor/tiendas/tiendas.component';
+import { AdminComponent } from './components/admin/admin.component';
+import { ResumenAdminComponent } from './components/admin/resumen/resumen.component';
+import { UsuariosAdminComponent } from './components/admin/usuarios/usuarios.component';
 import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
 
@@ -68,6 +71,18 @@ export const routes: Routes = [
       { path: '',        redirectTo: 'resumen', pathMatch: 'full' },
       { path: 'resumen', component: ResumenProveedorComponent },
       { path: 'tiendas', component: TiendasProveedorComponent }
+    ]
+  },
+
+  // Dashboard Admin
+  {
+    path: 'admin',
+    component: AdminComponent,
+    canActivate: [roleGuard('ADMIN')],
+    children: [
+      { path: '',         redirectTo: 'resumen', pathMatch: 'full' },
+      { path: 'resumen',  component: ResumenAdminComponent },
+      { path: 'usuarios', component: UsuariosAdminComponent }
     ]
   },
 

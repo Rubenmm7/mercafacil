@@ -33,6 +33,7 @@ public class RepartidorService {
 
     @Transactional(readOnly = true)
     public RepartidorStatsDto getStats(User repartidor) {
+        Objects.requireNonNull(repartidor.getId(), "El repartidor autenticado no tiene ID");
         var orders = orderRepository.findByDelivererOrderByIdDesc(repartidor);
 
         long enRuta = orders.stream()
@@ -53,6 +54,7 @@ public class RepartidorService {
 
     @Transactional(readOnly = true)
     public List<OrderResponse> getMyOrders(User repartidor) {
+        Objects.requireNonNull(repartidor.getId(), "El repartidor autenticado no tiene ID");
         return orderRepository.findByDelivererOrderByIdDesc(repartidor)
                 .stream().map(this::toOrderResponse).toList();
     }
@@ -86,7 +88,8 @@ public class RepartidorService {
         var order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Pedido no encontrado: " + orderId));
 
-        if (!Objects.equals(order.getDeliverer() != null ? order.getDeliverer().getId() : null, repartidor.getId()))
+        Long repartidorId = Objects.requireNonNull(repartidor.getId(), "El repartidor autenticado no tiene ID");
+        if (!Objects.equals(order.getDeliverer() != null ? order.getDeliverer().getId() : null, repartidorId))
             throw new SecurityException("No tienes permiso sobre este pedido");
 
         var status = OrderStatus.valueOf(newStatus);

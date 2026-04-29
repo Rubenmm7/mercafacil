@@ -24,6 +24,26 @@ export interface StoreOffer {
   brand: string;
 }
 
+// --- Admin dashboard ---
+export interface AdminStats {
+  totalUsers: number;
+  totalStores: number;
+  totalOrders: number;
+  clienteCount: number;
+  vendedorCount: number;
+  repartidorCount: number;
+  proveedorCount: number;
+  adminCount: number;
+}
+
+export interface UserAdmin {
+  id: number;
+  nombre: string;
+  apellidos: string;
+  email: string;
+  rol: Role;
+}
+
 // --- Proveedor dashboard ---
 export interface ProveedorStats {
   totalStores: number;

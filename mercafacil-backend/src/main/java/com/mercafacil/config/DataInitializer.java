@@ -63,10 +63,10 @@ public class DataInitializer implements CommandLineRunner {
         if (userRepository.count() > 0) return;
         userRepository.saveAll(List.of(
             user("Admin",  "Sistema",         "admin@mercafacil.com",      "admin123",      Role.ADMIN),
-            user("Alba",   "García López",    "cliente@mercafacil.com",    "cliente123",    Role.CLIENTE),
+            user("Alba",   "Navas Águila",    "cliente@mercafacil.com",    "cliente123",    Role.CLIENTE),
             user("Carlos", "Martínez Ruiz",   "vendedor@mercafacil.com",   "vendedor123",   Role.VENDEDOR),
             user("Pedro",  "Sánchez Mora",    "repartidor@mercafacil.com", "repartidor123", Role.REPARTIDOR),
-            user("Lucía",  "Fernández Gil",   "proveedor@mercafacil.com",  "proveedor123",  Role.PROVEEDOR)
+            user("Rubén",  "Maderas Moreno",   "proveedor@mercafacil.com",  "proveedor123",  Role.PROVEEDOR)
         ));
     }
 

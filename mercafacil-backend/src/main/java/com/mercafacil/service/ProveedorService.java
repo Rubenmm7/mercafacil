@@ -1,5 +1,10 @@
 package com.mercafacil.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.mercafacil.dto.ProveedorStatsDto;
 import com.mercafacil.dto.StoreDto;
 import com.mercafacil.model.ChatType;
@@ -8,11 +13,6 @@ import com.mercafacil.model.Store;
 import com.mercafacil.model.User;
 import com.mercafacil.repository.MessageRepository;
 import com.mercafacil.repository.StoreRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -27,9 +27,6 @@ public class ProveedorService {
         this.messageRepository = messageRepository;
     }
 
-    /**
-     * All stores in the centre — the proveedor can supply any of them.
-     */
     public List<StoreDto> getAllStores() {
         return storeRepository.findAll().stream()
                 .map(this::toStoreDto)

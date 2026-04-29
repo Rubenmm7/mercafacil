@@ -45,6 +45,9 @@
         @if (authService.user()?.rol === 'PROVEEDOR') {
           <a routerLink="/proveedor" routerLinkActive="active">Mi panel</a>
         }
+        @if (authService.user()?.rol === 'ADMIN') {
+          <a routerLink="/admin" routerLinkActive="active">Panel Admin</a>
+        }
         @if (showChatsLink) {
           <a routerLink="/chats" routerLinkActive="active">Chats</a>
         }
@@ -118,6 +121,9 @@
       }
       @if (authService.user()?.rol === 'PROVEEDOR') {
         <a routerLink="/proveedor" (click)="closeMobileMenu()">Mi panel</a>
+      }
+      @if (authService.user()?.rol === 'ADMIN') {
+        <a routerLink="/admin" (click)="closeMobileMenu()">Panel Admin</a>
       }
       @if (showChatsLink) {
         <a routerLink="/chats" (click)="closeMobileMenu()">Chats</a>

@@ -110,6 +110,24 @@ CREATE TABLE IF NOT EXISTS order_items (
 CREATE INDEX idx_orders_client       ON orders(cliente_id);
 CREATE INDEX idx_order_items_order   ON order_items(order_id);
 
+CREATE TABLE IF NOT EXISTS cart_items (
+    id            BIGINT       PRIMARY KEY AUTO_INCREMENT,
+    user_id       BIGINT       NOT NULL,
+    product_id    BIGINT       NOT NULL,
+    product_name  VARCHAR(200) NOT NULL,
+    product_image VARCHAR(500),
+    store_id      BIGINT       NOT NULL,
+    store_name    VARCHAR(200) NOT NULL,
+    brand         VARCHAR(100),
+    price         DOUBLE       NOT NULL,
+    quantity      INT          NOT NULL,
+    unit          VARCHAR(50),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_cart_item (user_id, product_id, store_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE INDEX idx_cart_user ON cart_items(user_id);
+
 CREATE TABLE IF NOT EXISTS messages (
     id           BIGINT       PRIMARY KEY AUTO_INCREMENT,
     chat_type    ENUM('CLIENTE_REPARTIDOR','VENDEDOR_REPARTIDOR','PROVEEDOR_VENDEDOR') NOT NULL,

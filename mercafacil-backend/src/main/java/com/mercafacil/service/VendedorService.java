@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -35,12 +36,14 @@ public class VendedorService {
 
     @Transactional(readOnly = true)
     public List<StoreDto> getMyStores(User vendedor) {
-        return storeRepository.findByVendedor_Id(vendedor.getId())
+        Long vendedorId = Objects.requireNonNull(vendedor.getId(), "El vendedor autenticado no tiene ID");
+        return storeRepository.findByVendedor_Id(vendedorId)
                 .stream().map(this::toStoreDto).toList();
     }
 
     private List<Long> myStoreIds(User vendedor) {
-        return storeRepository.findByVendedor_Id(vendedor.getId())
+        Long vendedorId = Objects.requireNonNull(vendedor.getId(), "El vendedor autenticado no tiene ID");
+        return storeRepository.findByVendedor_Id(vendedorId)
                 .stream().map(Store::getId).toList();
     }
 
