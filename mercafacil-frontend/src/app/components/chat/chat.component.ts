@@ -28,6 +28,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   messages   = signal<MessageResponse[]>([]);
   newMessage = signal('');
+  replyingTo = signal<MessageResponse | null>(null);
   loading    = signal(true);
   error      = signal('');
 
@@ -174,6 +175,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       chatType: this.chatType(),
       orderId:  orderId  ?? undefined,
       shopId:   shopId   ?? undefined,
+      replyToMessageId: this.replyingTo()?.id,
       mensaje:  text
     };
 
@@ -184,6 +186,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
 
     this.newMessage.set('');
+    this.replyingTo.set(null);
     this.scheduleScrollToBottom();
   }
 
@@ -192,6 +195,19 @@ export class ChatComponent implements OnInit, OnDestroy {
       event.preventDefault();
       this.send();
     }
+  }
+
+  setReplyTarget(msg: MessageResponse): void {
+    this.replyingTo.set(msg);
+  }
+
+  clearReplyTarget(): void {
+    this.replyingTo.set(null);
+  }
+
+  replyPreview(text?: string): string {
+    if (!text) return '';
+    return text.length > 80 ? `${text.slice(0, 80)}...` : text;
   }
 
   isOwnMessage(msg: MessageResponse): boolean {

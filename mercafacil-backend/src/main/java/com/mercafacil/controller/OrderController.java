@@ -39,6 +39,13 @@ public class OrderController {
         return ResponseEntity.ok(orderService.findByClient(user));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderResponse> getById(@PathVariable Long id,
+                                                 @AuthenticationPrincipal UserDetails principal) {
+        User user = userService.findByEmail(principal.getUsername());
+        return ResponseEntity.ok(orderService.findByIdForUser(id, user));
+    }
+
     @GetMapping
     public ResponseEntity<List<OrderResponse>> allOrders() {
         return ResponseEntity.ok(orderService.findAll());

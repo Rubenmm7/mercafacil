@@ -54,6 +54,10 @@ export class ApiService {
     return this.http.get<Order[]>(`${this.baseUrl}/orders/my`);
   }
 
+  getMyOrderById(orderId: number): Observable<Order> {
+    return this.http.get<Order>(`${this.baseUrl}/orders/${orderId}`);
+  }
+
   private handleError<T>(fallback: T) {
     return (error: HttpErrorResponse): Observable<T> => {
       console.error(`[ApiService] Error calling API:`, error.message);

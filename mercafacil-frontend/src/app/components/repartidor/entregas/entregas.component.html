@@ -53,12 +53,14 @@
                 @if (updating() === order.id) { Actualizando... } @else { {{ nextStatusLabel[order.status] }} }
               </button>
             }
-            <button class="btn-chat" (click)="openClientChat(order.id)" title="Chat con cliente">
-              💬 Cliente
-            </button>
             <button class="btn-chat" (click)="openVendedorChat(order.id)" title="Chat con vendedor">
-              🏪 Tienda
+              💬 Enviar mensaje a vendedor
             </button>
+            @if (simulatingOrderId() === order.id) {
+              <span class="gps-active" title="Enviando ubicación GPS en tiempo real">
+                📡 GPS activo
+              </span>
+            }
           }
         </div>
 

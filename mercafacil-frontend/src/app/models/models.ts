@@ -54,6 +54,7 @@ export interface ProveedorStats {
 // --- Repartidor dashboard ---
 export interface RepartidorStats {
   myOrders: number;
+  pendingPool: number;
   enRutaCount: number;
   deliveredToday: number;
 }
@@ -137,6 +138,7 @@ export interface MessageRequest {
   chatType: ChatType;
   orderId?: number;
   shopId?: number;
+  replyToMessageId?: number;
   mensaje: string;
 }
 
@@ -157,6 +159,9 @@ export interface MessageResponse {
   shopId?: number;
   senderId: number;
   senderName: string;
+  replyToMessageId?: number;
+  replyToSenderName?: string;
+  replyToMensaje?: string;
   mensaje: string;
   fecha: string;
 }
@@ -183,4 +188,13 @@ export interface Order {
   total: number;
   items: OrderItemDto[];
   createdAt?: string;
+}
+
+// Posición GPS del repartidor para un pedido
+export interface TrackingPosition {
+  id: number;
+  orderId: number;
+  latitud: number;
+  longitud: number;
+  ultimaActualizacion: string;
 }

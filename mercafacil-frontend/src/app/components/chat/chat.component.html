@@ -43,8 +43,15 @@
             @if (!isOwnMessage(msg)) {
               <span class="sender-name">{{ msg.senderName }}</span>
             }
+            @if (msg.replyToMessageId) {
+              <div class="reply-ref">
+                <span>{{ msg.replyToSenderName }}</span>
+                <p>{{ replyPreview(msg.replyToMensaje) }}</p>
+              </div>
+            }
             <p class="bubble-text">{{ msg.mensaje }}</p>
             <span class="bubble-time">{{ formatTime(msg.fecha) }}</span>
+            <button type="button" class="reply-btn" (click)="setReplyTarget(msg)">Responder</button>
           </div>
         </div>
       }
@@ -65,6 +72,16 @@
   </div>
 
   <!-- Input area -->
+  @if (replyingTo(); as ref) {
+    <div class="replying-strip">
+      <div>
+        <span>Respondiendo a {{ ref.senderName }}</span>
+        <p>{{ replyPreview(ref.mensaje) }}</p>
+      </div>
+      <button type="button" class="reply-cancel" (click)="clearReplyTarget()">✕</button>
+    </div>
+  }
+
   <div class="input-area">
     <textarea
       class="message-input"

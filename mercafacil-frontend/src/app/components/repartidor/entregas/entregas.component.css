@@ -81,3 +81,16 @@
   font-size: 0.82rem; cursor: pointer; transition: background 0.15s;
 }
 .btn-chat:hover { background: #e2e8f0; }
+
+/* Indicador de simulación GPS activa */
+.gps-active {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  background: #d1fae5; color: #065f46;
+  border: 1px solid #a7f3d0; border-radius: 999px;
+  padding: 0.3rem 0.7rem; font-size: 0.8rem; font-weight: 600;
+  animation: pulse-gps 2s ease-in-out infinite;
+}
+@keyframes pulse-gps {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}

@@ -61,6 +61,13 @@ public class MessageService {
                     .orElseThrow(() -> new IllegalArgumentException("Shop not found: " + shopId));
             msg.setShop(shop);
         }
+        if (req.replyToMessageId() != null) {
+            Long replyToId = Objects.requireNonNull(req.replyToMessageId());
+            var replyTo = messageRepository.findById(replyToId)
+                    .orElseThrow(() -> new IllegalArgumentException("Reply target not found: " + replyToId));
+            validateReplyTarget(req, replyTo);
+            msg.setReplyTo(replyTo);
+        }
 
         return toResponse(messageRepository.save(msg));
     }
@@ -134,6 +141,15 @@ public class MessageService {
     }
 
     private MessageResponse toResponse(Message m) {
+        Message replied = m.getReplyTo();
+        String repliedSenderName = null;
+        String repliedMensaje = null;
+        Long repliedId = null;
+        if (replied != null) {
+            repliedId = replied.getId();
+            repliedSenderName = replied.getSender().getNombre() + " " + replied.getSender().getApellidos();
+            repliedMensaje = replied.getMensaje();
+        }
         return new MessageResponse(
                 m.getId(),
                 m.getChatType(),
@@ -141,8 +157,24 @@ public class MessageService {
                 m.getShop()  != null ? m.getShop().getId()  : null,
                 m.getSender().getId(),
                 m.getSender().getNombre() + " " + m.getSender().getApellidos(),
+                repliedId,
+                repliedSenderName,
+                repliedMensaje,
                 m.getMensaje(),
                 m.getFecha()
         );
+    }
+
+    private void validateReplyTarget(MessageRequest req, Message target) {
+        if (target.getChatType() != req.chatType()) {
+            throw new IllegalArgumentException("Reply target belongs to a different chat type");
+        }
+        Long reqOrderId = req.orderId();
+        Long reqShopId = req.shopId();
+        Long targetOrderId = target.getOrder() != null ? target.getOrder().getId() : null;
+        Long targetShopId = target.getShop() != null ? target.getShop().getId() : null;
+        if (!Objects.equals(reqOrderId, targetOrderId) || !Objects.equals(reqShopId, targetShopId)) {
+            throw new IllegalArgumentException("Reply target belongs to a different thread");
+        }
     }
 }

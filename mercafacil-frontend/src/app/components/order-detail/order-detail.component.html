@@ -1,0 +1,113 @@
+<div class="order-detail-page">
+  <button class="back-btn" (click)="goBack()">← Volver a pedidos</button>
+
+  @if (loading()) {
+    <div class="state-box">Cargando pedido...</div>
+  } @else if (error()) {
+    <div class="state-box state-error">{{ error() }}</div>
+  } @else if (order(); as o) {
+    <div class="summary-card">
+      <div>
+        <h1>Pedido #{{ o.id }}</h1>
+        <p>Realizado el {{ formatDate(o.createdAt) }}</p>
+      </div>
+      <div class="summary-right">
+        <span class="status-badge status-{{ o.status.toLowerCase() }}">{{ statusLabel(o.status) }}</span>
+        <strong>{{ o.total | number:'1.2-2' }}€</strong>
+      </div>
+    </div>
+
+    <section class="panel">
+      <h2>Timeline del pedido</h2>
+      <div class="timeline">
+        @for (step of timelineSteps(); track step.key) {
+          <div class="step" [class.done]="isDone(step.key)" [class.current]="isCurrent(step.key)">
+            <div class="dot"></div>
+            <div>
+              <h3>{{ step.title }}</h3>
+              <p>{{ step.desc }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Tracking en tiempo real</h2>
+      @if (trackingLoading() && !tracking()) {
+        <p class="muted">Buscando última posición del repartidor...</p>
+      } @else if (!tracking()) {
+        <p class="muted">Aún no hay ubicación disponible para este pedido.</p>
+      } @else {
+        <div class="tracking-box">
+          <div><span>Latitud</span><strong>{{ tracking()!.latitud | number:'1.4-6' }}°</strong></div>
+          <div><span>Longitud</span><strong>{{ tracking()!.longitud | number:'1.4-6' }}°</strong></div>
+          <div><span>Última actualización</span><strong>{{ formatDate(tracking()!.ultimaActualizacion) }}</strong></div>
+        </div>
+      }
+    </section>
+
+    <section class="panel">
+      <h2>Chat con repartidor</h2>
+      @if (chatError()) {
+        <p class="muted error">{{ chatError() }}</p>
+      }
+
+      <div class="detail-chat-wrapper">
+        <div class="chat-history">
+          @if (chatLoading()) {
+            <div class="state-center"><span>Cargando mensajes...</span></div>
+          } @else if (messages().length === 0) {
+            <div class="state-center"><span>Sin mensajes todavía. ¡Empieza la conversación!</span></div>
+          } @else {
+            @for (msg of messages(); track msg.id) {
+              <div class="message-row" [class.own]="isOwnMessage(msg)">
+                <div class="bubble" [class.bubble-own]="isOwnMessage(msg)">
+                  @if (!isOwnMessage(msg)) {
+                    <span class="sender-name">{{ msg.senderName }}</span>
+                  }
+                  @if (msg.replyToMessageId) {
+                    <div class="reply-ref">
+                      <span>{{ msg.replyToSenderName }}</span>
+                      <p>{{ replyPreview(msg.replyToMensaje) }}</p>
+                    </div>
+                  }
+                  <p class="bubble-text">{{ msg.mensaje }}</p>
+                  <span class="bubble-time">{{ formatDate(msg.fecha) }}</span>
+                  <button type="button" class="reply-btn" (click)="setReplyTarget(msg)">Responder</button>
+                </div>
+              </div>
+            }
+          }
+        </div>
+
+        @if (replyingTo(); as ref) {
+          <div class="replying-strip">
+            <div>
+              <span>Respondiendo a {{ ref.senderName }}</span>
+              <p>{{ replyPreview(ref.mensaje) }}</p>
+            </div>
+            <button class="reply-cancel" (click)="clearReplyTarget()">✕</button>
+          </div>
+        }
+
+        <div class="chat-input">
+          <textarea
+            #messageBox
+            class="message-input"
+            [ngModel]="newMessage()"
+            (ngModelChange)="onMessageInput($event)"
+            (keydown)="onMessageKeyDown($event)"
+            rows="1"
+            placeholder="Escribe un mensaje..."></textarea>
+          <button class="send-btn" (click)="sendMessage()" [disabled]="!newMessage().trim() || chatConnecting()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"/>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+  }
+</div>

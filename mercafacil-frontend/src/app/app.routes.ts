@@ -9,6 +9,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { ChatsListComponent } from './components/chats-list/chats-list.component';
 import { OrdersComponent } from './components/orders/orders.component';
+import { OrderDetailComponent } from './components/order-detail/order-detail.component';
 import { VendedorComponent } from './components/vendedor/vendedor.component';
 import { ResumenComponent } from './components/vendedor/resumen/resumen.component';
 import { PedidosComponent } from './components/vendedor/pedidos/pedidos.component';
@@ -33,6 +34,7 @@ export const routes: Routes = [
   { path: 'envio',   component: ShippingComponent },
   { path: 'carrito', component: CartComponent, canActivate: [authGuard] },
   { path: 'pedidos', component: OrdersComponent, canActivate: [roleGuard('CLIENTE')] },
+  { path: 'pedidos/:id', component: OrderDetailComponent, canActivate: [roleGuard('CLIENTE')] },
   { path: 'login',   component: LoginComponent },
   { path: 'registro', component: RegisterComponent },
 

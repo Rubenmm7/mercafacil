@@ -2,21 +2,27 @@ package com.mercafacil.service;
 
 import com.mercafacil.dto.*;
 import com.mercafacil.model.Order;
+import com.mercafacil.model.Role;
 import com.mercafacil.model.OrderItem;
 import com.mercafacil.model.User;
 import com.mercafacil.repository.OrderRepository;
+import com.mercafacil.repository.StoreRepository;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final StoreRepository storeRepository;
 
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository, StoreRepository storeRepository) {
         this.orderRepository = orderRepository;
+        this.storeRepository = storeRepository;
     }
 
     public OrderResponse create(OrderRequest req, User client) {
@@ -49,6 +55,34 @@ public class OrderService {
 
     public List<OrderResponse> findAll() {
         return orderRepository.findAll().stream().map(this::toResponse).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public OrderResponse findByIdForUser(Long orderId, User user) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Pedido no encontrado: " + orderId));
+
+        if (!canAccessOrder(order, user)) {
+            throw new AccessDeniedException("No tienes permiso para ver este pedido");
+        }
+        return toResponse(order);
+    }
+
+    private boolean canAccessOrder(Order order, User user) {
+        if (user.getRol() == Role.ADMIN) return true;
+
+        Long userId = Objects.requireNonNull(user.getId(), "Usuario autenticado sin ID");
+        if (user.getRol() == Role.CLIENTE) {
+            return Objects.equals(order.getClient() != null ? order.getClient().getId() : null, userId);
+        }
+        if (user.getRol() == Role.REPARTIDOR) {
+            return Objects.equals(order.getDeliverer() != null ? order.getDeliverer().getId() : null, userId);
+        }
+        if (user.getRol() == Role.VENDEDOR) {
+            List<Long> myStoreIds = storeRepository.findByVendedor_Id(userId).stream().map(s -> s.getId()).toList();
+            return order.getItems().stream().anyMatch(item -> myStoreIds.contains(item.getStoreId()));
+        }
+        return false;
     }
 
     private OrderResponse toResponse(Order o) {

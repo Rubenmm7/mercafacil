@@ -47,13 +47,23 @@
           </div>
 
           @if (order.status !== 'ENTREGADO') {
-            <div class="order-card-actions">
+          <div class="order-card-actions">
+            <button class="btn-detail" (click)="openDetail(order.id)">
+              Ver detalle
+            </button>
+
               <button class="btn-chat" (click)="openChat(order.id)">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                 </svg>
                 Hablar con el repartidor
               </button>
+
+              @if (order.status === 'EN_RUTA') {
+                <button class="btn-tracking" (click)="openTracking(order.id)">
+                  📡 Ver seguimiento
+                </button>
+              }
             </div>
           }
         </div>
@@ -61,3 +71,52 @@
     </div>
   }
 </div>
+
+<!-- Modal de tracking en tiempo real -->
+@if (trackingOrderId() !== null) {
+  <div class="modal-backdrop" (click)="closeTracking()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>📡 Seguimiento — Pedido #{{ trackingOrderId() }}</h2>
+        <button class="modal-close" (click)="closeTracking()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        @if (trackingLoading() && !trackingPosition()) {
+          <div class="tracking-loading">
+            <div class="spinner-sm"></div>
+            <span>Conectando con el repartidor...</span>
+          </div>
+        } @else if (!trackingPosition()) {
+          <div class="tracking-waiting">
+            <span class="tracking-icon">🗺️</span>
+            <p>Esperando señal GPS del repartidor...</p>
+            <p class="tracking-hint">La posición aparecerá en cuanto el repartidor esté en movimiento.</p>
+          </div>
+        } @else {
+          <div class="tracking-data">
+            <div class="tracking-live-badge">
+              <span class="live-dot"></span> En directo
+            </div>
+            <div class="tracking-coords">
+              <div class="coord-row">
+                <span class="coord-label">Latitud</span>
+                <span class="coord-value">{{ trackingPosition()!.latitud | number:'1.4-6' }}°</span>
+              </div>
+              <div class="coord-row">
+                <span class="coord-label">Longitud</span>
+                <span class="coord-value">{{ trackingPosition()!.longitud | number:'1.4-6' }}°</span>
+              </div>
+            </div>
+            <p class="tracking-timestamp">
+              Última actualización: {{ formatTrackingDate(trackingPosition()!.ultimaActualizacion) }}
+            </p>
+            <p class="tracking-note">
+              🗺️ Visualización en mapa disponible próximamente
+            </p>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}

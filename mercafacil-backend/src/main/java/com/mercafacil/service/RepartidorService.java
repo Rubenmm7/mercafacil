@@ -35,6 +35,8 @@ public class RepartidorService {
     public RepartidorStatsDto getStats(User repartidor) {
         Objects.requireNonNull(repartidor.getId(), "El repartidor autenticado no tiene ID");
         var orders = orderRepository.findByDelivererOrderByIdDesc(repartidor);
+        long pendingPool = orderRepository.countByDelivererIsNullAndStatusIn(
+                Set.of(OrderStatus.PENDIENTE, OrderStatus.PREPARACION));
 
         long enRuta = orders.stream()
                 .filter(o -> o.getStatus() == OrderStatus.EN_RUTA)
@@ -47,7 +49,7 @@ public class RepartidorService {
                           && o.getCreatedAt().isAfter(startOfDay))
                 .count();
 
-        return new RepartidorStatsDto(orders.size(), enRuta, deliveredToday);
+        return new RepartidorStatsDto(orders.size(), pendingPool, enRuta, deliveredToday);
     }
 
     // --- Mis pedidos asignados ---

@@ -110,6 +110,17 @@ CREATE TABLE IF NOT EXISTS order_items (
 CREATE INDEX idx_orders_client       ON orders(cliente_id);
 CREATE INDEX idx_order_items_order   ON order_items(order_id);
 
+-- Historial de posiciones GPS del repartidor por pedido
+CREATE TABLE IF NOT EXISTS tracking (
+    id                   BIGINT   PRIMARY KEY AUTO_INCREMENT,
+    order_id             BIGINT   NOT NULL,
+    latitud              DOUBLE   NOT NULL,
+    longitud             DOUBLE   NOT NULL,
+    ultima_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    INDEX idx_tracking_order (order_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS cart_items (
     id            BIGINT       PRIMARY KEY AUTO_INCREMENT,
     user_id       BIGINT       NOT NULL,
@@ -134,11 +145,14 @@ CREATE TABLE IF NOT EXISTS messages (
     order_id     BIGINT       NULL,
     shop_id      BIGINT       NULL,
     remitente_id BIGINT       NOT NULL,
+    reply_to_id  BIGINT       NULL,
     mensaje      TEXT         NOT NULL,
     fecha        DATETIME     DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_msg_order  FOREIGN KEY (order_id)     REFERENCES orders(id)  ON DELETE CASCADE,
     CONSTRAINT fk_msg_shop   FOREIGN KEY (shop_id)      REFERENCES stores(id)  ON DELETE CASCADE,
     CONSTRAINT fk_msg_sender FOREIGN KEY (remitente_id) REFERENCES users(id),
+    CONSTRAINT fk_msg_reply  FOREIGN KEY (reply_to_id)  REFERENCES messages(id) ON DELETE SET NULL,
     INDEX idx_msg_order_type (order_id, chat_type),
-    INDEX idx_msg_shop_type  (shop_id, chat_type)
+    INDEX idx_msg_shop_type  (shop_id, chat_type),
+    INDEX idx_msg_reply_to   (reply_to_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

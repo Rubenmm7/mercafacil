@@ -27,6 +27,10 @@ public class Message {
     @JoinColumn(name = "remitente_id", nullable = false)
     private User sender;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reply_to_id")
+    private Message replyTo;
+
     @Column(nullable = false, columnDefinition = "TEXT")
     private String mensaje;
 
@@ -47,6 +51,8 @@ public class Message {
     public void setShop(Store shop)            { this.shop = shop; }
     public User getSender()                    { return sender; }
     public void setSender(User sender)         { this.sender = sender; }
+    public Message getReplyTo()                { return replyTo; }
+    public void setReplyTo(Message replyTo)    { this.replyTo = replyTo; }
     public String getMensaje()                 { return mensaje; }
     public void setMensaje(String mensaje)     { this.mensaje = mensaje; }
     public LocalDateTime getFecha()            { return fecha; }
