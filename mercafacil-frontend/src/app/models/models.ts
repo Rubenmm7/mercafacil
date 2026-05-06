@@ -189,6 +189,8 @@ export interface Order {
   total: number;
   items: OrderItemDto[];
   createdAt?: string;
+  shippingAddress?: string;
+  deliveryNotes?: string;
 }
 
 export interface MarkReadRequest {
