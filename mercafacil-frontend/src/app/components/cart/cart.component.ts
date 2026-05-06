@@ -56,9 +56,6 @@ export class CartComponent implements OnInit {
     this.cartItems().reduce((s, i) => s + i.quantity, 0)
   );
 
-  readonly checking = signal(false);
-  readonly checkoutError = signal<string | null>(null);
-
   constructor(
     public cartService: CartService,
     private api: ApiService,
@@ -70,19 +67,7 @@ export class CartComponent implements OnInit {
   }
 
   checkout(): void {
-    if (this.checking()) return;
-    this.checking.set(true);
-    this.checkoutError.set(null);
-    this.api.createOrder(this.cartItems()).subscribe({
-      next: () => {
-        this.cartService.clear();
-        this.router.navigate(['/pedidos']);
-      },
-      error: () => {
-        this.checkoutError.set('No se pudo procesar el pedido. Inténtalo de nuevo.');
-        this.checking.set(false);
-      }
-    });
+    this.router.navigate(['/checkout']);
   }
 
   storeSubtotal(items: CartItem[]): number {

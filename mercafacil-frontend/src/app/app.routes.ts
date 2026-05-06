@@ -24,6 +24,7 @@ import { TiendasProveedorComponent } from './components/proveedor/tiendas/tienda
 import { AdminComponent } from './components/admin/admin.component';
 import { ResumenAdminComponent } from './components/admin/resumen/resumen.component';
 import { UsuariosAdminComponent } from './components/admin/usuarios/usuarios.component';
+import { CheckoutComponent } from './components/checkout/checkout.component';
 import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
 
@@ -32,7 +33,8 @@ export const routes: Routes = [
   { path: 'buscar',  component: SearchComponent },
   { path: 'tiendas', component: StoresComponent },
   { path: 'envio',   component: ShippingComponent },
-  { path: 'carrito', component: CartComponent, canActivate: [authGuard] },
+  { path: 'carrito',  component: CartComponent,     canActivate: [authGuard] },
+  { path: 'checkout', component: CheckoutComponent, canActivate: [roleGuard('CLIENTE')] },
   { path: 'pedidos', component: OrdersComponent, canActivate: [roleGuard('CLIENTE')] },
   { path: 'pedidos/:id', component: OrderDetailComponent, canActivate: [roleGuard('CLIENTE')] },
   { path: 'login',   component: LoginComponent },
