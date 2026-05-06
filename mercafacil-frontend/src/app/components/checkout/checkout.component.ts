@@ -52,7 +52,7 @@ export class CheckoutComponent {
 
   constructor(
     private fb: FormBuilder,
-    public cartService: CartService,
+    private cartService: CartService,
     private api: ApiService,
     private router: Router
   ) {
@@ -110,6 +110,7 @@ export class CheckoutComponent {
 
     this.api.createOrder(this.cartItems(), shippingAddress, deliveryNotes).subscribe({
       next: () => {
+        this.submitting.set(false);
         this.cartService.clear();
         this.router.navigate(['/pedidos']);
       },
