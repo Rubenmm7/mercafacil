@@ -30,9 +30,6 @@ docs/
 .continue
 .gitattributes
 *environments/
-<<<<<<< HEAD
 *specs/
-=======
-specs/
->>>>>>> be779abf62ef7ca74071138f1adce976e3bd1b41
 node_modules
+resources/
