@@ -108,3 +108,52 @@
 @media (max-width: 640px) {
   .repartidor-map-wrapper { height: 220px; }
 }
+
+/* Delivery address block — visible when order is EN_RUTA */
+.delivery-address-block {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.addr-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #3b82f6;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.addr-main {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.delivery-notes {
+  font-size: 0.82rem;
+  color: #475569;
+  font-style: italic;
+}
+
+.btn-navigate {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  align-self: flex-start;
+  margin-top: 0.25rem;
+  background: #4285f4;
+  color: #fff;
+  border-radius: 6px;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.btn-navigate:hover { background: #3367d6; }

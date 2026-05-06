@@ -161,4 +161,9 @@ export class EntregasComponent implements OnInit, OnDestroy {
     this.simulatingOrderId.set(null);
     this.simPosition.set(null);
   }
+
+  mapsNavUrl(order: Order): string {
+    const dest = encodeURIComponent(order.shippingAddress ?? '');
+    return `https://www.google.com/maps/dir/?api=1&destination=${dest}`;
+  }
 }
