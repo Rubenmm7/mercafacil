@@ -8,5 +8,7 @@ public record OrderResponse(
         String status,
         Double total,
         List<OrderItemResponse> items,
-        String createdAt
+        String createdAt,
+        String shippingAddress,
+        String deliveryNotes
 ) {}
