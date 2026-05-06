@@ -34,6 +34,8 @@ public class OrderService {
                 .mapToDouble(i -> i.unitPrice() * i.quantity())
                 .sum();
         order.setTotal(Math.round(total * 100.0) / 100.0);
+        order.setShippingAddress(req.shippingAddress());
+        order.setDeliveryNotes(req.deliveryNotes());
 
         for (OrderItemRequest ir : req.items()) {
             OrderItem item = new OrderItem();
@@ -98,6 +100,7 @@ public class OrderService {
                 .toList();
         String clientEmail = o.getClient() != null ? o.getClient().getEmail() : null;
         String createdAt = o.getCreatedAt() != null ? o.getCreatedAt().toString() : null;
-        return new OrderResponse(o.getId(), clientEmail, o.getStatus().name(), o.getTotal(), items, createdAt);
+        return new OrderResponse(o.getId(), clientEmail, o.getStatus().name(), o.getTotal(), items, createdAt,
+                o.getShippingAddress(), o.getDeliveryNotes());
     }
 }

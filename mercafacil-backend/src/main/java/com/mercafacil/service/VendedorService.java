@@ -215,7 +215,8 @@ public class VendedorService {
                 .toList();
         String clientEmail = o.getClient() != null ? o.getClient().getEmail() : null;
         String createdAt   = o.getCreatedAt() != null ? o.getCreatedAt().toString() : null;
-        return new OrderResponse(o.getId(), clientEmail, o.getStatus().name(), o.getTotal(), items, createdAt);
+        return new OrderResponse(o.getId(), clientEmail, o.getStatus().name(), o.getTotal(), items, createdAt,
+                o.getShippingAddress(), o.getDeliveryNotes());
     }
 
     private ProductDto toProductDto(Product p, List<Long> storeIds) {
