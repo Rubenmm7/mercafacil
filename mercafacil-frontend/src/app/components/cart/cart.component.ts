@@ -67,7 +67,7 @@ export class CartComponent implements OnInit {
   }
 
   checkout(): void {
-    this.router.navigate(['/checkout']);
+    this.router.navigate(['/pago']);
   }
 
   storeSubtotal(items: CartItem[]): number {

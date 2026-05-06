@@ -34,7 +34,7 @@ export const routes: Routes = [
   { path: 'tiendas', component: StoresComponent },
   { path: 'envio',   component: ShippingComponent },
   { path: 'carrito',  component: CartComponent,     canActivate: [authGuard] },
-  { path: 'checkout', component: CheckoutComponent, canActivate: [roleGuard('CLIENTE')] },
+  { path: 'pago', component: CheckoutComponent, canActivate: [roleGuard('CLIENTE')] },
   { path: 'pedidos', component: OrdersComponent, canActivate: [roleGuard('CLIENTE')] },
   { path: 'pedidos/:id', component: OrderDetailComponent, canActivate: [roleGuard('CLIENTE')] },
   { path: 'login',   component: LoginComponent },
