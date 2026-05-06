@@ -38,14 +38,16 @@ export class ApiService {
     );
   }
 
-  createOrder(items: CartItem[]): Observable<Order> {
+  createOrder(items: CartItem[], shippingAddress: string, deliveryNotes?: string): Observable<Order> {
     const payload = {
       items: items.map(i => ({
         productId: i.productId,
         storeId: i.storeId,
         quantity: i.quantity,
         unitPrice: i.price
-      }))
+      })),
+      shippingAddress,
+      deliveryNotes: deliveryNotes ?? null
     };
     return this.http.post<Order>(`${this.baseUrl}/orders`, payload);
   }
