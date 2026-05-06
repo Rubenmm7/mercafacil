@@ -1,0 +1,40 @@
+.hero { background: linear-gradient(135deg, #1a7a4a, #0d4f2e); padding: 48px 16px; text-align: center; }
+.hero h1 { color: white; font-size: clamp(1.6rem, 3vw, 2.2rem); }
+.hero p { color: #a7f3d0; font-size: 1rem; margin-top: 8px; }
+.container { max-width: 1200px; margin: 0 auto; padding: 32px 16px; }
+.filters { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 32px; }
+.search-wrap { flex: 1; max-width: 384px; }
+.search-wrap input { width: 100%; padding: 10px 16px; border: 1px solid #e5e7eb; border-radius: 12px; font-size: 0.875rem; outline: none; }
+.type-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+.type-filters button { padding: 10px 16px; border: 1px solid #e5e7eb; border-radius: 12px; font-size: 0.875rem; color: #374151; background: white; transition: all 0.2s; }
+.type-filters button.active { background: #1a7a4a; color: white; border-color: #1a7a4a; font-weight: 600; }
+.stores-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.store-card { background: white; border: 1px solid #e5e7eb; border-radius: 16px; overflow: hidden; transition: box-shadow 0.2s; }
+.store-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+.store-header { padding: 20px; display: flex; align-items: center; gap: 16px; }
+.store-logo { width: 56px; height: 56px; border-radius: 16px; color: white; font-weight: 700; font-size: 1rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.store-title { flex: 1; }
+.name-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.cat-badge { font-size: 0.7rem; font-weight: 600; padding: 2px 8px; border-radius: 99px; background: white; border: 1px solid; }
+.stars { display: flex; align-items: center; gap: 2px; margin-top: 4px; }
+.stars span { font-size: 0.8rem; color: #6b7280; margin-left: 4px; }
+.store-info { padding: 0 20px; }
+.info-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; font-size: 0.875rem; color: #374151; }
+.info-icon { flex-shrink: 0; }
+.sub { font-size: 0.8rem; color: #6b7280; }
+.delivery-info { margin: 0 20px 20px; background: #f9fafb; border-radius: 12px; padding: 12px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; }
+.del-label { font-size: 0.72rem; color: #6b7280; }
+.del-value { font-size: 0.85rem; font-weight: 700; color: #1a2e1f; }
+.store-actions { padding: 0 20px 20px; }
+.view-btn { width: 100%; padding: 10px; border-radius: 12px; color: white; font-weight: 500; font-size: 0.875rem; transition: opacity 0.2s; }
+.view-btn:hover { opacity: 0.85; }
+.empty { text-align: center; padding: 64px 0; }
+.empty div:first-child { font-size: 2.5rem; margin-bottom: 12px; }
+.empty p { color: #6b7280; margin-top: 8px; }
+.join-section { margin-top: 48px; background: #f0faf4; border-radius: 24px; padding: 32px; text-align: center; }
+.join-section h2 { color: #1a2e1f; margin-bottom: 8px; }
+.join-section p { color: #4b5563; font-size: 0.95rem; margin-bottom: 24px; }
+.join-btn { padding: 12px 28px; background: #1a7a4a; color: white; border-radius: 12px; font-weight: 600; }
+
+@media (max-width: 1024px) { .stores-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .stores-grid { grid-template-columns: 1fr; } }

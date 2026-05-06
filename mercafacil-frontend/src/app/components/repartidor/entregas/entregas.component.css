@@ -1,0 +1,110 @@
+.page-title { font-size: 1.5rem; font-weight: 700; color: #1e293b; margin: 0 0 1.25rem; }
+.loading    { color: #64748b; padding: 2rem; text-align: center; }
+.empty      { color: #94a3b8; text-align: center; padding: 3rem; }
+.error-msg  { background: #fee2e2; color: #dc2626; padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem; }
+
+/* Tabs */
+.tabs { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; border-bottom: 1px solid #e2e8f0; }
+
+.tab {
+  background: none; border: none; border-bottom: 2px solid transparent;
+  padding: 0.6rem 1rem; font-size: 0.9rem; font-weight: 600; color: #64748b;
+  cursor: pointer; display: flex; align-items: center; gap: 0.4rem;
+  margin-bottom: -1px; transition: color 0.15s, border-color 0.15s;
+}
+.tab:hover  { color: #1e293b; }
+.tab.active { color: #059669; border-bottom-color: #059669; }
+
+.badge {
+  background: #e2e8f0; color: #475569;
+  border-radius: 999px; padding: 0.05rem 0.45rem;
+  font-size: 0.72rem; font-weight: 700;
+}
+.badge-green { background: #d1fae5; color: #065f46; }
+
+/* Orders list */
+.orders-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.order-card {
+  background: #fff; border: 1px solid #e2e8f0;
+  border-left: 3px solid #e2e8f0;
+  border-radius: 10px; padding: 1rem 1.1rem;
+  display: flex; flex-direction: column; gap: 0.6rem;
+}
+.order-card.status-pendiente   { border-left-color: #94a3b8; }
+.order-card.status-preparacion { border-left-color: #f59e0b; }
+.order-card.status-en_ruta     { border-left-color: #3b82f6; }
+.order-card.status-entregado   { border-left-color: #10b981; }
+
+.order-header {
+  display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+}
+.order-id    { font-weight: 800; font-size: 1rem; color: #1e293b; }
+.order-total { font-weight: 700; color: #1e293b; margin-left: auto; }
+
+.status-badge {
+  font-size: 0.75rem; font-weight: 600;
+  padding: 0.2rem 0.55rem; border-radius: 999px;
+  background: #f1f5f9; color: #475569;
+}
+.status-en_ruta   .status-badge { background: #dbeafe; color: #1d4ed8; }
+.status-entregado .status-badge { background: #d1fae5; color: #065f46; }
+
+.order-meta {
+  display: flex; gap: 1rem; flex-wrap: wrap;
+  font-size: 0.8rem; color: #64748b;
+}
+
+.order-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.25rem; }
+
+.btn-accept {
+  background: #059669; color: #fff; border: none;
+  border-radius: 7px; padding: 0.45rem 1rem;
+  font-size: 0.85rem; font-weight: 600; cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-accept:hover:not(:disabled) { background: #047857; }
+.btn-accept:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.btn-advance {
+  background: #2563eb; color: #fff; border: none;
+  border-radius: 7px; padding: 0.45rem 1rem;
+  font-size: 0.85rem; font-weight: 600; cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-advance:hover:not(:disabled) { background: #1d4ed8; }
+.btn-advance:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.btn-chat {
+  background: #f8fafc; border: 1px solid #e2e8f0;
+  border-radius: 7px; padding: 0.4rem 0.8rem;
+  font-size: 0.82rem; cursor: pointer; transition: background 0.15s;
+}
+.btn-chat:hover { background: #e2e8f0; }
+
+/* Indicador de simulación GPS activa */
+.gps-active {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  background: #d1fae5; color: #065f46;
+  border: 1px solid #a7f3d0; border-radius: 999px;
+  padding: 0.3rem 0.7rem; font-size: 0.8rem; font-weight: 600;
+  animation: pulse-gps 2s ease-in-out infinite;
+}
+@keyframes pulse-gps {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
+.repartidor-map-wrapper {
+  width: 100%;
+  height: 280px;
+  margin-top: 12px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  background: #f3f4f6;
+}
+
+@media (max-width: 640px) {
+  .repartidor-map-wrapper { height: 220px; }
+}

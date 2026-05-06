@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #F8FAF9;
+  color: #1a2e1f;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+input, select {
+  font-family: inherit;
+}
+
+h1 { font-size: 1.5rem; font-weight: 700; }
+h2 { font-size: 1.25rem; font-weight: 600; }
+h3 { font-size: 1.1rem; font-weight: 600; }
+h4 { font-size: 1rem; font-weight: 500; }
+
+/* ---- Skeleton loaders (estado de carga profesional) ---- */
+@keyframes skeleton-shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton-card,
+.skeleton-row {
+  background: linear-gradient(90deg, #eef2ef 0%, #f7faf8 50%, #eef2ef 100%);
+  background-size: 800px 100%;
+  animation: skeleton-shimmer 1.4s infinite linear;
+  border-radius: 12px;
+  min-height: 140px;
+  border: 1px solid #e5e7eb;
+  pointer-events: none;
+}
+
+.skeleton-row {
+  height: 32px;
+  min-height: 32px;
+  width: 100%;
+}
+
+.skeleton-product { min-height: 260px; }
+
+/* Fade-in suave para contenido real */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.category-card:not(.skeleton-card),
+.store-card:not(.skeleton-card),
+.product-card:not(.skeleton-card),
+.product-result:not(.skeleton-card),
+.store-delivery-card:not(.skeleton-card) {
+  animation: fade-in .35s ease both;
+}

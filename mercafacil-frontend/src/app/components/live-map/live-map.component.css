@@ -1,0 +1,78 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #eef1f5;
+}
+
+google-map {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.map-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 100%;
+  min-height: 280px;
+  padding: 24px;
+  text-align: center;
+  background: linear-gradient(180deg, #f7fafc 0%, #eef1f5 100%);
+  color: #4a5568;
+}
+
+.map-fallback-icon {
+  font-size: 36px;
+}
+
+.map-fallback-title {
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0;
+}
+
+.map-fallback-hint {
+  margin: 0;
+  font-size: 13px;
+  color: #718096;
+  max-width: 380px;
+}
+
+.map-fallback-hint code {
+  background: #edf2f7;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.map-fallback-coords {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #2d3748;
+}
+
+.map-fallback-loading p {
+  font-size: 14px;
+  color: #718096;
+  margin: 0;
+}
+
+.map-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #4a90e2;
+  border-radius: 50%;
+  animation: map-spin 0.9s linear infinite;
+}
+
+@keyframes map-spin {
+  to { transform: rotate(360deg); }
+}

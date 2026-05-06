@@ -1,0 +1,27 @@
+@if (mapsReady()) {
+  <google-map
+    height="100%"
+    width="100%"
+    [center]="center()"
+    [zoom]="zoom()"
+    [options]="options()">
+    <map-marker [position]="center()" [title]="label()" />
+  </google-map>
+} @else if (mapsError()) {
+  <div class="map-fallback">
+    <span class="map-fallback-icon">🗺️</span>
+    <p class="map-fallback-title">Mapa no disponible</p>
+    <p class="map-fallback-hint">
+      Añade tu clave en <code>environment.googleMapsApiKey</code> para ver el mapa interactivo.
+    </p>
+    <p class="map-fallback-coords">
+      <strong>Lat</strong> {{ lat() | number:'1.4-6' }}° &nbsp;·&nbsp;
+      <strong>Lng</strong> {{ lng() | number:'1.4-6' }}°
+    </p>
+  </div>
+} @else {
+  <div class="map-fallback map-fallback-loading">
+    <div class="map-spinner"></div>
+    <p>Cargando mapa…</p>
+  </div>
+}

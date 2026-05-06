@@ -1,0 +1,109 @@
+.loading { text-align: center; padding: 3rem 0; color: #64748b; }
+.error-msg { text-align: center; padding: 2rem; color: #dc2626; background: #fef2f2; border-radius: 8px; }
+.empty-state { text-align: center; padding: 3rem; color: #94a3b8; }
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 1.5rem;
+}
+
+/* Store grid */
+.stores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
+.store-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.store-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+
+.store-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+}
+
+.store-logo {
+  font-size: 2rem;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.7);
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.store-info { min-width: 0; }
+
+.store-name {
+  font-weight: 700;
+  font-size: 1.05rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.store-category {
+  font-size: 0.78rem;
+  color: #475569;
+  margin-top: 0.1rem;
+}
+
+.store-body {
+  padding: 1rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.store-detail {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+}
+
+.detail-label {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.detail-value {
+  color: #1e293b;
+  text-align: right;
+}
+
+.chat-btn {
+  margin-top: 0.75rem;
+  width: 100%;
+  padding: 0.65rem;
+  background: #7c3aed;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.chat-btn:hover { background: #6d28d9; }
+
+@media (max-width: 640px) {
+  .stores-grid { grid-template-columns: 1fr; }
+}

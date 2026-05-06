@@ -1,0 +1,102 @@
+<div class="chat-wrapper">
+
+  <!-- Header -->
+  <div class="chat-header">
+    <div class="chat-header-info">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      <div>
+        <span class="chat-title">{{ chatTitle() }}</span>
+        <span class="chat-subtitle">{{ chatSubtitle() }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Messages area -->
+  <div class="messages-wrapper">
+  <div class="messages-area" #messagesArea (scroll)="onScroll()">
+
+    @if (loading()) {
+      <div class="state-center">
+        <div class="spinner"></div>
+        <span>Cargando mensajes...</span>
+      </div>
+    } @else if (error()) {
+      <div class="state-center state-error">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        {{ error() }}
+      </div>
+    } @else if (messages().length === 0) {
+      <div class="state-center state-empty">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        <span>Sin mensajes todavía. ¡Empieza la conversación!</span>
+      </div>
+    } @else {
+      @for (msg of messages(); track msg.id) {
+        <div class="message-row" [class.own]="isOwnMessage(msg)">
+          <div class="bubble" [class.bubble-own]="isOwnMessage(msg)">
+            @if (!isOwnMessage(msg)) {
+              <span class="sender-name">{{ msg.senderName }}</span>
+            }
+            @if (msg.replyToMessageId) {
+              <div class="reply-ref">
+                <span>{{ msg.replyToSenderName }}</span>
+                <p>{{ replyPreview(msg.replyToMensaje) }}</p>
+              </div>
+            }
+            <p class="bubble-text">{{ msg.mensaje }}</p>
+            <span class="bubble-time">{{ formatTime(msg.fecha) }}</span>
+            <button type="button" class="reply-btn" (click)="setReplyTarget(msg)">Responder</button>
+          </div>
+        </div>
+      }
+    }
+
+  </div>
+
+    @if (!isAtBottom() && !loading() && !error()) {
+      <button type="button" class="jump-bottom-btn" (click)="jumpToBottom()" title="Ir al último mensaje">
+        @if (unreadCount() > 0) {
+          <span class="jump-badge">{{ unreadCount() }}</span>
+        }
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+    }
+  </div>
+
+  <!-- Input area -->
+  @if (replyingTo(); as ref) {
+    <div class="replying-strip">
+      <div>
+        <span>Respondiendo a {{ ref.senderName }}</span>
+        <p>{{ replyPreview(ref.mensaje) }}</p>
+      </div>
+      <button type="button" class="reply-cancel" (click)="clearReplyTarget()">✕</button>
+    </div>
+  }
+
+  <div class="input-area">
+    <textarea
+      class="message-input"
+      placeholder="Escribe un mensaje..."
+      [value]="newMessage()"
+      (input)="newMessage.set($any($event.target).value)"
+      (keydown)="onKeyDown($event)"
+      rows="1">
+    </textarea>
+    <button class="send-btn" (click)="send()" [disabled]="!newMessage().trim()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="22" y1="2" x2="11" y2="13"/>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
+  </div>
+
+</div>

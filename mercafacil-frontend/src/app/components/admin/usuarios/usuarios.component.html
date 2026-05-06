@@ -1,0 +1,54 @@
+<h1 class="page-title">Gestión de usuarios</h1>
+
+@if (loading()) {
+  <div class="loading">Cargando usuarios...</div>
+} @else if (error()) {
+  <div class="error-msg">{{ error() }}</div>
+} @else {
+  <div class="table-wrapper">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of users(); track user.id) {
+          <tr>
+            <td class="td-id">{{ user.id }}</td>
+            <td class="td-name">{{ user.nombre }} {{ user.apellidos }}</td>
+            <td class="td-email">{{ user.email }}</td>
+            <td class="td-rol">
+              @if (editingId() === user.id) {
+                <select class="rol-select" [ngModel]="editingRol()" (ngModelChange)="editingRol.set($event)">
+                  @for (r of roles; track r) {
+                    <option [value]="r">{{ rolLabel(r) }}</option>
+                  }
+                </select>
+              } @else {
+                <span class="badge {{ rolClass(user.rol) }}">{{ rolLabel(user.rol) }}</span>
+              }
+            </td>
+            <td class="td-actions">
+              @if (editingId() === user.id) {
+                <button class="btn-save" (click)="saveRole(user.id)" [disabled]="saving()">
+                  {{ saving() ? 'Guardando…' : '✓ Guardar' }}
+                </button>
+                <button class="btn-cancel" (click)="cancelEdit()">✕</button>
+              } @else {
+                <button class="btn-edit" (click)="startEdit(user)">✏️ Editar rol</button>
+                <button class="btn-delete" (click)="deleteUser(user.id, user.nombre)">🗑️</button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="total-info">{{ users().length }} usuario{{ users().length !== 1 ? 's' : '' }} registrado{{ users().length !== 1 ? 's' : '' }}</div>
+}

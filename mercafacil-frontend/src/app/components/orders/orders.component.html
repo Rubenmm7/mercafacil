@@ -1,0 +1,115 @@
+<div class="orders-page">
+  <div class="orders-header">
+    <h1>Mis pedidos</h1>
+    <p class="subtitle">Consulta el estado e historial de tus compras</p>
+  </div>
+
+  @if (loading()) {
+    <div class="orders-loading">
+      <div class="spinner"></div>
+      <p>Cargando pedidos...</p>
+    </div>
+  } @else if (errorMsg()) {
+    <div class="orders-empty">
+      <div class="empty-icon">⚠️</div>
+      <h2>No se pudieron cargar los pedidos</h2>
+      <p>{{ errorMsg() }}</p>
+      <button class="btn-primary" (click)="loadOrders()">Reintentar</button>
+    </div>
+  } @else if (orders().length === 0) {
+    <div class="orders-empty">
+      <div class="empty-icon">📦</div>
+      <h2>Todavía no tienes pedidos</h2>
+      <p>Cuando realices una compra, aparecerá aquí con su estado en tiempo real.</p>
+      <button class="btn-primary" (click)="goToSearch()">Explorar productos</button>
+    </div>
+  } @else {
+    <div class="orders-list">
+      @for (order of orders(); track order.id) {
+        <div class="order-card">
+          <div class="order-card-header">
+            <div class="order-meta">
+              <span class="order-id">Pedido #{{ order.id }}</span>
+              <span class="order-date">{{ formatDate(order.createdAt) }}</span>
+            </div>
+            <span class="status-badge status-{{ order.status.toLowerCase() }}">
+              {{ statusLabel(order.status) }}
+            </span>
+          </div>
+
+          <div class="order-card-body">
+            <div class="order-info">
+              <span class="order-items-count">
+                {{ order.items.length }} {{ order.items.length === 1 ? 'producto' : 'productos' }}
+              </span>
+              <strong class="order-total">{{ order.total | number:'1.2-2' }}€</strong>
+            </div>
+          </div>
+
+          @if (order.status !== 'ENTREGADO') {
+            <div class="order-card-actions">
+              <button class="btn-detail" (click)="openDetail(order.id)">
+                Ver detalle
+              </button>
+
+              <button class="btn-chat" (click)="openChat(order.id)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                Enviar mensaje al repartidor
+              </button>
+
+              @if (order.status === 'EN_RUTA') {
+                <button class="btn-tracking" (click)="openTracking(order.id)">
+                  📡 Ver seguimiento
+                </button>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>
+
+<!-- Modal de tracking en tiempo real -->
+@if (trackingOrderId() !== null) {
+  <div class="modal-backdrop" (click)="closeTracking()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>📡 Seguimiento — Pedido #{{ trackingOrderId() }}</h2>
+        <button class="modal-close" (click)="closeTracking()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        @if (trackingLoading() && !trackingPosition()) {
+          <div class="tracking-loading">
+            <div class="spinner-sm"></div>
+            <span>Conectando con el repartidor...</span>
+          </div>
+        } @else if (!trackingPosition()) {
+          <div class="tracking-waiting">
+            <span class="tracking-icon">🗺️</span>
+            <p>Esperando señal GPS del repartidor...</p>
+            <p class="tracking-hint">La posición aparecerá en cuanto el repartidor esté en movimiento.</p>
+          </div>
+        } @else {
+          <div class="tracking-live-badge">
+            <span class="live-dot"></span> En directo
+          </div>
+          <div class="tracking-map-wrapper">
+            <app-live-map
+              [lat]="trackingPosition()!.latitud"
+              [lng]="trackingPosition()!.longitud"
+              [label]="'Repartidor — Pedido #' + trackingOrderId()" />
+          </div>
+          <div class="tracking-coords-row">
+            <span><span class="coord-label">Lat</span> <strong>{{ trackingPosition()!.latitud | number:'1.4-6' }}°</strong></span>
+            <span><span class="coord-label">Lng</span> <strong>{{ trackingPosition()!.longitud | number:'1.4-6' }}°</strong></span>
+            <span class="tracking-timestamp">{{ formatTrackingDate(trackingPosition()!.ultimaActualizacion) }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}

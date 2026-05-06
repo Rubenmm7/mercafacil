@@ -1,0 +1,16 @@
+FROM node:20-alpine
+WORKDIR /app
+
+# Instalar dependencias primero (cache de capa Docker)
+COPY package*.json ./
+RUN npm install
+
+# Copiar configuración del proyecto (angular.json, tsconfig*, etc.)
+# El directorio src/ será sobreescrito por el volumen del host en dev
+COPY . .
+
+EXPOSE 4200
+
+# --host 0.0.0.0  → accesible desde fuera del contenedor
+# --poll 2000     → detecta cambios en Windows/Docker vía polling (inotify no funciona en WSL2)
+CMD ["npx", "ng", "serve", "--host", "0.0.0.0", "--poll", "2000"]

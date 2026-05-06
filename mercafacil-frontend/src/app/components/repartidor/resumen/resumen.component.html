@@ -1,0 +1,44 @@
+<h1 class="page-title">Resumen</h1>
+
+@if (error()) { <div class="error-msg">{{ error() }}</div> }
+
+@if (loading()) {
+  <div class="loading">Cargando estadísticas...</div>
+} @else if (stats()) {
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon">📦</div>
+      <div class="kpi-value">{{ stats()!.myOrders }}</div>
+      <div class="kpi-label">Entregas asignadas</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">🧾</div>
+      <div class="kpi-value">{{ stats()!.pendingPool }}</div>
+      <div class="kpi-label">Pendientes de reparto</div>
+    </div>
+    <div class="kpi-card kpi-active">
+      <div class="kpi-icon">🚚</div>
+      <div class="kpi-value">{{ stats()!.enRutaCount }}</div>
+      <div class="kpi-label">En ruta ahora</div>
+    </div>
+    <div class="kpi-card kpi-done">
+      <div class="kpi-icon">✅</div>
+      <div class="kpi-value">{{ stats()!.deliveredToday }}</div>
+      <div class="kpi-label">Entregados hoy</div>
+    </div>
+  </div>
+
+  <div class="quick-links">
+    <h2 class="section-title">Acciones rápidas</h2>
+    <div class="links-grid">
+      <a routerLink="../entregas" class="quick-link">
+        <span>📦</span>
+        <span>Ver mis entregas</span>
+      </a>
+      <a routerLink="../entregas" class="quick-link">
+        <span>🔍</span>
+        <span>Buscar disponibles</span>
+      </a>
+    </div>
+  </div>
+}

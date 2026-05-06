@@ -1,0 +1,206 @@
+<!-- Hero Section -->
+<section class="hero" [style.background-image]="'url(' + heroImg + ')'">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="hero-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        <span>Más de 5.000 productos comparados en Jaén</span>
+      </div>
+      <h1 class="hero-title">Encuentra los mejores precios de tu supermercado</h1>
+      <p class="hero-subtitle">Compara precios en Mercadona, Alcampo, Lidl y más tiendas de Jaén. Ahorra tiempo y dinero con un solo clic.</p>
+
+      <form class="hero-search" (ngSubmit)="handleSearch()">
+        <div class="hero-search-box">
+          <svg class="hero-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" placeholder="¿Qué producto buscas?" [(ngModel)]="searchQuery" name="heroSearch" />
+          <button type="submit" class="hero-search-btn">Buscar</button>
+        </div>
+      </form>
+
+      <div class="popular-terms">
+        <span class="popular-label">Popular:</span>
+        @for (term of popularTerms; track term) {
+          <button class="popular-tag" (click)="searchTerm(term)">{{term}}</button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stats-inner">
+      @for (stat of stats; track stat.label) {
+        <div class="stat-item">
+          <div class="stat-value">{{stat.value}}</div>
+          <div class="stat-label">{{stat.label}}</div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Categories -->
+<section class="section">
+  <div class="section-header">
+    <h2>Explorar categorías</h2>
+    <a routerLink="/buscar" class="see-all">Ver todas ›</a>
+  </div>
+  <div class="categories-grid">
+    @if (categories().length === 0 && loading()) {
+      @for (i of [1,2,3,4,5,6]; track i) {
+        <div class="category-card skeleton-card"></div>
+      }
+    } @else {
+      @for (cat of categories(); track cat.id) {
+        <button class="category-card" [style.background-color]="cat.bgColor" (click)="searchCategory(cat.name)">
+          <div class="cat-icon">{{cat.icon}}</div>
+          <div class="cat-name">{{cat.name}}</div>
+          <div class="cat-count">{{cat.count}} productos</div>
+        </button>
+      }
+    }
+  </div>
+</section>
+
+<!-- Stores -->
+<section class="stores-section">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2>Tiendas disponibles</h2>
+      <a routerLink="/tiendas" class="see-all">Ver todas ›</a>
+    </div>
+    <div class="stores-grid">
+      @if (stores().length === 0 && loading()) {
+        @for (i of [1,2,3,4,5]; track i) {
+          <div class="store-card skeleton-card"></div>
+        }
+      } @else {
+        @for (store of stores(); track store.id) {
+          <a routerLink="/tiendas" class="store-card">
+            <div class="store-logo" [style.background-color]="store.color">{{store.logo}}</div>
+            <div class="store-name">{{store.name}}</div>
+            <div class="store-rating">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="#f97316" stroke="#f97316" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <span>{{store.rating}}</span>
+            </div>
+            <div class="store-delivery">🕐 {{store.deliveryTime}}</div>
+          </a>
+        }
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Featured Products -->
+<section class="section">
+  <div class="section-header">
+    <h2>Productos populares</h2>
+    <a routerLink="/buscar" class="see-all">Ver todos ›</a>
+  </div>
+  <div class="products-grid">
+    @if (featuredProducts().length === 0 && loading()) {
+      @for (i of [1,2,3,4]; track i) {
+        <div class="product-card skeleton-card skeleton-product"></div>
+      }
+    } @else {
+      @for (product of featuredProducts(); track product.id) {
+        <a [routerLink]="['/buscar']" [queryParams]="{q: product.name}" class="product-card">
+          <div class="product-image">
+            <img [src]="product.image" [alt]="product.name" />
+            <div class="product-stores-badge">{{getAvailableCount(product)}} tiendas</div>
+          </div>
+          <div class="product-info">
+            <div class="product-category">{{product.category}}</div>
+            <h4>{{product.name}}</h4>
+            <div class="product-price">
+              Desde <span class="price-value">{{getMinPrice(product) | number:'1.2-2'}}€</span>
+              @if (getMinPrice(product) !== getMaxPrice(product)) {
+                <span> hasta {{getMaxPrice(product) | number:'1.2-2'}}€</span>
+              }
+            </div>
+          </div>
+        </a>
+      }
+    }
+  </div>
+</section>
+
+<!-- Promo banners -->
+<section class="section">
+  <div class="promos-grid">
+    <div class="promo-card promo-green">
+      <img [src]="oliveImg" alt="Aceite de Oliva" class="promo-bg" />
+      <div class="promo-content">
+        <div class="promo-title">Aceite de Oliva</div>
+        <div>
+          <div class="promo-desc">El mejor AOVE de Jaén a precios comparados</div>
+          <button class="promo-btn" style="color: #1a7a4a" (click)="searchTerm('Aceite de Oliva')">Explorar</button>
+        </div>
+      </div>
+    </div>
+    <div class="promo-card promo-blue">
+      <img [src]="fruitImg" alt="Frutas y Verduras" class="promo-bg" />
+      <div class="promo-content">
+        <div class="promo-title">Frutas y Verduras</div>
+        <div>
+          <div class="promo-desc">Naranjas y productos frescos de temporada</div>
+          <button class="promo-btn" style="color: #2563eb" (click)="searchTerm('Naranjas')">Explorar</button>
+        </div>
+      </div>
+    </div>
+    <div class="promo-card promo-amber">
+      <img [src]="breadImg" alt="Panadería" class="promo-bg" />
+      <div class="promo-content">
+        <div class="promo-title">Panadería</div>
+        <div>
+          <div class="promo-desc">Pan artesano del día en tu puerta</div>
+          <button class="promo-btn" style="color: #c2850a" (click)="searchTerm('Pan')">Explorar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="how-section">
+  <div class="section-inner">
+    <h2 class="text-center">¿Cómo funciona MercaFácil?</h2>
+    <p class="how-subtitle">Compra inteligente, ahorra más</p>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-icon" style="background: #dcfce7"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1a7a4a" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div>
+        <div class="step-number" style="background: #1a7a4a">01</div>
+        <h4>Busca tu producto</h4>
+        <p>Escribe el nombre del producto que necesitas y buscamos en todas las tiendas simultáneamente.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-icon" style="background: #dbeafe"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+        <div class="step-number" style="background: #2563eb">02</div>
+        <h4>Compara precios</h4>
+        <p>Ve los precios actualizados de cada supermercado para ese producto y elige el mejor.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-icon" style="background: #ffedd5"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+        <div class="step-number" style="background: #f97316">03</div>
+        <h4>Añade al carrito</h4>
+        <p>Añade los productos al carrito desde la tienda que prefieras o mezcla productos de varias.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-icon" style="background: #ede9fe"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="step-number" style="background: #8b5cf6">04</div>
+        <h4>Recibe en casa</h4>
+        <p>El supermercado prepara y entrega tu pedido en la franja horaria que elijas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section">
+  <div class="cta-card">
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#a7f3d0" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+    <h2 class="cta-title">Precios actualizados cada día</h2>
+    <p class="cta-desc">Nuestro sistema actualiza automáticamente los precios de los supermercados asociados cada mañana para que siempre tengas la información más reciente.</p>
+    <button class="cta-btn" (click)="goToSearch()">Empezar a comparar</button>
+  </div>
+</section>

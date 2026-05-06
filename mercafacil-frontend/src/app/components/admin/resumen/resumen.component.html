@@ -1,0 +1,61 @@
+@if (loading()) {
+  <div class="loading">Cargando estadísticas...</div>
+} @else if (error()) {
+  <div class="error-msg">{{ error() }}</div>
+} @else {
+  <h1 class="page-title">Resumen del sistema</h1>
+
+  <!-- KPI principales -->
+  <div class="kpi-grid">
+    <div class="kpi-card blue">
+      <div class="kpi-icon">👥</div>
+      <div class="kpi-value">{{ stats()?.totalUsers }}</div>
+      <div class="kpi-label">Usuarios totales</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-icon">🏪</div>
+      <div class="kpi-value">{{ stats()?.totalStores }}</div>
+      <div class="kpi-label">Tiendas activas</div>
+    </div>
+    <div class="kpi-card purple">
+      <div class="kpi-icon">📦</div>
+      <div class="kpi-value">{{ stats()?.totalOrders }}</div>
+      <div class="kpi-label">Pedidos totales</div>
+    </div>
+  </div>
+
+  <!-- Distribución por rol -->
+  <h2 class="section-title">Usuarios por rol</h2>
+  <div class="role-grid">
+    <div class="role-card">
+      <span class="role-icon">🛍️</span>
+      <span class="role-count">{{ stats()?.clienteCount }}</span>
+      <span class="role-name">Clientes</span>
+    </div>
+    <div class="role-card">
+      <span class="role-icon">🏪</span>
+      <span class="role-count">{{ stats()?.vendedorCount }}</span>
+      <span class="role-name">Vendedores</span>
+    </div>
+    <div class="role-card">
+      <span class="role-icon">🛵</span>
+      <span class="role-count">{{ stats()?.repartidorCount }}</span>
+      <span class="role-name">Repartidores</span>
+    </div>
+    <div class="role-card">
+      <span class="role-icon">📦</span>
+      <span class="role-count">{{ stats()?.proveedorCount }}</span>
+      <span class="role-name">Proveedores</span>
+    </div>
+    <div class="role-card">
+      <span class="role-icon">🛡️</span>
+      <span class="role-count">{{ stats()?.adminCount }}</span>
+      <span class="role-name">Admins</span>
+    </div>
+  </div>
+
+  <!-- Accesos rápidos -->
+  <div class="quick-links">
+    <a routerLink="../usuarios" class="quick-card">👥 Gestionar usuarios</a>
+  </div>
+}
