@@ -58,15 +58,17 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      # Hot reload: el código fuente del host se monta sobre el del contenedor
-      - ./mercafacil-backend/src:/app/src
-      # Cache de Maven para no re-descargar dependencias entre reinicios
-      - maven_cache:/root/.m2
+      - ./mercafacil-backend:/app   # directorio completo montado en vivo
+      - maven_cache:/root/.m2       # caché de dependencias Maven
     depends_on:
       mysql:
         condition: service_healthy
     networks:
       - mercafacil-network
+    develop:
+      watch:
+        - action: rebuild
+          path: ./mercafacil-backend/pom.xml
 
   frontend:
     build:
@@ -74,22 +76,30 @@ services:
       dockerfile: Dockerfile.dev
     container_name: mercafacil-frontend
     restart: unless-stopped
+    environment:
+      CHOKIDAR_USEPOLLING: "true"   # polling para Windows/WSL2 (inotify no fiable)
     ports:
       - "4200:4200"
     volumes:
-      # Hot reload completo: también refleja angular.json, tsconfig, etc.
-      - ./mercafacil-frontend:/app
-      # Volumen anónimo: evita que el host sobreescriba el node_modules Linux del contenedor
-      - /app/node_modules
+      - ./mercafacil-frontend:/app              # directorio completo montado en vivo
+      - front_node_modules:/app/node_modules    # node_modules del contenedor, no del host
     depends_on:
       - backend
     networks:
       - mercafacil-network
+    develop:
+      watch:
+        - action: rebuild
+          path: ./mercafacil-frontend/package.json
+        - action: rebuild
+          path: ./mercafacil-frontend/angular.json
 
 volumes:
   mysql_data:
     driver: local
   maven_cache:
+    driver: local
+  front_node_modules:
     driver: local
 
 networks:

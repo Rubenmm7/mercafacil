@@ -80,6 +80,8 @@ export class EntregasComponent implements OnInit, OnDestroy {
         this.myOrders.set(my);
         this.available.set(avail);
         this.loading.set(false);
+        const enRuta = my.find(o => o.status === 'EN_RUTA');
+        if (enRuta && this.simulatingOrderId() === null) this.startSimulation(enRuta.id);
       },
       error: () => { this.error.set('Error al cargar entregas'); this.loading.set(false); }
     });

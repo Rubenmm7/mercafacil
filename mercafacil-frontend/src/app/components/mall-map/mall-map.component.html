@@ -1,0 +1,116 @@
+<div class="mall-map-container">
+
+  <!-- Selector de planta -->
+  <div class="floor-tabs">
+    <button class="floor-tab"
+            [class.active]="activeFloor() === 'baja'"
+            (click)="setFloor('baja')">
+      Planta Baja
+    </button>
+    <button class="floor-tab"
+            [class.active]="activeFloor() === 'alta'"
+            (click)="setFloor('alta')">
+      Planta Alta
+    </button>
+  </div>
+
+  <!-- Plano esquemático -->
+  <svg class="mall-svg" viewBox="0 0 556 290" preserveAspectRatio="xMidYMid meet"
+       xmlns="http://www.w3.org/2000/svg" role="img"
+       aria-label="Plano interactivo de Jaén Plaza">
+
+    <!-- Fondo del edificio -->
+    <rect class="building-bg" x="0" y="0" width="556" height="290" rx="6" />
+
+    <!-- Muro divisor vertical (separa el anchor Decathlon) en Planta Baja -->
+    @if (activeFloor() === 'baja') {
+      <rect class="wall-v" x="376" y="0" width="10" height="290" />
+    }
+
+    <!-- Pasillo principal (franja horizontal entre filas) -->
+    <rect class="corridor-strip" x="0" y="130" width="372" height="30" />
+    @if (activeFloor() === 'alta') {
+      <rect class="corridor-strip wide" x="0" y="130" width="556" height="30" />
+    }
+
+    <!-- Texto del pasillo / zona -->
+    @if (activeFloor() === 'baja') {
+      <text x="186" y="149" class="corridor-label" text-anchor="middle">PASILLO PRINCIPAL</text>
+    } @else {
+      <text x="278" y="149" class="corridor-label" text-anchor="middle">ZONA DE RESTAURACIÓN</text>
+    }
+
+    <!-- Zonas de tiendas -->
+    @for (zone of zones(); track zone.storeId) {
+      @if (zone.store) {
+        <g class="zone-group"
+           [class.selected]="selectedId() === zone.storeId"
+           (click)="select(zone.storeId)"
+           (keydown)="onKeydown($event, zone.storeId)"
+           tabindex="0"
+           role="button"
+           [attr.aria-label]="zone.store.name">
+
+          <!-- Tile de la tienda -->
+          <rect [attr.x]="zone.x"
+                [attr.y]="zone.y"
+                [attr.width]="zone.w"
+                [attr.height]="zone.h"
+                rx="5"
+                class="zone-rect"
+                [style.fill]="zone.store.color"
+                [style.stroke]="zone.store.color" />
+
+          <!-- Círculo con logo/emoji -->
+          <circle [attr.cx]="zone.cx"
+                  [attr.cy]="zone.cy - 14"
+                  r="17"
+                  class="zone-icon-ring" />
+          <text [attr.x]="zone.cx"
+                [attr.y]="zone.cy - 14"
+                class="zone-icon"
+                text-anchor="middle"
+                dominant-baseline="middle">{{ zone.store.logo }}</text>
+
+          <!-- Nombre de la tienda -->
+          @if (zone.labelLines.length === 1) {
+            <text [attr.x]="zone.cx"
+                  [attr.y]="zone.cy + 9"
+                  class="zone-label"
+                  text-anchor="middle"
+                  dominant-baseline="middle">{{ zone.labelLines[0] }}</text>
+          } @else {
+            <text class="zone-label" text-anchor="middle">
+              <tspan [attr.x]="zone.cx" [attr.y]="zone.cy + 4">{{ zone.labelLines[0] }}</tspan>
+              <tspan [attr.x]="zone.cx" dy="1.25em">{{ zone.labelLines[1] }}</tspan>
+            </text>
+          }
+
+        </g>
+      }
+    }
+
+    <!-- Terraza/zona abierta en Planta Alta -->
+    @if (activeFloor() === 'alta') {
+      <g class="terrace-zone">
+        <rect x="268" y="154" width="284" height="128" rx="5" class="terrace-rect" />
+        <text x="410" y="211" class="terrace-icon" text-anchor="middle" dominant-baseline="middle">☕</text>
+        <text x="410" y="236" class="terrace-label" text-anchor="middle">TERRAZA</text>
+      </g>
+    }
+
+    <!-- Etiqueta de planta actual -->
+    <text x="8" y="282" class="floor-badge">
+      {{ activeFloor() === 'baja' ? '▸ PLANTA BAJA' : '▸ PLANTA ALTA' }}
+    </text>
+
+    <!-- Indicador de entrada principal -->
+    @if (activeFloor() === 'baja') {
+      <g class="entrance">
+        <rect x="218" y="284" width="120" height="6" rx="3" class="entrance-bar" />
+        <text x="278" y="280" class="entrance-label" text-anchor="middle">ENTRADA PRINCIPAL</text>
+      </g>
+    }
+
+  </svg>
+</div>

@@ -1,0 +1,180 @@
+/* ── Contenedor ────────────────────────────────────────────── */
+.mall-map-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px 6px;
+  box-sizing: border-box;
+}
+
+/* ── Selector de planta ─────────────────────────────────────── */
+.floor-tabs {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.floor-tab {
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1.5px solid #cbd5e1;
+  background: #fff;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+  letter-spacing: 0.02em;
+}
+
+.floor-tab.active {
+  background: #1e293b;
+  color: #fff;
+  border-color: #1e293b;
+  font-weight: 700;
+}
+
+.floor-tab:hover:not(.active) {
+  border-color: #475569;
+  color: #1e293b;
+}
+
+/* ── SVG ────────────────────────────────────────────────────── */
+.mall-svg {
+  width: 100%;
+  flex: 1;
+  display: block;
+  min-height: 0;
+}
+
+/* ── Edificio y estructura ──────────────────────────────────── */
+.building-bg {
+  fill: #e8edf2;
+  stroke: #94a3b8;
+  stroke-width: 1.5;
+}
+
+.wall-v {
+  fill: #94a3b8;
+}
+
+.corridor-strip {
+  fill: #dde3ea;
+}
+
+.corridor-label {
+  font-size: 8.5px;
+  fill: #94a3b8;
+  font-family: inherit;
+  letter-spacing: 0.18em;
+  font-weight: 600;
+  pointer-events: none;
+  text-transform: uppercase;
+}
+
+/* ── Zonas interactivas ─────────────────────────────────────── */
+.zone-group {
+  cursor: pointer;
+  outline: none;
+}
+
+.zone-rect {
+  fill-opacity: 0.18;
+  stroke-width: 1.5;
+  transition: fill-opacity 0.2s ease, stroke-width 0.2s ease, filter 0.2s ease;
+}
+
+.zone-group:hover .zone-rect,
+.zone-group:focus-visible .zone-rect {
+  fill-opacity: 0.35;
+  stroke-width: 2.5;
+}
+
+.zone-group.selected .zone-rect {
+  fill-opacity: 0.55;
+  stroke-width: 3;
+  filter: drop-shadow(0 0 6px rgba(0,0,0,0.25));
+}
+
+/* ── Icono/logo circular ────────────────────────────────────── */
+.zone-icon-ring {
+  fill: rgba(255,255,255,0.82);
+  pointer-events: none;
+}
+
+.zone-group.selected .zone-icon-ring {
+  fill: rgba(255,255,255,0.95);
+}
+
+.zone-icon {
+  font-size: 15px;
+  pointer-events: none;
+}
+
+/* ── Nombre de tienda ───────────────────────────────────────── */
+.zone-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  fill: #1e293b;
+  font-family: inherit;
+  pointer-events: none;
+  letter-spacing: 0.02em;
+  paint-order: stroke;
+  stroke: rgba(255,255,255,0.85);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+.zone-group.selected .zone-label {
+  font-size: 10.5px;
+  fill: #0f172a;
+}
+
+/* ── Terraza (Planta Alta) ──────────────────────────────────── */
+.terrace-rect {
+  fill: #e2e8f0;
+  stroke: #b0b9c5;
+  stroke-width: 1.5;
+  stroke-dasharray: 6 3;
+}
+
+.terrace-icon {
+  font-size: 22px;
+  fill: #94a3b8;
+  pointer-events: none;
+}
+
+.terrace-label {
+  font-size: 9px;
+  fill: #94a3b8;
+  font-family: inherit;
+  letter-spacing: 0.2em;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+/* ── Decoración: etiqueta de planta y entrada ───────────────── */
+.floor-badge {
+  font-size: 8px;
+  fill: #94a3b8;
+  font-family: inherit;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.entrance-bar {
+  fill: #64748b;
+}
+
+.entrance-label {
+  font-size: 7.5px;
+  fill: #64748b;
+  font-family: inherit;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  pointer-events: none;
+}

@@ -7,6 +7,7 @@ RUN mvn dependency:go-offline -B
 
 EXPOSE 8080
 
-# Loop de fondo: recompila cada 2s los .java del host (montados vía volumen).
-# Spring DevTools detecta los .class nuevos y reinicia el contexto automáticamente.
-CMD ["sh", "-c", "(sleep 30 && while true; do mvn compile -q; sleep 5; done) & mvn spring-boot:run"]
+# Compile loop en background: recompila cada 2s los .java montados vía volumen.
+# Spring DevTools detecta los .class nuevos y reinicia el contexto (~3-5s).
+# exec reemplaza el shell por mvn para que Docker pueda enviarle señales correctamente.
+CMD ["sh", "-c", "(while true; do sleep 2; mvn compile -q 2>/dev/null; done) & exec mvn spring-boot:run"]

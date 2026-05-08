@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
@@ -17,16 +17,16 @@ export class LayoutComponent {
   mobileMenuOpen = false;
   searchQuery = '';
 
+  readonly isDark = signal(
+    localStorage.getItem('mf-dark') === '1' ||
+    (!localStorage.getItem('mf-dark') && window.matchMedia('(prefers-color-scheme: dark)').matches)
+  );
+
   navLinks = [
     { path: '/', label: 'Inicio' },
     { path: '/tiendas', label: 'Tiendas' },
     { path: '/envio', label: 'Envío' }
   ];
-
-  get chatVisible(): boolean {
-    const rol = this.authService.user()?.rol;
-    return !!rol && rol !== 'ADMIN';
-  }
 
   get showChatsLink(): boolean {
     const rol = this.authService.user()?.rol;
@@ -40,15 +40,31 @@ export class LayoutComponent {
     { path: '/envio', label: 'Información de envío' }
   ];
 
-  footerStores = ['Mercadona', 'Carrefour', 'Lidl', 'Dia', 'Alcampo', 'El Corte Inglés'];
-  footerSupport = ['Ayuda y FAQ', 'Política de envíos', 'Devoluciones', 'Contacto', 'Términos de uso', 'Privacidad'];
+  footerStores = [
+    "McDonald's", 'Popeyes', 'Vips', "Foster's Hollywood",
+    'Zara', 'Primark', 'MediaMarkt', 'Game', 'Decathlon', 'Tiendanimal'
+  ];
+
+  footerSupport = [
+    'Ayuda y FAQ', 'Política de envíos', 'Devoluciones',
+    'Contacto', 'Términos de uso', 'Privacidad'
+  ];
 
   constructor(
     public cartService: CartService,
     public authService: AuthService,
     public notificationService: NotificationService,
     private router: Router
-  ) {}
+  ) {
+    document.documentElement.classList.toggle('dark', this.isDark());
+  }
+
+  toggleDark(): void {
+    const next = !this.isDark();
+    this.isDark.set(next);
+    document.documentElement.classList.toggle('dark', next);
+    localStorage.setItem('mf-dark', next ? '1' : '0');
+  }
 
   handleSearch(): void {
     if (this.searchQuery.trim()) {

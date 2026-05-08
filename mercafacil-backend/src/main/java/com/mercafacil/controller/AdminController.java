@@ -41,7 +41,7 @@ public class AdminController {
 
     @PutMapping("/users/{id}/role")
     public ResponseEntity<UserDto> changeRole(@PathVariable Long id,
-                                              @RequestBody Map<String, String> body) {
+            @RequestBody Map<String, String> body) {
         if (id == null) {
             throw new IllegalArgumentException("User ID cannot be null");
         }

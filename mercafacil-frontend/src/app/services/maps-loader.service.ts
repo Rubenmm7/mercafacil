@@ -25,12 +25,16 @@ export class MapsLoaderService {
     }
 
     this.loadPromise = new Promise<boolean>(resolve => {
+      const cb = '__gmapsReady';
+      (window as any)[cb] = () => {
+        delete (window as any)[cb];
+        resolve(true);
+      };
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&loading=async`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&callback=${cb}`;
       script.async = true;
       script.defer = true;
-      script.onload  = () => resolve(true);
-      script.onerror = () => resolve(false);
+      script.onerror = () => { delete (window as any)[cb]; resolve(false); };
       document.head.appendChild(script);
     });
     return this.loadPromise;

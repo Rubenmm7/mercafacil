@@ -33,3 +33,4 @@ docs/
 *specs/
 node_modules
 resources/
+.superpowers/

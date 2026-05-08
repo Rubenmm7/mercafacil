@@ -157,3 +157,9 @@
 }
 
 .btn-navigate:hover { background: #3367d6; }
+
+.addr-missing {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  font-style: italic;
+}
