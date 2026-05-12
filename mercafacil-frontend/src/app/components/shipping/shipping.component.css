@@ -12,8 +12,8 @@
 .icon-wrap { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
 .icon-wrap.green { background: #dcfce7; }
 .icon-wrap.blue  { background: #dbeafe; }
-html.dark .icon-wrap.green { background: rgba(26,122,74,0.2); }
-html.dark .icon-wrap.blue  { background: rgba(37,99,235,0.2); }
+:host-context(html.dark) .icon-wrap.green { background: rgba(26,122,74,0.2); }
+:host-context(html.dark) .icon-wrap.blue  { background: rgba(37,99,235,0.2); }
 .card-header h3 { color: var(--text); font-size: 1rem; }
 .card-header p  { font-size: 0.8rem; color: var(--text-muted); }
 
@@ -110,13 +110,24 @@ html.dark .icon-wrap.blue  { background: rgba(37,99,235,0.2); }
 .result-warn { background: #fffbeb; border-color: #fcd34d; }
 .result-fail { background: #fef2f2; border-color: #fca5a5; }
 
-html.dark .result-ok   { background: rgba(26,122,74,0.20);  border-color: rgba(74,222,128,0.50); }
-html.dark .result-warn { background: rgba(217,119,6,0.18);  border-color: rgba(252,211,77,0.50); }
-html.dark .result-fail { background: rgba(220,38,38,0.18);  border-color: rgba(252,165,165,0.50); }
-html.dark .result-ok   .result-row strong { color: #86efac; }
-html.dark .result-warn .result-row strong { color: #fde68a; }
-html.dark .result-fail .result-row strong { color: #fca5a5; }
-html.dark .result-pills { border-top-color: rgba(74,222,128,0.25); }
+:host-context(html.dark) .result-ok   { background: #0d2d1a; border-color: #4ade80; }
+:host-context(html.dark) .result-warn { background: #221a00; border-color: #fbbf24; }
+:host-context(html.dark) .result-fail { background: #2d0f0f; border-color: #f87171; }
+
+:host-context(html.dark) .result-ok   .result-row strong { color: #86efac; }
+:host-context(html.dark) .result-warn .result-row strong { color: #fde68a; }
+:host-context(html.dark) .result-fail .result-row strong { color: #fca5a5; }
+
+:host-context(html.dark) .result-ok   .result-row span { color: #bbf7d0; }
+:host-context(html.dark) .result-warn .result-row span { color: #fef3c7; }
+:host-context(html.dark) .result-fail .result-row span { color: #fecaca; }
+
+:host-context(html.dark) .result-dot.ok   { background: #22c55e; }
+:host-context(html.dark) .result-dot.warn { background: #d97706; }
+:host-context(html.dark) .result-dot.fail { background: #ef4444; }
+
+:host-context(html.dark) .result-pills { border-top-color: rgba(74,222,128,0.30); }
+:host-context(html.dark) .pill { background: rgba(34,197,94,0.15); border-color: rgba(74,222,128,0.45); color: #86efac; }
 
 .result-row { display: flex; align-items: flex-start; gap: 12px; }
 
@@ -145,7 +156,6 @@ html.dark .result-pills { border-top-color: rgba(74,222,128,0.25); }
   border-radius: 99px;
   font-size: 0.75rem; font-weight: 600; color: #15803d;
 }
-html.dark .pill { background: rgba(26,122,74,0.15); border-color: rgba(74,222,128,0.2); color: #4ade80; }
 
 /* ── Zip chips ────────────────────────────────────────────────────── */
 .zip-hints { margin-top: 20px; }
@@ -214,8 +224,8 @@ html.dark .pill { background: rgba(26,122,74,0.15); border-color: rgba(74,222,12
 .slot-badge.badge-active { background: #dbeafe; color: #1d4ed8; }
 .slot-badge.badge-past   { background: var(--border-2); color: var(--text-muted); }
 
-html.dark .slot-badge.badge-ok     { background: rgba(26,122,74,0.2);  color: #4ade80; }
-html.dark .slot-badge.badge-active { background: rgba(37,99,235,0.2);  color: #60a5fa; }
+:host-context(html.dark) .slot-badge.badge-ok     { background: rgba(26,122,74,0.2);  color: #4ade80; }
+:host-context(html.dark) .slot-badge.badge-active { background: rgba(37,99,235,0.2);  color: #60a5fa; }
 
 .slot-note { font-size: 0.78rem; color: var(--text-muted); margin-top: 14px; }
 
@@ -230,10 +240,10 @@ th:nth-child(2), th:nth-child(3), th:nth-child(4) { text-align: center; }
 td { padding: 16px 20px; font-size: 0.875rem; color: var(--text); border-bottom: 1px solid var(--border-2); }
 td:nth-child(2), td:nth-child(3), td:nth-child(4) { text-align: center; }
 .green-text { color: #1a7a4a; font-weight: 700; }
-html.dark .green-text { color: #4ade80; }
+:host-context(html.dark) .green-text { color: #4ade80; }
 .status-badge { padding: 4px 12px; border-radius: 99px; font-size: 0.75rem; font-weight: 600; background: var(--border-2); color: var(--text-muted); }
 .status-badge.active { background: #dcfce7; color: #1a7a4a; }
-html.dark .status-badge.active { background: rgba(26,122,74,0.2); color: #4ade80; }
+:host-context(html.dark) .status-badge.active { background: rgba(26,122,74,0.2); color: #4ade80; }
 .table-note { padding: 12px 20px; background: var(--bg-alt); border-top: 1px solid var(--border); font-size: 0.78rem; color: var(--text-muted); }
 
 /* ── Store delivery ───────────────────────────────────────────────── */
