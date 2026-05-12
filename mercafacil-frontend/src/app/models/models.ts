@@ -2,6 +2,7 @@ export interface Store {
   id: number;
   name: string;
   logo: string;
+  logoUrl?: string;
   color: string;
   bgColor: string;
   address: string;
@@ -14,6 +15,10 @@ export interface Store {
   deliveryFee: number;
   category: string;
 }
+
+export type StoreWithLogo = Store & {
+  logoUrl?: string;
+};
 
 export interface StoreOffer {
   storeId: number;

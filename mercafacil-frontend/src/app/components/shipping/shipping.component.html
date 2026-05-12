@@ -182,7 +182,16 @@
         } @else {
           @for (store of stores(); track store.id) {
             <div class="store-delivery-card">
-              <div class="sd-header"><div class="sd-logo" [style.background-color]="store.color">{{store.logo}}</div><h4>{{store.name}}</h4></div>
+              <div class="sd-header">
+                <div class="sd-logo" [class.has-logo]="!!store.logoUrl" [style.background-color]="store.logoUrl ? '#ffffff' : store.color">
+                  @if (store.logoUrl) {
+                    <img [src]="store.logoUrl" [alt]="store.name" />
+                  } @else {
+                    <span>{{store.logo}}</span>
+                  }
+                </div>
+                <h4>{{store.name}}</h4>
+              </div>
               <div class="sd-row"><span>Tiempo de entrega</span><strong>{{store.deliveryTime}}</strong></div>
               <div class="sd-row"><span>Pedido mínimo</span><strong>{{store.minOrder}}€</strong></div>
               <div class="sd-row"><span>Coste de envío</span><strong class="green-text">{{store.deliveryFee | number:'1.2-2'}}€</strong></div>

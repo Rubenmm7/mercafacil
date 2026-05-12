@@ -257,6 +257,17 @@
   justify-content: center;
   margin-bottom: 6px;
 }
+.store-logo.has-logo,
+.mall-store-logo.has-logo {
+  padding: 6px;
+}
+.store-logo img,
+.mall-store-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
 .store-name { font-weight: 600; font-size: 0.85rem; color: var(--text, #111827); }
 .store-rating {
   display: flex;

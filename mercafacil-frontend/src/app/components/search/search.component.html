@@ -35,7 +35,13 @@
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                 }
               </span>
-              <span class="store-mini-logo" [style.background-color]="store.color">{{store.logo}}</span>
+              <span class="store-mini-logo" [class.has-logo]="!!store.logoUrl" [style.background-color]="store.logoUrl ? '#ffffff' : store.color">
+                @if (store.logoUrl) {
+                  <img [src]="store.logoUrl" [alt]="store.name" />
+                } @else {
+                  {{store.logo}}
+                }
+              </span>
               <span>{{store.name}}</span>
             </label>
           }
@@ -131,7 +137,13 @@
               <div class="offers-grid">
                 @for (offer of product.storeOffers; track offer.storeId) {
                   <div class="offer-row" [class.best]="isLowest(product, offer.price, offer.inStock)" [class.out-of-stock]="!offer.inStock">
-                    <div class="offer-store-logo" [style.background-color]="getStore(offer.storeId)?.color || '#999'">{{getStore(offer.storeId)?.logo}}</div>
+                    <div class="offer-store-logo" [class.has-logo]="!!getStore(offer.storeId)?.logoUrl" [style.background-color]="getStore(offer.storeId)?.logoUrl ? '#ffffff' : (getStore(offer.storeId)?.color || '#999')">
+                      @if (getStore(offer.storeId)?.logoUrl) {
+                        <img [src]="getStore(offer.storeId)?.logoUrl" [alt]="getStore(offer.storeId)?.name || offer.storeName" />
+                      } @else {
+                        {{getStore(offer.storeId)?.logo}}
+                      }
+                    </div>
                     <div class="offer-info">
                       <div class="offer-store-name">
                         <span class="store-name-text">{{offer.storeName}}</span>

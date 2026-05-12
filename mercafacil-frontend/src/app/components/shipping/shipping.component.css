@@ -253,6 +253,15 @@ td:nth-child(2), td:nth-child(3), td:nth-child(4) { text-align: center; }
 .store-delivery-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
 .sd-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
 .sd-logo { width: 40px; height: 40px; border-radius: 12px; color: white; font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.sd-logo.has-logo {
+  padding: 4px;
+}
+.sd-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
 .sd-header h4 { color: var(--text); }
 .sd-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.8rem; }
 .sd-row span   { color: var(--text-muted); }

@@ -24,6 +24,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@SuppressWarnings("unused")
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;

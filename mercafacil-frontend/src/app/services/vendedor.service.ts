@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Order, ProductDetail, Store, StoreOfferDetail, VendedorStats } from '../models/models';
+import { attachStoreLogo } from './store-logo';
 
 @Injectable({ providedIn: 'root' })
 export class VendedorService {
@@ -15,7 +17,9 @@ export class VendedorService {
   }
 
   getStores(): Observable<Store[]> {
-    return this.http.get<Store[]>(`${this.base}/stores`);
+    return this.http.get<Store[]>(`${this.base}/stores`).pipe(
+      map(stores => stores.map(attachStoreLogo))
+    );
   }
 
   getOrders(): Observable<Order[]> {

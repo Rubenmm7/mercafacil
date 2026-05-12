@@ -13,7 +13,13 @@
       @for (store of stores(); track store.id) {
         <div class="store-card">
           <div class="store-header" [style.background]="store.bgColor">
-            <span class="store-logo">{{ store.logo }}</span>
+            <span class="store-logo" [class.has-logo]="!!store.logoUrl" [style.background-color]="store.logoUrl ? '#ffffff' : store.color">
+              @if (store.logoUrl) {
+                <img [src]="store.logoUrl" [alt]="store.name" />
+              } @else {
+                {{ store.logo }}
+              }
+            </span>
             <div class="store-info">
               <div class="store-name" [style.color]="store.color">{{ store.name }}</div>
               <div class="store-category">{{ store.category }}</div>

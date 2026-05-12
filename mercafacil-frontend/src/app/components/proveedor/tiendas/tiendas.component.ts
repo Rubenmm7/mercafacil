@@ -2,7 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProveedorService } from '../../../services/proveedor.service';
-import { Store } from '../../../models/models';
+import { StoreWithLogo } from '../../../models/models';
 import { IconComponent } from '../../icon/icon.component';
 
 @Component({
@@ -13,7 +13,7 @@ import { IconComponent } from '../../icon/icon.component';
   styleUrl: './tiendas.component.css'
 })
 export class TiendasProveedorComponent implements OnInit {
-  stores  = signal<Store[]>([]);
+  stores = signal<StoreWithLogo[]>([]);
   loading = signal(true);
   error   = signal('');
 

@@ -49,6 +49,15 @@
   border-radius: 10px;
   flex-shrink: 0;
 }
+.store-logo.has-logo {
+  padding: 6px;
+}
+.store-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
 
 .store-info { min-width: 0; }
 

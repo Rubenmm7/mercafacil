@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { Store, Product, Category, DeliveryZone, Order, CartItem } from '../models/models';
+import { catchError, map } from 'rxjs/operators';
+import { Store, StoreWithLogo, Product, Category, DeliveryZone, Order, CartItem } from '../models/models';
 import { environment } from '../../environments/environment';
+import { attachStoreLogo } from './store-logo';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -11,9 +12,10 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  getStores(): Observable<Store[]> {
+  getStores(): Observable<StoreWithLogo[]> {
     return this.http.get<Store[]>(`${this.baseUrl}/stores`).pipe(
-      catchError(this.handleError<Store[]>([]))
+      map(stores => stores.map(attachStoreLogo)),
+      catchError(this.handleError<StoreWithLogo[]>([]))
     );
   }
 

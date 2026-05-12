@@ -186,7 +186,11 @@ html.dark .state-error { color: #f87171; }
   box-shadow: 0 1px 4px rgba(0,0,0,.05);
 }
 
-html.dark .bubble { box-shadow: 0 1px 4px rgba(0,0,0,.3); }
+:host-context(html.dark) .messages-area .bubble {
+  background: #161b22 !important;
+  border-color: #334155 !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,.35) !important;
+}
 
 .bubble-own {
   background: #dcfce7;
@@ -194,9 +198,15 @@ html.dark .bubble { box-shadow: 0 1px 4px rgba(0,0,0,.3); }
   border-radius: 16px 16px 4px 16px;
 }
 
-html.dark .bubble-own {
-  background: rgba(26,122,74,0.22);
-  border-color: rgba(74,222,128,0.25);
+:host-context(html.dark) .messages-area .message-row.own .bubble {
+  background: #0f172a !important;
+  border-color: rgba(74,222,128,0.4) !important;
+  box-shadow: inset 0 0 0 1px rgba(74,222,128,0.12) !important;
+}
+
+:host-context(html.dark) .messages-area .message-row:not(.own) .bubble {
+  background: #161b22 !important;
+  border-color: rgba(148,163,184,0.24) !important;
 }
 
 .sender-name {
@@ -217,12 +227,31 @@ html.dark .sender-name { color: #4ade80; }
   word-break: break-word;
 }
 
+:host-context(html.dark) .messages-area .bubble-text {
+  color: #f8fafc !important;
+  line-height: 1.55;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.12);
+}
+
 .bubble-time {
   display: block;
   font-size: .65rem;
   color: var(--text-muted);
   text-align: right;
   margin-top: 4px;
+}
+
+:host-context(html.dark) .messages-area .bubble-time {
+  color: #9ca3af !important;
+}
+
+:host-context(html.dark) .messages-area .reply-btn {
+  color: #86efac !important;
+  font-weight: 600;
+}
+
+:host-context(html.dark) .messages-area .reply-btn:hover {
+  color: #bbf7d0 !important;
 }
 
 .reply-ref {
@@ -233,9 +262,10 @@ html.dark .sender-name { color: #4ade80; }
   margin-bottom: 8px;
 }
 
-html.dark .reply-ref {
-  background: rgba(26,122,74,0.12);
-  border-left-color: #4ade80;
+:host-context(html.dark) .messages-area .reply-ref {
+  background: #0f172a !important;
+  border-left-color: #4ade80 !important;
+  border: 1px solid rgba(74,222,128,0.18) !important;
 }
 
 .reply-ref span {
@@ -245,13 +275,15 @@ html.dark .reply-ref {
   color: #166534;
 }
 
-html.dark .reply-ref span { color: #4ade80; }
+:host-context(html.dark) .messages-area .reply-ref span { color: #4ade80 !important; }
 
 .reply-ref p {
   margin: 2px 0 0;
   font-size: .78rem;
   color: var(--text-2);
 }
+
+:host-context(html.dark) .messages-area .reply-ref p { color: #d1d5db !important; }
 
 .reply-btn {
   margin-top: 6px;
@@ -263,7 +295,7 @@ html.dark .reply-ref span { color: #4ade80; }
   padding: 0;
 }
 
-html.dark .reply-btn { color: #4ade80; }
+:host-context(html.dark) .messages-area .reply-btn { color: #4ade80 !important; }
 
 .replying-strip {
   display: flex;
@@ -282,13 +314,20 @@ html.dark .reply-btn { color: #4ade80; }
   color: #166534;
 }
 
-html.dark .replying-strip span { color: #4ade80; }
+:host-context(html.dark) .replying-strip span { color: #4ade80; }
 
 .replying-strip p {
   margin: 2px 0 0;
   font-size: .82rem;
   color: var(--text-2);
 }
+
+:host-context(html.dark) .replying-strip {
+  background: #0f172a;
+  border-top-color: rgba(255,255,255,0.08);
+}
+
+:host-context(html.dark) .replying-strip p { color: #d1d5db; }
 
 .reply-cancel {
   border: none;
@@ -328,6 +367,21 @@ html.dark .replying-strip span { color: #4ade80; }
 
 .message-input::placeholder { color: var(--text-muted); }
 .message-input:focus { border-color: #16a34a; }
+
+:host-context(html.dark) .message-input {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f3f4f6;
+}
+
+:host-context(html.dark) .message-input::placeholder {
+  color: #64748b;
+}
+
+:host-context(html.dark) .message-input:focus {
+  border-color: #4ade80;
+  box-shadow: 0 0 0 3px rgba(74,222,128,0.12);
+}
 
 .send-btn {
   flex-shrink: 0;

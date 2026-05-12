@@ -17,7 +17,7 @@
 
       <p class="hero-subtitle">
         Supermercados, tecnología, moda, restaurantes y deporte.<br>
-        Todo en un sitio. <strong>Sin registrarte. Sin coste.</strong>
+        Todo en un sitio. <strong>Sin coste adicional.</strong>
       </p>
 
       <form class="hero-search-form" (ngSubmit)="handleSearch()">
@@ -90,7 +90,13 @@
     } @else {
       @for (store of stores(); track store.id) {
         <a routerLink="/tiendas" class="store-card">
-          <div class="store-logo" [style.background]="store.color">{{ store.logo }}</div>
+          <div class="store-logo" [class.has-logo]="!!store.logoUrl" [style.background-color]="store.logoUrl ? '#ffffff' : store.color">
+            @if (store.logoUrl) {
+              <img [src]="store.logoUrl" [alt]="store.name" />
+            } @else {
+              <span>{{ store.logo }}</span>
+            }
+          </div>
           <div class="store-name">{{ store.name }}</div>
           <div class="store-rating">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="#f97316" stroke="#f97316" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
@@ -130,7 +136,13 @@
           <button class="mall-store-row"
                   [class.active]="selectedMallStore() === store.id"
                   (click)="selectMallStore(store.id)">
-            <div class="mall-store-logo" [style.background]="store.color">{{ store.logo }}</div>
+            <div class="mall-store-logo" [class.has-logo]="!!store.logoUrl" [style.background-color]="store.logoUrl ? '#ffffff' : store.color">
+              @if (store.logoUrl) {
+                <img [src]="store.logoUrl" [alt]="store.name" />
+              } @else {
+                <span>{{ store.logo }}</span>
+              }
+            </div>
             <div class="mall-store-info">
               <span class="mall-store-name">{{ store.name }}</span>
               <span class="mall-store-cat">{{ store.category }}</span>

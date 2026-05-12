@@ -18,9 +18,15 @@
       <div class="cart-items">
         @for (group of itemsByStore(); track group.storeId) {
           <div class="store-group">
-            <div class="store-group-header" [style.background-color]="group.store?.bgColor || '#f3f4f6'" [style.--store-color]="group.store?.color || '#999'">
+            <div class="store-group-header" [style.--store-bg]="group.store?.bgColor || '#f3f4f6'" [style.--store-color]="group.store?.color || '#999'">
               <div class="sg-left">
-                <div class="sg-logo" [style.background-color]="group.store?.color || '#999'">{{group.store?.logo}}</div>
+                <div class="sg-logo" [class.has-logo]="!!group.store?.logoUrl" [style.background-color]="group.store?.logoUrl ? '#ffffff' : (group.store?.color || '#999')">
+                  @if (group.store?.logoUrl) {
+                    <img [src]="group.store?.logoUrl" [alt]="group.storeName" />
+                  } @else {
+                    <span>{{group.store?.logo}}</span>
+                  }
+                </div>
                 <span class="sg-name">{{group.storeName}}</span>
                 <span class="sg-count">· {{group.items.length}} {{group.items.length === 1 ? 'producto' : 'productos'}}</span>
               </div>

@@ -30,7 +30,13 @@
       @for (store of filteredStores(); track store.id) {
         <div class="store-card">
           <div class="store-header" [style.background-color]="store.bgColor">
-            <div class="store-logo" [style.background-color]="store.color">{{store.logo}}</div>
+            <div class="store-logo" [class.has-logo]="!!store.logoUrl" [style.background-color]="store.logoUrl ? '#ffffff' : store.color">
+              @if (store.logoUrl) {
+                <img [src]="store.logoUrl" [alt]="store.name" />
+              } @else {
+                <span>{{store.logo}}</span>
+              }
+            </div>
             <div class="store-title">
               <div class="name-row">
                 <h3>{{store.name}}</h3>

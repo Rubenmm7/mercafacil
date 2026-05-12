@@ -22,6 +22,7 @@ import { environment } from '../../../environments/environment';
 })
 export class ChatComponent implements OnInit, OnDestroy {
   @ViewChild('messagesArea') private messagesArea!: ElementRef<HTMLElement>;
+  @ViewChild('messageInput') private messageInput?: ElementRef<HTMLTextAreaElement>;
 
   orderId  = signal<number | null>(null);
   shopId   = signal<number | null>(null);
@@ -206,6 +207,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   setReplyTarget(msg: MessageResponse): void {
     this.replyingTo.set(msg);
+    this.focusMessageInput();
   }
 
   clearReplyTarget(): void {
@@ -277,5 +279,15 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (!el) return;
     el.scrollTop = el.scrollHeight;
     this.isAtBottom.set(true);
+  }
+
+  private focusMessageInput(): void {
+    requestAnimationFrame(() => {
+      const el = this.messageInput?.nativeElement;
+      if (!el) return;
+      el.focus();
+      const len = el.value.length;
+      el.setSelectionRange(len, len);
+    });
   }
 }
