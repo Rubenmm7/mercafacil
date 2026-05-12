@@ -44,6 +44,22 @@ export interface UserAdmin {
   rol: Role;
 }
 
+export interface CreateUserRequest {
+  nombre: string;
+  apellidos: string;
+  email: string;
+  password: string;
+  rol: Role;
+}
+
+export interface UpdateUserRequest {
+  nombre: string;
+  apellidos: string;
+  email: string;
+  rol: Role;
+  password?: string;
+}
+
 // --- Proveedor dashboard ---
 export interface ProveedorStats {
   totalStores: number;

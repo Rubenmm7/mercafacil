@@ -18,13 +18,15 @@ export class StoresComponent implements OnInit {
   readonly filterType = signal<string>('Todos');
   readonly searchStore = signal<string>('');
 
-  filterTypes = ['Todos', 'Supermercado', 'Hipermercado', 'Gran Almacén'];
+  filterTypes = ['Todos', 'Comida Rápida', 'Moda', 'Tecnología', 'Deporte', 'Mascotas'];
 
   readonly filteredStores = computed(() => {
     const type = this.filterType();
     const search = this.searchStore().toLowerCase();
     return this.stores().filter(s => {
-      const matchesType = type === 'Todos' || s.category === type;
+      const matchesType = type === 'Todos'
+        || (type === 'Tecnología' && (s.category === 'Tecnología' || s.category === 'Videojuegos'))
+        || (type !== 'Tecnología' && s.category === type);
       const matchesSearch = s.name.toLowerCase().includes(search)
         || s.address.toLowerCase().includes(search);
       return matchesType && matchesSearch;

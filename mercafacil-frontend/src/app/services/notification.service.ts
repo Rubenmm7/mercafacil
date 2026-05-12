@@ -66,7 +66,8 @@ export class NotificationService {
     this.http.get<Record<string, number>>(`${environment.apiUrl}/messages/unread-counts`).subscribe({
       next: counts => this._unreadCounts.set(
         new Map(Object.entries(counts).map(([k, v]) => [k, Number(v)]))
-      )
+      ),
+      error: () => {}
     });
   }
 
@@ -76,6 +77,10 @@ export class NotificationService {
       connectHeaders: { Authorization: `Bearer ${token}` },
       reconnectDelay: 5000,
       onConnect: () => {
+        if (!this.authService.hasValidToken()) {
+          this.client?.deactivate();
+          return;
+        }
         this.subscribeToAllThreads();
         this.loadUnreadCounts();
       },
@@ -87,7 +92,8 @@ export class NotificationService {
 
   private subscribeToAllThreads(): void {
     this.http.get<ChatThread[]>(`${environment.apiUrl}/messages/threads`).subscribe({
-      next: threads => threads.forEach(t => this.subscribeToThread(t))
+      next: threads => threads.forEach(t => this.subscribeToThread(t)),
+      error: () => {}
     });
   }
 

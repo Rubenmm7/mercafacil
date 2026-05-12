@@ -1,17 +1,22 @@
-.loading { text-align: center; padding: 3rem 0; color: #64748b; }
+.loading { text-align: center; padding: 3rem 0; color: var(--text-muted); }
 .error-msg { text-align: center; padding: 2rem; color: #dc2626; background: #fef2f2; border-radius: 8px; }
+
+:host-context(html.dark) .error-msg {
+  background: rgba(220, 38, 38, 0.12);
+  color: #f87171;
+}
 
 .page-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text);
   margin-bottom: 1.5rem;
 }
 
 .section-title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-2);
   margin: 0 0 1rem;
 }
 
@@ -24,8 +29,8 @@
 }
 
 .kpi-card {
-  background: #fff;
-  border: 1px solid #e2e8f0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 1.25rem;
   text-align: center;
@@ -37,8 +42,8 @@
 .kpi-card.purple{ border-top: 3px solid #a855f7; }
 
 .kpi-icon  { font-size: 1.5rem; margin-bottom: 0.5rem; }
-.kpi-value { font-size: 1.75rem; font-weight: 700; color: #1e293b; }
-.kpi-label { font-size: 0.82rem; color: #64748b; margin-top: 0.25rem; }
+.kpi-value { font-size: 1.75rem; font-weight: 700; color: var(--text); }
+.kpi-label { font-size: 0.82rem; color: var(--text-muted); margin-top: 0.25rem; }
 
 /* Role grid */
 .role-grid {
@@ -49,8 +54,8 @@
 }
 
 .role-card {
-  background: #fff;
-  border: 1px solid #e2e8f0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   border-radius: 10px;
   padding: 1rem 0.75rem;
   display: flex;
@@ -60,8 +65,8 @@
 }
 
 .role-icon  { font-size: 1.4rem; }
-.role-count { font-size: 1.5rem; font-weight: 700; color: #1e293b; }
-.role-name  { font-size: 0.78rem; color: #64748b; }
+.role-count { font-size: 1.5rem; font-weight: 700; color: var(--text); }
+.role-name  { font-size: 0.78rem; color: var(--text-muted); }
 
 /* Quick links */
 .quick-links {
@@ -76,16 +81,16 @@
   justify-content: center;
   gap: 0.5rem;
   padding: 1rem;
-  background: #fff;
-  border: 1px solid #e2e8f0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   border-radius: 10px;
   text-decoration: none;
-  color: #334155;
+  color: var(--text-2);
   font-weight: 600;
   font-size: 0.9rem;
   transition: background 0.15s, border-color 0.15s;
 }
 .quick-card:hover {
-  background: #eff6ff;
-  border-color: #93c5fd;
+  background: var(--bg-alt);
+  border-color: var(--border);
 }

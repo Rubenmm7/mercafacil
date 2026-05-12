@@ -18,37 +18,126 @@
     <div class="two-cols">
       <!-- Zip checker -->
       <div class="card">
-        <div class="card-header"><div class="icon-wrap green">📍</div><div><h3>Comprueba tu cobertura</h3><p>Introduce tu código postal de Jaén</p></div></div>
-        <form class="zip-form" (ngSubmit)="handleCheckZip()">
-          <input type="text" placeholder="Ej: 23001" [value]="zipCode()" (input)="onZipInput($event)" maxlength="5" />
-          <button type="submit">Comprobar</button>
-        </form>
-        @if (checkResult() === 'available') {
-          <div class="result-ok">✅ ¡Zona con cobertura! El código postal <strong>{{zipCode()}}</strong> tiene entrega disponible. Tiempo estimado: 1-4h</div>
+        <div class="card-header">
+          <div class="icon-wrap green">📍</div>
+          <div><h3>Comprueba tu cobertura</h3><p>Introduce tu código postal de Jaén</p></div>
+        </div>
+
+        <div class="zip-form">
+          <div class="zip-input-wrap">
+            <svg class="zip-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input type="text" inputmode="numeric" placeholder="Ej: 23001"
+                   (input)="onZipInput($event)" (keydown.enter)="handleCheckZip()" maxlength="5" />
+          </div>
+          <button type="button" (click)="handleCheckZip()" [disabled]="checking() || zipCode().length < 3">
+            @if (checking()) { <span class="btn-spin"></span> }
+            @else { Comprobar }
+          </button>
+        </div>
+
+        @if (checking()) {
+          <div class="state-checking">
+            <span class="check-spin"></span>
+            Comprobando cobertura...
+          </div>
         }
-        @if (checkResult() === 'unavailable') {
-          <div class="result-fail">❌ Zona no disponible aún. Estamos expandiendo nuestra cobertura.</div>
+
+        @if (!checking() && checkResult() === 'available') {
+          <div class="result-card result-ok">
+            <div class="result-row">
+              <span class="result-dot ok">✓</span>
+              <div>
+                <strong>¡Zona con cobertura!</strong>
+                <span>{{ zoneName() }} · CP {{ zipCode() }}</span>
+              </div>
+            </div>
+            <div class="result-pills">
+              <span class="pill">⏱ 1–4h</span>
+              <span class="pill">📦 Gratis +40€</span>
+              <span class="pill">🔄 Dev. 24h</span>
+            </div>
+          </div>
         }
+
+        @if (!checking() && checkResult() === 'nearby') {
+          <div class="result-card result-warn">
+            <div class="result-row">
+              <span class="result-dot warn">!</span>
+              <div>
+                <strong>Zona sin cobertura aún</strong>
+                <span>CP {{ zipCode() }} está en la provincia de Jaén pero fuera de nuestra área actual. Pronto llegamos.</span>
+              </div>
+            </div>
+          </div>
+        }
+
+        @if (!checking() && checkResult() === 'too_far') {
+          <div class="result-card result-fail">
+            <div class="result-row">
+              <span class="result-dot fail">✕</span>
+              <div>
+                <strong>Zona a más de 30 km</strong>
+                <span>Por ahora solo enviamos en la provincia de Jaén (CP 23xxx). Estamos trabajando para ampliar nuestra cobertura.</span>
+              </div>
+            </div>
+          </div>
+        }
+
         <div class="zip-hints">
           <div class="hint-label">Códigos postales con cobertura:</div>
-          <div class="hint-item">• 23001–23009 (Jaén Capital)</div>
-          <div class="hint-item">• 23100–23350 (Martos, Alcalá la Real)</div>
-          <div class="hint-item">• 23400–23500 (Úbeda, Baeza)</div>
+          <div class="zip-chips">
+            <div class="zip-chip">
+              <span class="chip-dot"></span>
+              <span class="chip-range">23001–23009</span>
+              <span class="chip-name">Jaén Capital</span>
+            </div>
+            <div class="zip-chip">
+              <span class="chip-dot"></span>
+              <span class="chip-range">23100–23350</span>
+              <span class="chip-name">Martos, Alcalá la Real</span>
+            </div>
+            <div class="zip-chip">
+              <span class="chip-dot"></span>
+              <span class="chip-range">23400–23500</span>
+              <span class="chip-name">Úbeda, Baeza</span>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Time slots -->
       <div class="card">
-        <div class="card-header"><div class="icon-wrap blue">🕐</div><div><h3>Franjas horarias</h3><p>Disponibilidad para hoy</p></div></div>
+        <div class="card-header">
+          <div class="icon-wrap blue">🕐</div>
+          <div><h3>Franjas horarias</h3><p>Disponibilidad para hoy</p></div>
+        </div>
         <div class="slots">
           @for (slot of timeSlots; track slot.time) {
-            <div class="slot" [class.unavailable]="!slot.available">
-              <span>🕐 {{slot.time}}</span>
-              <span class="slot-badge" [class.available]="slot.available">{{slot.available ? 'Disponible' : 'Ocupado'}}</span>
+            <div class="slot"
+                 [class.slot-past]="slot.past"
+                 [class.slot-active]="slot.active"
+                 [class.unavailable]="!slot.available">
+              <div class="slot-left">
+                <span class="slot-dot"
+                      [class.dot-on]="slot.available && !slot.past"
+                      [class.dot-active]="slot.active"></span>
+                <div>
+                  <span class="slot-time">{{ slot.time }}</span>
+                  <span class="slot-label">{{ slot.label }}</span>
+                </div>
+              </div>
+              <span class="slot-badge"
+                    [class.badge-ok]="slot.available && !slot.past && !slot.active"
+                    [class.badge-active]="slot.active"
+                    [class.badge-past]="slot.past">
+                {{ slot.past ? 'Finalizado' : slot.active ? 'En curso' : 'Disponible' }}
+              </span>
             </div>
           }
         </div>
-        <p class="slot-note">* Las franjas horarias son orientativas y pueden variar según la tienda.</p>
+        <p class="slot-note">* Las franjas son orientativas y pueden variar según la tienda.</p>
       </div>
     </div>
 

@@ -8,12 +8,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mercafacil.dto.AdminStatsDto;
+import com.mercafacil.dto.CreateUserRequest;
+import com.mercafacil.dto.UpdateUserRequest;
 import com.mercafacil.dto.UserDto;
 import com.mercafacil.model.Role;
 import com.mercafacil.service.AdminService;
@@ -37,6 +40,17 @@ public class AdminController {
     @GetMapping("/users")
     public ResponseEntity<List<UserDto>> getAllUsers() {
         return ResponseEntity.ok(adminService.getAllUsers());
+    }
+
+    @PostMapping("/users")
+    public ResponseEntity<UserDto> createUser(@RequestBody CreateUserRequest req) {
+        return ResponseEntity.ok(adminService.createUser(req));
+    }
+
+    @PutMapping("/users/{id}")
+    public ResponseEntity<UserDto> updateUser(@PathVariable Long id,
+            @RequestBody UpdateUserRequest req) {
+        return ResponseEntity.ok(adminService.updateUser(id, req));
     }
 
     @PutMapping("/users/{id}/role")

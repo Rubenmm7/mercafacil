@@ -19,7 +19,7 @@
       </div>
       <div class="toast-footer">
         <span class="toast-time">ahora mismo</span>
-        @if (toast.type === 'message') {
+        @if (toast.chatType) {
           <button class="toast-action" (click)="goToChat(toast)">Ver chat →</button>
         }
       </div>

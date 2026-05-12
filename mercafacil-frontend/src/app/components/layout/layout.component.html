@@ -10,7 +10,7 @@
 
       <!-- Logo -->
       <a routerLink="/" class="logo">
-        <div class="logo-icon">M</div>
+        <img src="icono_1.png" class="logo-img" alt="MercaFácil">
         <div>
           <span class="logo-merca">Merca</span><span class="logo-facil">Fácil</span>
         </div>
@@ -159,13 +159,22 @@
   <router-outlet></router-outlet>
 </main>
 
+<!-- Botón scroll to top -->
+@if (showScrollBtn()) {
+  <button class="scroll-top-btn" (click)="scrollToTop()" title="Volver arriba" aria-label="Volver arriba">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"/>
+    </svg>
+  </button>
+}
+
 <!-- Footer -->
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-grid">
       <div class="footer-brand">
         <div class="footer-logo">
-          <div class="logo-icon-sm">M</div>
+          <img src="icono_1.png" class="logo-img-sm" alt="MercaFácil">
           <span><span class="flogo-merca">Merca</span><span class="flogo-facil">Fácil</span></span>
         </div>
         <p class="footer-desc">Compara precios de todos los comercios de Jaén y encuentra siempre la mejor oferta.</p>
@@ -181,16 +190,16 @@
       <div>
         <h4 class="footer-title">TIENDAS</h4>
         <ul>
-          @for (s of footerStores; track s) {
-            <li><a routerLink="/tiendas">{{s}}</a></li>
+          @for (s of footerStores; track s.id) {
+            <li><a href="#" (click)="$event.preventDefault(); navigateToStore(s)">{{s.name}}</a></li>
           }
         </ul>
       </div>
       <div>
         <h4 class="footer-title">SOPORTE</h4>
         <ul>
-          @for (s of footerSupport; track s) {
-            <li><a href="#">{{s}}</a></li>
+          @for (s of footerSupport; track s.path) {
+            <li><a [routerLink]="s.path">{{s.label}}</a></li>
           }
         </ul>
       </div>

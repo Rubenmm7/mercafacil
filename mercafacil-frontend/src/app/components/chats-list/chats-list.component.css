@@ -7,7 +7,7 @@
 .chats-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--text);
   margin: 0 0 16px;
 }
 
@@ -18,16 +18,17 @@
   justify-content: center;
   gap: 12px;
   padding: 60px 20px;
-  color: #9ca3af;
+  color: var(--text-muted);
   font-size: .9rem;
 }
 
 .state-error { color: #ef4444; }
+html.dark .state-error { color: #f87171; }
 
 .spinner {
   width: 28px;
   height: 28px;
-  border: 3px solid #d1fae5;
+  border: 3px solid var(--border);
   border-top-color: #16a34a;
   border-radius: 50%;
   animation: spin .7s linear infinite;
@@ -48,15 +49,15 @@
   gap: 14px;
   align-items: flex-start;
   padding: 14px 16px;
-  background: #fff;
-  border: 1px solid #e5e7eb;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   border-radius: 12px;
   cursor: pointer;
   transition: background .15s, border-color .15s, transform .1s;
 }
 
 .thread-item:hover {
-  background: #f9fafb;
+  background: var(--bg-alt);
   border-color: #16a34a;
 }
 
@@ -67,12 +68,14 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #dcfce7;
+  background: var(--green-light);
   color: #16a34a;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
+html.dark .thread-icon { color: #4ade80; }
 
 .thread-body {
   flex: 1;
@@ -92,12 +95,12 @@
 .thread-title {
   font-weight: 600;
   font-size: .95rem;
-  color: #111827;
+  color: var(--text);
 }
 
 .thread-date {
   font-size: .7rem;
-  color: #9ca3af;
+  color: var(--text-muted);
   flex-shrink: 0;
 }
 
@@ -109,10 +112,12 @@
   letter-spacing: .03em;
 }
 
+html.dark .thread-subtitle { color: #4ade80; }
+
 .thread-preview {
   margin: 4px 0 0;
   font-size: .85rem;
-  color: #4b5563;
+  color: var(--text-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

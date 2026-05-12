@@ -1,5 +1,5 @@
 import { Component, OnInit, computed, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
@@ -126,6 +126,11 @@ export class SearchComponent implements OnInit {
 
   isLowest(product: Product, price: number, inStock: boolean): boolean {
     return inStock && price === this.getMinPrice(product);
+  }
+
+  isUniqueBest(product: Product, price: number, inStock: boolean): boolean {
+    if (!inStock || price !== this.getMinPrice(product)) return false;
+    return product.storeOffers.filter(o => o.inStock && o.price === price).length === 1;
   }
 
   isAdded(productId: number, storeId: number): boolean {

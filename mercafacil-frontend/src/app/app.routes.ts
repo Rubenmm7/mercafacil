@@ -25,6 +25,7 @@ import { AdminComponent } from './components/admin/admin.component';
 import { ResumenAdminComponent } from './components/admin/resumen/resumen.component';
 import { UsuariosAdminComponent } from './components/admin/usuarios/usuarios.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
+import { InfoPageComponent } from './components/info-page/info-page.component';
 import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
 
@@ -39,6 +40,13 @@ export const routes: Routes = [
   { path: 'pedidos/:id', component: OrderDetailComponent, canActivate: [roleGuard('CLIENTE')] },
   { path: 'login',   component: LoginComponent },
   { path: 'registro', component: RegisterComponent },
+
+  // Páginas de información / soporte
+  { path: 'ayuda',        component: InfoPageComponent, data: { pageId: 'ayuda' } },
+  { path: 'devoluciones', component: InfoPageComponent, data: { pageId: 'devoluciones' } },
+  { path: 'contacto',     component: InfoPageComponent, data: { pageId: 'contacto' } },
+  { path: 'terminos',     component: InfoPageComponent, data: { pageId: 'terminos' } },
+  { path: 'privacidad',   component: InfoPageComponent, data: { pageId: 'privacidad' } },
 
   // Dashboard Vendedor
   {

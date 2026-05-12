@@ -1,8 +1,10 @@
-import { Component, signal } from '@angular/core';
+import { Component, HostListener, OnInit, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
+import { ApiService } from '../../services/api.service';
+import { Store } from '../../models/models';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -13,7 +15,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'
 })
-export class LayoutComponent {
+export class LayoutComponent implements OnInit {
   mobileMenuOpen = false;
   searchQuery = '';
 
@@ -21,6 +23,20 @@ export class LayoutComponent {
     localStorage.getItem('mf-dark') === '1' ||
     (!localStorage.getItem('mf-dark') && window.matchMedia('(prefers-color-scheme: dark)').matches)
   );
+
+  private readonly _footerStores = signal<Store[]>([]);
+  get footerStores(): Store[] { return this._footerStores(); }
+
+  readonly showScrollBtn = signal(false);
+
+  @HostListener('window:scroll')
+  onScroll(): void {
+    this.showScrollBtn.set(window.scrollY > 300);
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   navLinks = [
     { path: '/', label: 'Inicio' },
@@ -37,26 +53,34 @@ export class LayoutComponent {
     { path: '/', label: 'Inicio' },
     { path: '/tiendas', label: 'Tiendas' },
     { path: '/buscar', label: 'Buscar productos' },
-    { path: '/envio', label: 'Información de envío' }
-  ];
-
-  footerStores = [
-    "McDonald's", 'Popeyes', 'Vips', "Foster's Hollywood",
-    'Zara', 'Primark', 'MediaMarkt', 'Game', 'Decathlon', 'Tiendanimal'
+    { path: '/envio', label: 'Información de envíos' }
   ];
 
   footerSupport = [
-    'Ayuda y FAQ', 'Política de envíos', 'Devoluciones',
-    'Contacto', 'Términos de uso', 'Privacidad'
+    { label: 'Ayuda y FAQ',        path: '/ayuda' },
+    { label: 'Política de envíos', path: '/envio' },
+    { label: 'Devoluciones',       path: '/devoluciones' },
+    { label: 'Contacto',           path: '/contacto' },
+    { label: 'Términos de uso',    path: '/terminos' },
+    { label: 'Privacidad',         path: '/privacidad' },
   ];
 
   constructor(
     public cartService: CartService,
     public authService: AuthService,
     public notificationService: NotificationService,
-    private router: Router
+    private router: Router,
+    private api: ApiService
   ) {
     document.documentElement.classList.toggle('dark', this.isDark());
+  }
+
+  ngOnInit(): void {
+    this.api.getStores().subscribe(stores => this._footerStores.set(stores));
+  }
+
+  navigateToStore(store: Store): void {
+    this.router.navigate(['/buscar'], { queryParams: { storeId: store.id } });
   }
 
   toggleDark(): void {

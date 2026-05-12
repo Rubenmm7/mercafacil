@@ -1,4 +1,7 @@
-<h1 class="page-title">Gestión de usuarios</h1>
+<div class="page-header">
+  <h1 class="page-title">Gestión de usuarios</h1>
+  <button class="btn-new" (click)="openCreateModal()">+ Nuevo usuario</button>
+</div>
 
 @if (loading()) {
   <div class="loading">Cargando usuarios...</div>
@@ -23,26 +26,11 @@
             <td class="td-name">{{ user.nombre }} {{ user.apellidos }}</td>
             <td class="td-email">{{ user.email }}</td>
             <td class="td-rol">
-              @if (editingId() === user.id) {
-                <select class="rol-select" [ngModel]="editingRol()" (ngModelChange)="editingRol.set($event)">
-                  @for (r of roles; track r) {
-                    <option [value]="r">{{ rolLabel(r) }}</option>
-                  }
-                </select>
-              } @else {
-                <span class="badge {{ rolClass(user.rol) }}">{{ rolLabel(user.rol) }}</span>
-              }
+              <span class="badge {{ rolClass(user.rol) }}">{{ rolLabel(user.rol) }}</span>
             </td>
             <td class="td-actions">
-              @if (editingId() === user.id) {
-                <button class="btn-save" (click)="saveRole(user.id)" [disabled]="saving()">
-                  {{ saving() ? 'Guardando…' : '✓ Guardar' }}
-                </button>
-                <button class="btn-cancel" (click)="cancelEdit()">✕</button>
-              } @else {
-                <button class="btn-edit" (click)="startEdit(user)">✏️ Editar rol</button>
-                <button class="btn-delete" (click)="deleteUser(user.id, user.nombre)">🗑️</button>
-              }
+              <button class="btn-edit" (click)="openEditModal(user)">✏️ Editar</button>
+              <button class="btn-delete" (click)="deleteUser(user.id, user.nombre)">🗑️</button>
             </td>
           </tr>
         }
@@ -51,4 +39,97 @@
   </div>
 
   <div class="total-info">{{ users().length }} usuario{{ users().length !== 1 ? 's' : '' }} registrado{{ users().length !== 1 ? 's' : '' }}</div>
+}
+
+@if (showModal()) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <h2 class="modal-title">
+          {{ modalMode() === 'create' ? '+ Nuevo usuario' : '✏️ Editar usuario' }}
+        </h2>
+        <button class="modal-close" (click)="closeModal()">✕</button>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submitModal()" class="modal-form">
+
+        <div class="form-row">
+          <div class="form-field">
+            <label>Nombre <span class="required">*</span></label>
+            <input formControlName="nombre" type="text" placeholder="Nombre" [class.input-error]="fieldError('nombre')" />
+            @if (fieldError('nombre')) {
+              <span class="field-error">Campo obligatorio</span>
+            }
+          </div>
+          <div class="form-field">
+            <label>Apellidos <span class="required">*</span></label>
+            <input formControlName="apellidos" type="text" placeholder="Apellidos" [class.input-error]="fieldError('apellidos')" />
+            @if (fieldError('apellidos')) {
+              <span class="field-error">Campo obligatorio</span>
+            }
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label>Email <span class="required">*</span></label>
+            <input formControlName="email" type="email" placeholder="correo@ejemplo.com" [class.input-error]="fieldError('email')" />
+            @if (fieldError('email')) {
+              <span class="field-error">Email inválido o vacío</span>
+            }
+          </div>
+          <div class="form-field">
+            <label>Rol <span class="required">*</span></label>
+            <select formControlName="rol" [class.input-error]="fieldError('rol')">
+              @for (r of roles; track r) {
+                <option [value]="r">{{ rolLabel(r) }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <div class="form-divider">
+          <span>{{ modalMode() === 'create' ? 'Contraseña' : 'Cambiar contraseña (opcional)' }}</span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label>
+              Contraseña
+              @if (modalMode() === 'create') { <span class="required">*</span> }
+            </label>
+            <input formControlName="password" type="password"
+                   [placeholder]="modalMode() === 'edit' ? 'Dejar vacío para no cambiar' : 'Contraseña'"
+                   [class.input-error]="fieldError('password')" />
+            @if (fieldError('password')) {
+              <span class="field-error">Campo obligatorio</span>
+            }
+          </div>
+          <div class="form-field">
+            <label>
+              Confirmar contraseña
+              @if (modalMode() === 'create') { <span class="required">*</span> }
+            </label>
+            <input formControlName="confirmPassword" type="password"
+                   [placeholder]="modalMode() === 'edit' ? 'Repetir nueva contraseña' : 'Repetir contraseña'"
+                   [class.input-error]="fieldError('confirmPassword') || passwordMismatch" />
+            @if (passwordMismatch) {
+              <span class="field-error">Las contraseñas no coinciden</span>
+            } @else if (fieldError('confirmPassword')) {
+              <span class="field-error">Campo obligatorio</span>
+            }
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" (click)="closeModal()">Cancelar</button>
+          <button type="submit" class="btn-save" [disabled]="saving()">
+            {{ saving() ? 'Guardando…' : (modalMode() === 'create' ? 'Crear usuario' : 'Guardar cambios') }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
 }

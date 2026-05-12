@@ -1,13 +1,12 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { Store, DeliveryZone } from '../../models/models';
 
 @Component({
   selector: 'app-shipping',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule],
   templateUrl: './shipping.component.html',
   styleUrl: './shipping.component.css'
 })
@@ -16,14 +15,32 @@ export class ShippingComponent implements OnInit {
   readonly deliveryZones = signal<DeliveryZone[]>([]);
   readonly loading = signal(true);
   readonly zipCode = signal('');
-  readonly checkResult = signal<'available' | 'unavailable' | null>(null);
+  readonly checking = signal(false);
+  readonly checkResult = signal<'available' | 'nearby' | 'too_far' | null>(null);
 
-  timeSlots = [
-    { time: '09:00 - 12:00', available: true },
-    { time: '12:00 - 15:00', available: true },
-    { time: '15:00 - 18:00', available: false },
-    { time: '18:00 - 21:00', available: true }
-  ];
+  readonly zoneName = computed(() => {
+    const code = this.zipCode();
+    if (code.startsWith('230')) return 'Jaén Capital';
+    if (['231', '232', '233'].some(p => code.startsWith(p))) return 'Martos / Alcalá la Real';
+    if (['234', '235'].some(p => code.startsWith(p))) return 'Úbeda / Baeza';
+    return 'Jaén';
+  });
+
+  get timeSlots() {
+    const now = new Date();
+    const nowMin = now.getHours() * 60 + now.getMinutes();
+    return [
+      { time: '09:00 – 12:00', label: 'Mañana',      start: 9  * 60, end: 12 * 60 },
+      { time: '12:00 – 15:00', label: 'Mediodía',    start: 12 * 60, end: 15 * 60 },
+      { time: '15:00 – 18:00', label: 'Tarde',       start: 15 * 60, end: 18 * 60 },
+      { time: '18:00 – 21:00', label: 'Tarde-noche', start: 18 * 60, end: 21 * 60 },
+    ].map(s => ({
+      ...s,
+      past:      nowMin >= s.end,
+      active:    nowMin >= s.start && nowMin < s.end,
+      available: nowMin < s.end,
+    }));
+  }
 
   faqs = [
     { q: '¿Puedo cambiar mi dirección de entrega después de hacer el pedido?', a: 'Sí, puedes modificar la dirección de entrega hasta 30 minutos después de realizar el pedido, siempre que el estado sea \'En preparación\'.' },
@@ -44,14 +61,27 @@ export class ShippingComponent implements OnInit {
 
   handleCheckZip(): void {
     const code = this.zipCode();
-    if (code.length === 5) {
-      const jaenPrefixes = ['230', '231', '232', '233', '234', '235'];
-      this.checkResult.set(jaenPrefixes.some(p => code.startsWith(p)) ? 'available' : 'unavailable');
-    }
+    if (code.length < 3 || this.checking()) return;
+    this.checking.set(true);
+    this.checkResult.set(null);
+    setTimeout(() => {
+      const covered = ['230', '231', '232', '233', '234', '235'];
+      if (covered.some(p => code.startsWith(p))) {
+        this.checkResult.set('available');
+      } else if (code.startsWith('23')) {
+        this.checkResult.set('nearby');
+      } else {
+        this.checkResult.set('too_far');
+      }
+      this.checking.set(false);
+    }, 650);
   }
 
   onZipInput(event: Event): void {
     const input = event.target as HTMLInputElement;
-    this.zipCode.set(input.value.replace(/\D/g, '').slice(0, 5));
+    const clean = input.value.replace(/\D/g, '').slice(0, 5);
+    if (clean !== input.value) input.value = clean;
+    this.zipCode.set(clean);
+    if (clean.length < 3) this.checkResult.set(null);
   }
 }

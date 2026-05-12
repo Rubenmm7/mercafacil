@@ -1,0 +1,48 @@
+@if (content) {
+<div class="info-page">
+  <div class="info-header">
+    <h1 class="info-title">{{ content.title }}</h1>
+    <p class="info-subtitle">{{ content.subtitle }}</p>
+  </div>
+
+  <div class="info-body">
+    @for (section of content.sections; track section.title) {
+    <section class="info-section">
+      <h2 class="section-title">{{ section.title }}</h2>
+
+      @if (section.text) {
+      <p class="section-text">{{ section.text }}</p>
+      }
+
+      @if (section.bullets && section.bullets.length > 0) {
+      <ul class="section-bullets">
+        @for (b of section.bullets; track b) {
+        <li>{{ b }}</li>
+        }
+      </ul>
+      }
+
+      @if (section.items && section.items.length > 0) {
+      <div class="faq-list">
+        @for (item of section.items; track item.q) {
+        <div class="faq-item">
+          <p class="faq-q">{{ item.q }}</p>
+          <p class="faq-a">{{ item.a }}</p>
+        </div>
+        }
+      </div>
+      }
+    </section>
+    }
+  </div>
+
+  <div class="info-back">
+    <a routerLink="/" class="back-link">← Volver al inicio</a>
+  </div>
+</div>
+} @else {
+<div class="info-page not-found">
+  <h1>Página no encontrada</h1>
+  <a routerLink="/" class="back-link">← Volver al inicio</a>
+</div>
+}

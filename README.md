@@ -119,4 +119,4 @@ mercafacil/
 ## Autor
 
 **Rubén Maderas Moreno**  
-2.º DAW — Proyecto de Fin de Grado, 2025/2026
+2º DAW — Proyecto de Fin de Grado, 2025/2026

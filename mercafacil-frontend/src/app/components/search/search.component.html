@@ -134,8 +134,8 @@
                     <div class="offer-store-logo" [style.background-color]="getStore(offer.storeId)?.color || '#999'">{{getStore(offer.storeId)?.logo}}</div>
                     <div class="offer-info">
                       <div class="offer-store-name">
-                        {{offer.storeName}}
-                        @if (isLowest(product, offer.price, offer.inStock)) {
+                        <span class="store-name-text">{{offer.storeName}}</span>
+                        @if (isUniqueBest(product, offer.price, offer.inStock)) {
                           <span class="best-badge">MEJOR</span>
                         }
                       </div>

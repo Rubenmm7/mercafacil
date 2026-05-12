@@ -46,7 +46,7 @@
       } @else {
         @for (g of categoryGroups(); track g.name) {
           <button class="panel-row" (click)="searchCategory(g.name)">
-            <div class="panel-row-icon" [style.background]="g.bgColor">{{ g.icon }}</div>
+            <div class="panel-row-icon" [style.background]="g.bgColor" [innerHTML]="iconHtml(g.name)"></div>
             <div class="panel-row-info">
               <span class="panel-row-name">{{ g.name }}</span>
               <span class="panel-row-stores">{{ g.storeNames }}</span>

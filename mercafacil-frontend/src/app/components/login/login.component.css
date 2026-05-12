@@ -3,13 +3,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f9fafb;
+  background: var(--bg);
   padding: 2rem 1rem;
 }
 
 .auth-card {
-  background: #fff;
+  background: var(--bg-card);
   border-radius: 16px;
+  border: 1px solid var(--border);
   box-shadow: 0 4px 24px rgba(0, 0, 0, .08);
   padding: 2.5rem 2rem;
   width: 100%;
@@ -38,12 +39,12 @@
 .auth-header h1 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--text);
   margin: 0 0 .25rem;
 }
 
 .auth-header p {
-  color: #6b7280;
+  color: var(--text-muted);
   font-size: .9rem;
   margin: 0;
 }
@@ -56,19 +57,25 @@
   display: block;
   font-size: .875rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-2);
   margin-bottom: .4rem;
 }
 
 .form-group input {
   width: 100%;
   padding: .625rem .875rem;
-  border: 1.5px solid #d1d5db;
+  border: 1.5px solid var(--border);
   border-radius: 8px;
   font-size: .95rem;
   outline: none;
-  transition: border-color .2s;
+  transition: border-color .2s, box-shadow .2s;
   box-sizing: border-box;
+  background: var(--bg-input);
+  color: var(--text);
+}
+
+.form-group input::placeholder {
+  color: var(--text-muted);
 }
 
 .form-group input:focus {
@@ -84,6 +91,12 @@
   padding: .625rem .875rem;
   font-size: .875rem;
   margin-bottom: 1rem;
+}
+
+:host-context(html.dark) .error-msg {
+  background: rgba(220, 38, 38, 0.12);
+  border-color: rgba(248, 113, 113, 0.35);
+  color: #f87171;
 }
 
 .btn-primary {
@@ -106,7 +119,7 @@
   text-align: center;
   margin-top: 1.5rem;
   font-size: .875rem;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .auth-link a {
@@ -119,7 +132,7 @@
 .demo-accounts {
   margin-top: 1.75rem;
   padding-top: 1.25rem;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--border);
 }
 
 .demo-title {
@@ -127,7 +140,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: .05em;
-  color: #9ca3af;
+  color: var(--text-muted);
   margin: 0 0 .75rem;
   text-align: center;
 }
@@ -139,7 +152,8 @@
 }
 
 .demo-grid > div {
-  background: #f9fafb;
+  background: var(--bg-alt);
+  border: 1px solid var(--border-2);
   border-radius: 8px;
   padding: .5rem .625rem;
   font-size: .75rem;
@@ -149,4 +163,4 @@
 }
 
 .demo-grid strong { color: #059669; }
-.demo-grid span   { color: #4b5563; }
+.demo-grid span   { color: var(--text-muted); }
