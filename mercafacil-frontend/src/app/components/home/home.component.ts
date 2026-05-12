@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ApiService } from '../../services/api.service';
 import { MallMapComponent } from '../mall-map/mall-map.component';
+import { IconComponent, IconName } from '../icon/icon.component';
 import { Product, Store, Category } from '../../models/models';
 
 interface CategoryGroup {
@@ -60,7 +61,7 @@ const DEFAULT_SVG = `<svg ${SVG_ATTRS}><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, MallMapComponent],
+  imports: [CommonModule, FormsModule, RouterLink, MallMapComponent, IconComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -99,11 +100,11 @@ export class HomeComponent implements OnInit {
 
   popularTerms = ['iPhone 17', 'Big Mac', 'Aceite Oliva', 'Rockrider'];
 
-  stats = [
-    { icon: '📍', value: '25+',     label: 'Establecimientos en Jaén' },
-    { icon: '🏷️', value: '+50.000', label: 'Productos comparados'     },
-    { icon: '✅', value: 'Gratis',  label: 'Sin registro necesario'   },
-    { icon: '🔄', value: 'Diario',  label: 'Precios actualizados'     },
+  stats: { icon: IconName; value: string; label: string }[] = [
+    { icon: 'map-pin',      value: '25+',     label: 'Establecimientos en Jaén' },
+    { icon: 'tag',          value: '+50.000', label: 'Productos comparados'     },
+    { icon: 'check-circle', value: 'Gratis',  label: 'Sin registro necesario'   },
+    { icon: 'refresh-cw',   value: 'Diario',  label: 'Precios actualizados'     },
   ];
 
   constructor(

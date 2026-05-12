@@ -148,7 +148,11 @@
         <a routerLink="/chats" (click)="closeMobileMenu()">Chats</a>
       }
       <button class="mobile-dark-toggle" (click)="toggleDark()">
-        {{ isDark() ? '☀️ Modo claro' : '🌙 Modo oscuro' }}
+        @if (isDark()) {
+          <app-icon name="sun" [size]="16" /> Modo claro
+        } @else {
+          <app-icon name="moon" [size]="16" /> Modo oscuro
+        }
       </button>
     </div>
   }

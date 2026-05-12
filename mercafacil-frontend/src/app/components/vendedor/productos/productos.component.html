@@ -58,7 +58,9 @@
   <div class="products-grid">
     @for (p of products(); track p.id) {
       <div class="product-card">
-        <div class="product-image">{{ p.image || '📦' }}</div>
+        <div class="product-image">
+          @if (p.image) { {{ p.image }} } @else { <app-icon name="package" [size]="32" /> }
+        </div>
         <div class="product-body">
           <div class="product-name">{{ p.name }}</div>
           <div class="product-meta">{{ p.category }} · {{ p.unit }}</div>
@@ -68,8 +70,8 @@
           <div class="offer-count">{{ p.offers.length }} oferta(s) en tus tiendas</div>
         </div>
         <div class="product-actions">
-          <button class="btn-icon" title="Editar" (click)="openEdit(p)">✏️</button>
-          <button class="btn-icon btn-danger" title="Eliminar" (click)="delete(p)">🗑️</button>
+          <button class="btn-icon" title="Editar" (click)="openEdit(p)"><app-icon name="edit" [size]="16" /></button>
+          <button class="btn-icon btn-danger" title="Eliminar" (click)="delete(p)"><app-icon name="trash" [size]="16" /></button>
         </div>
       </div>
     }

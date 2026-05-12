@@ -3,11 +3,12 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { VendedorService } from '../../../services/vendedor.service';
 import { ToastService } from '../../../services/toast.service';
 import { ProductDetail, Store } from '../../../models/models';
+import { IconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'app-vendedor-productos',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, IconComponent],
   templateUrl: './productos.component.html',
   styleUrl: './productos.component.css'
 })

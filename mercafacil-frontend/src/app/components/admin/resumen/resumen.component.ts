@@ -2,11 +2,12 @@ import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AdminService } from '../../../services/admin.service';
 import { AdminStats } from '../../../models/models';
+import { IconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'app-admin-resumen',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, IconComponent],
   templateUrl: './resumen.component.html',
   styleUrl: './resumen.component.css'
 })

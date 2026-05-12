@@ -3,11 +3,12 @@ import { DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { VendedorService } from '../../../services/vendedor.service';
 import { StoreOfferDetail, VendedorStats } from '../../../models/models';
+import { IconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'app-vendedor-resumen',
   standalone: true,
-  imports: [RouterLink, DecimalPipe],
+  imports: [RouterLink, DecimalPipe, IconComponent],
   templateUrl: './resumen.component.html',
   styleUrl: './resumen.component.css'
 })

@@ -61,10 +61,10 @@
             }
           </div>
           <div class="offer-stock" [class.stock-low]="isLowStock(offer.stock)">
-            @if (isLowStock(offer.stock)) { ⚠️ }
+            @if (isLowStock(offer.stock)) { <app-icon name="alert-triangle" [size]="14" /> }
             {{ offer.stock }} uds.
           </div>
-          <button class="btn-edit" (click)="startEdit(offer)">✏️ Editar</button>
+          <button class="btn-edit" (click)="startEdit(offer)"><app-icon name="edit" [size]="14" /> Editar</button>
         }
 
       </div>

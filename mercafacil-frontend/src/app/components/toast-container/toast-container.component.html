@@ -15,7 +15,7 @@
           }
           <div class="toast-msg">{{ toast.body }}</div>
         </div>
-        <button class="toast-close" (click)="dismiss(toast.id)">✕</button>
+        <button class="toast-close" (click)="dismiss(toast.id)" aria-label="Cerrar"><app-icon name="x" [size]="16" /></button>
       </div>
       <div class="toast-footer">
         <span class="toast-time">ahora mismo</span>

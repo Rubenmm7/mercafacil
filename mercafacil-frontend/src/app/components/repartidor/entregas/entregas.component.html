@@ -5,11 +5,11 @@
 <!-- Tabs -->
 <div class="tabs">
   <button class="tab" [class.active]="activeTab() === 'mis'" (click)="setTab('mis')">
-    📦 Mis entregas
+    <app-icon name="package" [size]="16" /> Mis entregas
     @if (myOrders().length > 0) { <span class="badge">{{ myOrders().length }}</span> }
   </button>
   <button class="tab" [class.active]="activeTab() === 'disponibles'" (click)="setTab('disponibles')">
-    🔍 Disponibles
+    <app-icon name="search" [size]="16" /> Disponibles
     @if (available().length > 0) { <span class="badge badge-green">{{ available().length }}</span> }
   </button>
 </div>
@@ -33,9 +33,9 @@
         </div>
 
         <div class="order-meta">
-          <span>👤 {{ order.clientEmail }}</span>
-          <span>🕐 {{ formatDate(order.createdAt) }}</span>
-          <span>🛍️ {{ order.items.length }} artículo(s)</span>
+          <span><app-icon name="user" [size]="14" /> {{ order.clientEmail }}</span>
+          <span><app-icon name="clock" [size]="14" /> {{ formatDate(order.createdAt) }}</span>
+          <span><app-icon name="shopping-bag" [size]="14" /> {{ order.items.length }} artículo(s)</span>
         </div>
 
         <div class="order-actions">
@@ -43,7 +43,8 @@
             <button class="btn-accept"
                     [disabled]="updating() === order.id"
                     (click)="accept(order)">
-              @if (updating() === order.id) { Aceptando... } @else { ✅ Aceptar entrega }
+              @if (updating() === order.id) { Aceptando... }
+              @else { <app-icon name="check-circle" [size]="16" /> Aceptar entrega }
             </button>
           } @else {
             @if (nextStatus[order.status]) {
@@ -54,11 +55,11 @@
               </button>
             }
             <button class="btn-chat" (click)="openVendedorChat(order.id)" title="Chat con vendedor">
-              💬 Enviar mensaje a vendedor
+              <app-icon name="message-circle" [size]="14" /> Enviar mensaje a vendedor
             </button>
             @if (simulatingOrderId() === order.id) {
               <span class="gps-active" title="Enviando ubicación GPS en tiempo real">
-                📡 GPS activo
+                <app-icon name="radio" [size]="14" /> GPS activo
               </span>
             }
           }
@@ -66,11 +67,11 @@
 
         @if (order.status === 'EN_RUTA') {
           <div class="delivery-address-block">
-            <span class="addr-label">📍 Dirección de entrega</span>
+            <span class="addr-label"><app-icon name="map-pin" [size]="14" /> Dirección de entrega</span>
             @if (order.shippingAddress) {
               <div class="addr-main">{{ order.shippingAddress }}</div>
               @if (order.deliveryNotes) {
-                <div class="delivery-notes">💬 "{{ order.deliveryNotes }}"</div>
+                <div class="delivery-notes"><app-icon name="message-circle" [size]="14" /> "{{ order.deliveryNotes }}"</div>
               }
               <a [href]="mapsNavUrl(order)" target="_blank" rel="noopener" class="btn-navigate">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">

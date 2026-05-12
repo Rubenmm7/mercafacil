@@ -8,17 +8,17 @@
   <!-- KPI cards -->
   <div class="kpi-grid">
     <div class="kpi-card">
-      <div class="kpi-icon">🏪</div>
+      <div class="kpi-icon"><app-icon name="store" [size]="28" /></div>
       <div class="kpi-value">{{ stats()?.totalStores }}</div>
       <div class="kpi-label">Tiendas del centro</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-icon">💬</div>
+      <div class="kpi-icon"><app-icon name="message-circle" [size]="28" /></div>
       <div class="kpi-value">{{ stats()?.activeChats }}</div>
       <div class="kpi-label">Chats activos</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-icon">📦</div>
+      <div class="kpi-icon"><app-icon name="package" [size]="28" /></div>
       <div class="kpi-value">{{ stats()?.totalProducts }}</div>
       <div class="kpi-label">Tiendas suministradas</div>
     </div>
@@ -27,7 +27,7 @@
   <!-- Info box -->
   <div class="info-box">
     <div class="info-header">
-      <span class="info-icon">ℹ️</span>
+      <span class="info-icon"><app-icon name="info" /></span>
       <strong>Panel de proveedor</strong>
     </div>
     <p class="info-text">
@@ -39,7 +39,7 @@
 
   <!-- Accesos rápidos -->
   <div class="quick-links">
-    <a routerLink="../tiendas" class="quick-card">🏪 Ver tiendas</a>
-    <a routerLink="/chats"     class="quick-card">💬 Mis conversaciones</a>
+    <a routerLink="../tiendas" class="quick-card"><app-icon name="store" /> Ver tiendas</a>
+    <a routerLink="/chats"     class="quick-card"><app-icon name="message-circle" /> Mis conversaciones</a>
   </div>
 }

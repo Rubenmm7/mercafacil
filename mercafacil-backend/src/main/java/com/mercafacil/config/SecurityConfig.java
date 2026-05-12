@@ -53,7 +53,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/orders/**")
                                 .hasAnyRole("CLIENTE", "VENDEDOR", "REPARTIDOR", "ADMIN")
                         .requestMatchers("/api/messages/**")
-                                .hasAnyRole("CLIENTE", "VENDEDOR", "REPARTIDOR", "PROVEEDOR")
+                                .hasAnyRole("CLIENTE", "VENDEDOR", "REPARTIDOR", "PROVEEDOR", "ADMIN")
                         .requestMatchers("/api/vendedor/**").hasRole("VENDEDOR")
                         .requestMatchers("/api/repartidor/**").hasRole("REPARTIDOR")
                         .requestMatchers("/api/proveedor/**").hasRole("PROVEEDOR")

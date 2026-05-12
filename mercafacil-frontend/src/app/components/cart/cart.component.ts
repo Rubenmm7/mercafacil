@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart.service';
 import { ApiService } from '../../services/api.service';
 import { CartItem, Store } from '../../models/models';
+import { IconComponent } from '../icon/icon.component';
 
 interface StoreGroup {
   storeId: number;
@@ -15,7 +16,7 @@ interface StoreGroup {
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })

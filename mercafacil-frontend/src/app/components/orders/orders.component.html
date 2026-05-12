@@ -11,14 +11,14 @@
     </div>
   } @else if (errorMsg()) {
     <div class="orders-empty">
-      <div class="empty-icon">⚠️</div>
+      <div class="empty-icon"><app-icon name="alert-triangle" [size]="48" /></div>
       <h2>No se pudieron cargar los pedidos</h2>
       <p>{{ errorMsg() }}</p>
       <button class="btn-primary" (click)="loadOrders()">Reintentar</button>
     </div>
   } @else if (orders().length === 0) {
     <div class="orders-empty">
-      <div class="empty-icon">📦</div>
+      <div class="empty-icon"><app-icon name="package" [size]="48" /></div>
       <h2>Todavía no tienes pedidos</h2>
       <p>Cuando realices una compra, aparecerá aquí con su estado en tiempo real.</p>
       <button class="btn-primary" (click)="goToSearch()">Explorar productos</button>

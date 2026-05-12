@@ -3,11 +3,12 @@ import { DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { VendedorService } from '../../../services/vendedor.service';
 import { Order, OrderStatus } from '../../../models/models';
+import { IconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'app-vendedor-pedidos',
   standalone: true,
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, IconComponent],
   templateUrl: './pedidos.component.html',
   styleUrl: './pedidos.component.css'
 })

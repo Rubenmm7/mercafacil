@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validatio
 import { AdminService } from '../../../services/admin.service';
 import { ToastService } from '../../../services/toast.service';
 import { CreateUserRequest, UpdateUserRequest, UserAdmin, Role } from '../../../models/models';
+import { IconComponent, IconName } from '../../icon/icon.component';
 
 function passwordsMatch(group: AbstractControl): ValidationErrors | null {
   const pass    = group.get('password')?.value as string;
@@ -14,7 +15,7 @@ function passwordsMatch(group: AbstractControl): ValidationErrors | null {
 @Component({
   selector: 'app-admin-usuarios',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, IconComponent],
   templateUrl: './usuarios.component.html',
   styleUrl: './usuarios.component.css'
 })
@@ -111,7 +112,7 @@ export class UsuariosAdminComponent implements OnInit {
           this.users.update(list => [...list, created]);
           this.showModal.set(false);
           this.saving.set(false);
-          this.toastService.showMessage({ body: `Usuario "${created.nombre}" creado correctamente`, title: '✓ Creado' });
+          this.toastService.showMessage({ body: `Usuario "${created.nombre}" creado correctamente`, title: 'Usuario creado' });
         },
         error: err => {
           this.saving.set(false);
@@ -132,7 +133,7 @@ export class UsuariosAdminComponent implements OnInit {
           this.users.update(list => list.map(u => u.id === updated.id ? updated : u));
           this.showModal.set(false);
           this.saving.set(false);
-          this.toastService.showMessage({ body: `Usuario "${updated.nombre}" actualizado`, title: '✓ Guardado' });
+          this.toastService.showMessage({ body: `Usuario "${updated.nombre}" actualizado`, title: 'Cambios guardados' });
         },
         error: err => {
           this.saving.set(false);
@@ -166,13 +167,24 @@ export class UsuariosAdminComponent implements OnInit {
 
   rolLabel(rol: Role): string {
     const labels: Record<Role, string> = {
-      ADMIN: '🛡️ Admin',
-      CLIENTE: '🛍️ Cliente',
-      VENDEDOR: '🏪 Vendedor',
-      REPARTIDOR: '🛵 Repartidor',
-      PROVEEDOR: '📦 Proveedor'
+      ADMIN: 'Admin',
+      CLIENTE: 'Cliente',
+      VENDEDOR: 'Vendedor',
+      REPARTIDOR: 'Repartidor',
+      PROVEEDOR: 'Proveedor'
     };
     return labels[rol];
+  }
+
+  rolIcon(rol: Role): IconName {
+    const icons: Record<Role, IconName> = {
+      ADMIN: 'shield',
+      CLIENTE: 'shopping-bag',
+      VENDEDOR: 'store',
+      REPARTIDOR: 'bike',
+      PROVEEDOR: 'package'
+    };
+    return icons[rol];
   }
 
   rolClass(rol: Role): string {

@@ -2,11 +2,12 @@ import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { RepartidorService } from '../../../services/repartidor.service';
 import { RepartidorStats } from '../../../models/models';
+import { IconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'app-repartidor-resumen',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, IconComponent],
   templateUrl: './resumen.component.html',
   styleUrl: './resumen.component.css'
 })

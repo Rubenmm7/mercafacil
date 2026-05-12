@@ -2,11 +2,12 @@ import { Component, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api.service';
 import { Store, DeliveryZone } from '../../models/models';
+import { IconComponent } from '../icon/icon.component';
 
 @Component({
   selector: 'app-shipping',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
   templateUrl: './shipping.component.html',
   styleUrl: './shipping.component.css'
 })

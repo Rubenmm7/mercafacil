@@ -17,7 +17,7 @@
           <div class="form-section">
             <div class="section-header">
               <span class="section-num">1</span>
-              <h2>📍 Dirección de entrega</h2>
+              <h2><app-icon name="map-pin" [size]="22" /> Dirección de entrega</h2>
             </div>
 
             <div class="form-grid">
@@ -87,7 +87,7 @@
           <div class="form-section">
             <div class="section-header">
               <span class="section-num">2</span>
-              <h2>💳 Datos de pago</h2>
+              <h2><app-icon name="credit-card" [size]="22" /> Datos de pago</h2>
               <div class="card-brands">
                 <span class="brand visa">VISA</span>
                 <span class="brand mc">MC</span>
@@ -148,7 +148,7 @@
               </div>
             </div>
 
-            <div class="secure-badge">🔒 Pago simulado — Ningún cargo real se realizará</div>
+            <div class="secure-badge"><app-icon name="lock" [size]="16" /> Pago simulado — Ningún cargo real se realizará</div>
           </div>
 
         </form>
@@ -191,7 +191,7 @@
             @if (submitting()) {
               Procesando...
             } @else {
-              ✓ Confirmar y pagar — {{ total() | number:'1.2-2' }} €
+              <app-icon name="check" [size]="18" /> Confirmar y pagar — {{ total() | number:'1.2-2' }} €
             }
           </button>
 

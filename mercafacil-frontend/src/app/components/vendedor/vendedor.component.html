@@ -1,7 +1,7 @@
 <div class="dashboard-layout">
   <aside class="sidebar">
     <div class="sidebar-header">
-      <span class="sidebar-icon">🏪</span>
+      <span class="sidebar-icon"><app-icon name="store" [size]="24" /></span>
       <div>
         <div class="sidebar-title">Panel Vendedor</div>
         <div class="sidebar-user">{{ authService.user()?.nombre }}</div>
@@ -10,16 +10,16 @@
 
     <nav class="sidebar-nav">
       <a routerLink="resumen" routerLinkActive="active" class="nav-item">
-        <span class="nav-icon">📊</span> Resumen
+        <span class="nav-icon"><app-icon name="bar-chart" /></span> Resumen
       </a>
       <a routerLink="pedidos" routerLinkActive="active" class="nav-item">
-        <span class="nav-icon">📦</span> Pedidos
+        <span class="nav-icon"><app-icon name="package" /></span> Pedidos
       </a>
       <a routerLink="productos" routerLinkActive="active" class="nav-item">
-        <span class="nav-icon">🛒</span> Productos
+        <span class="nav-icon"><app-icon name="shopping-cart" /></span> Productos
       </a>
       <a routerLink="ofertas" routerLinkActive="active" class="nav-item">
-        <span class="nav-icon">🏷️</span> Ofertas y Stock
+        <span class="nav-icon"><app-icon name="tag" /></span> Ofertas y Stock
       </a>
     </nav>
 

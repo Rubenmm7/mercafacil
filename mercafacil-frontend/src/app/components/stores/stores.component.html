@@ -45,9 +45,9 @@
             </div>
           </div>
           <div class="store-info">
-            <div class="info-row"><span class="info-icon orange">📍</span><div><div>{{store.address}}</div><div class="sub">{{store.city}}</div></div></div>
-            <div class="info-row"><span class="info-icon">🕐</span><span>{{store.hours}}</span></div>
-            <div class="info-row"><span class="info-icon">📞</span><span>{{store.phone}}</span></div>
+            <div class="info-row"><span class="info-icon orange"><app-icon name="map-pin" [size]="16" /></span><div><div>{{store.address}}</div><div class="sub">{{store.city}}</div></div></div>
+            <div class="info-row"><span class="info-icon"><app-icon name="clock" [size]="16" /></span><span>{{store.hours}}</span></div>
+            <div class="info-row"><span class="info-icon"><app-icon name="phone" [size]="16" /></span><span>{{store.phone}}</span></div>
           </div>
           <div class="delivery-info">
             <div class="delivery-col"><div class="del-label">Envío en</div><div class="del-value">{{store.deliveryTime}}</div></div>
@@ -64,7 +64,7 @@
 
   @if (!loading() && filteredStores().length === 0) {
     <div class="empty">
-      <div>🏪</div>
+      <div><app-icon name="store" [size]="48" /></div>
       <h3>No se encontraron tiendas</h3>
       <p>Prueba con otro filtro</p>
     </div>

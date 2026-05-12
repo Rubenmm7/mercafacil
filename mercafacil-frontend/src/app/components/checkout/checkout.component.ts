@@ -7,6 +7,7 @@ import {
 import { DecimalPipe } from '@angular/common';
 import { CartService } from '../../services/cart.service';
 import { ApiService } from '../../services/api.service';
+import { IconComponent } from '../icon/icon.component';
 
 function luhnCheck(control: AbstractControl): ValidationErrors | null {
   const val: string = (control.value ?? '').replace(/\s/g, '');
@@ -34,7 +35,7 @@ function expiryNotPast(control: AbstractControl): ValidationErrors | null {
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [ReactiveFormsModule, DecimalPipe],
+  imports: [ReactiveFormsModule, DecimalPipe, IconComponent],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
 })

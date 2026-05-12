@@ -1,7 +1,7 @@
 <div>
   <!-- Hero -->
   <div class="hero">
-    <div class="hero-badge">🚚 Entrega en el mismo día disponible</div>
+    <div class="hero-badge"><app-icon name="truck" [size]="16" /> Entrega en el mismo día disponible</div>
     <h1>Información de envío y entrega</h1>
     <p>Recibe tus productos del supermercado en la puerta de tu casa</p>
   </div>
@@ -9,17 +9,17 @@
   <div class="container">
     <!-- Features -->
     <div class="features-grid">
-      <div class="feature-card"><div class="feature-icon green">🚚</div><h4>Envío rápido</h4><p>Entrega en 1-6 horas</p></div>
-      <div class="feature-card"><div class="feature-icon blue">🛡️</div><h4>Pedido seguro</h4><p>Protección garantizada</p></div>
-      <div class="feature-card"><div class="feature-icon orange">🔄</div><h4>Fácil devolución</h4><p>En 24h sin preguntas</p></div>
-      <div class="feature-card"><div class="feature-icon purple">📅</div><h4>Horario flexible</h4><p>Elige tu franja horaria</p></div>
+      <div class="feature-card"><div class="feature-icon green"><app-icon name="truck" [size]="28" /></div><h4>Envío rápido</h4><p>Entrega en 1-6 horas</p></div>
+      <div class="feature-card"><div class="feature-icon blue"><app-icon name="shield" [size]="28" /></div><h4>Pedido seguro</h4><p>Protección garantizada</p></div>
+      <div class="feature-card"><div class="feature-icon orange"><app-icon name="refresh-cw" [size]="28" /></div><h4>Fácil devolución</h4><p>En 24h sin preguntas</p></div>
+      <div class="feature-card"><div class="feature-icon purple"><app-icon name="calendar" [size]="28" /></div><h4>Horario flexible</h4><p>Elige tu franja horaria</p></div>
     </div>
 
     <div class="two-cols">
       <!-- Zip checker -->
       <div class="card">
         <div class="card-header">
-          <div class="icon-wrap green">📍</div>
+          <div class="icon-wrap green"><app-icon name="map-pin" [size]="22" /></div>
           <div><h3>Comprueba tu cobertura</h3><p>Introduce tu código postal de Jaén</p></div>
         </div>
 
@@ -47,16 +47,16 @@
         @if (!checking() && checkResult() === 'available') {
           <div class="result-card result-ok">
             <div class="result-row">
-              <span class="result-dot ok">✓</span>
+              <span class="result-dot ok"><app-icon name="check" [size]="14" /></span>
               <div>
                 <strong>¡Zona con cobertura!</strong>
                 <span>{{ zoneName() }} · CP {{ zipCode() }}</span>
               </div>
             </div>
             <div class="result-pills">
-              <span class="pill">⏱ 1–4h</span>
-              <span class="pill">📦 Gratis +40€</span>
-              <span class="pill">🔄 Dev. 24h</span>
+              <span class="pill"><app-icon name="clock" [size]="14" /> 1–4h</span>
+              <span class="pill"><app-icon name="package" [size]="14" /> Gratis +40€</span>
+              <span class="pill"><app-icon name="refresh-cw" [size]="14" /> Dev. 24h</span>
             </div>
           </div>
         }
@@ -76,7 +76,7 @@
         @if (!checking() && checkResult() === 'too_far') {
           <div class="result-card result-fail">
             <div class="result-row">
-              <span class="result-dot fail">✕</span>
+              <span class="result-dot fail"><app-icon name="x" [size]="14" /></span>
               <div>
                 <strong>Zona a más de 30 km</strong>
                 <span>Por ahora solo enviamos en la provincia de Jaén (CP 23xxx). Estamos trabajando para ampliar nuestra cobertura.</span>
@@ -110,7 +110,7 @@
       <!-- Time slots -->
       <div class="card">
         <div class="card-header">
-          <div class="icon-wrap blue">🕐</div>
+          <div class="icon-wrap blue"><app-icon name="clock" [size]="22" /></div>
           <div><h3>Franjas horarias</h3><p>Disponibilidad para hoy</p></div>
         </div>
         <div class="slots">
@@ -155,16 +155,19 @@
             } @else {
               @for (zone of deliveryZones(); track zone.zone) {
                 <tr>
-                  <td>📍 {{zone.zone}}</td>
+                  <td><app-icon name="map-pin" [size]="14" /> {{zone.zone}}</td>
                   <td>{{zone.available ? zone.minTime : '—'}}</td>
                   <td><span [class.green-text]="zone.fee < 2">{{zone.available ? (zone.fee | number:'1.2-2') + '€' : 'No disponible'}}</span></td>
-                  <td><span class="status-badge" [class.active]="zone.available">{{zone.available ? '✅ Activo' : 'Próximamente'}}</span></td>
+                  <td><span class="status-badge" [class.active]="zone.available">
+                    @if (zone.available) { <app-icon name="check-circle" [size]="14" /> Activo }
+                    @else { Próximamente }
+                  </span></td>
                 </tr>
               }
             }
           </tbody>
         </table>
-        <div class="table-note">💡 Envío gratuito en todos los pedidos superiores a 40€</div>
+        <div class="table-note"><app-icon name="lightbulb" [size]="16" /> Envío gratuito en todos los pedidos superiores a 40€</div>
       </div>
     </div>
 

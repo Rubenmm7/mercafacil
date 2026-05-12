@@ -4,11 +4,12 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { Order, OrderStatus } from '../../models/models';
+import { IconComponent } from '../icon/icon.component';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, IconComponent],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.css'
 })

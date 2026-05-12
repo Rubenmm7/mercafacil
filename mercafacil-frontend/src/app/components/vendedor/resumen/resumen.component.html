@@ -8,22 +8,22 @@
   <!-- KPI cards -->
   <div class="kpi-grid">
     <div class="kpi-card">
-      <div class="kpi-icon">🏪</div>
+      <div class="kpi-icon"><app-icon name="store" [size]="28" /></div>
       <div class="kpi-value">{{ stats()?.totalStores }}</div>
       <div class="kpi-label">Mis tiendas</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-icon">📦</div>
+      <div class="kpi-icon"><app-icon name="package" [size]="28" /></div>
       <div class="kpi-value">{{ stats()?.pendingOrders }}</div>
       <div class="kpi-label">Pedidos activos</div>
     </div>
     <div class="kpi-card" [class.kpi-warning]="(stats()?.lowStockOffers ?? 0) > 0">
-      <div class="kpi-icon">⚠️</div>
+      <div class="kpi-icon"><app-icon name="alert-triangle" [size]="28" /></div>
       <div class="kpi-value">{{ stats()?.lowStockOffers }}</div>
       <div class="kpi-label">Stock bajo (&lt;10)</div>
     </div>
     <div class="kpi-card kpi-revenue">
-      <div class="kpi-icon">💶</div>
+      <div class="kpi-icon"><app-icon name="euro" [size]="28" /></div>
       <div class="kpi-value">{{ stats()?.todayRevenue | number:'1.2-2' }} €</div>
       <div class="kpi-label">Ingresos hoy</div>
     </div>
@@ -33,7 +33,7 @@
   @if (lowStock().length > 0) {
     <div class="alert-box">
       <div class="alert-header">
-        <span class="alert-icon">⚠️</span>
+        <span class="alert-icon"><app-icon name="alert-triangle" /></span>
         <strong>Productos con stock bajo — contacta a tu proveedor</strong>
       </div>
       <div class="low-stock-list">
@@ -53,9 +53,9 @@
 
   <!-- Accesos rápidos -->
   <div class="quick-links">
-    <a routerLink="../pedidos"   class="quick-card">📦 Ver pedidos activos</a>
-    <a routerLink="../productos" class="quick-card">🛒 Gestionar productos</a>
-    <a routerLink="../ofertas"   class="quick-card">🏷️ Gestionar stock y precios</a>
-    <a routerLink="/chats"       class="quick-card">💬 Ir al chat</a>
+    <a routerLink="../pedidos"   class="quick-card"><app-icon name="package" /> Ver pedidos activos</a>
+    <a routerLink="../productos" class="quick-card"><app-icon name="shopping-cart" /> Gestionar productos</a>
+    <a routerLink="../ofertas"   class="quick-card"><app-icon name="tag" /> Gestionar stock y precios</a>
+    <a routerLink="/chats"       class="quick-card"><app-icon name="message-circle" /> Ir al chat</a>
   </div>
 }

@@ -70,12 +70,12 @@
         <div class="active-filters">
           @if (selectedCategory()) {
             <span class="filter-chip green">
-              {{selectedCategory()}} <button (click)="selectCategory('')">✕</button>
+              {{selectedCategory()}} <button (click)="selectCategory('')" aria-label="Quitar filtro"><app-icon name="x" [size]="12" /></button>
             </span>
           }
           @for (sid of selectedStores(); track sid) {
             <span class="filter-chip" [style.background-color]="getStore(sid)?.bgColor" [style.color]="getStore(sid)?.color">
-              {{getStore(sid)?.name}} <button (click)="toggleStore(sid)">✕</button>
+              {{getStore(sid)?.name}} <button (click)="toggleStore(sid)" aria-label="Quitar filtro"><app-icon name="x" [size]="12" /></button>
             </span>
           }
           <button class="clear-link" (click)="clearFilters()">Limpiar filtros</button>
@@ -94,7 +94,7 @@
       <!-- Empty state -->
       @if (!loading() && filteredProducts().length === 0) {
         <div class="empty-state">
-          <div class="empty-icon">🔍</div>
+          <div class="empty-icon"><app-icon name="search" [size]="48" /></div>
           <h3>No encontramos resultados</h3>
           <p>Prueba con otro término o explora nuestras categorías</p>
           <button class="btn-primary" (click)="clearAll()">Ver todos los productos</button>
@@ -150,7 +150,11 @@
                       </span>
                       @if (offer.inStock) {
                         <button class="add-btn" [class.added]="isAdded(product.id, offer.storeId)" (click)="addToCart(product, offer)">
-                          {{isAdded(product.id, offer.storeId) ? '✓ Añadido' : '🛒 Añadir'}}
+                          @if (isAdded(product.id, offer.storeId)) {
+                            <app-icon name="check" [size]="14" /> Añadido
+                          } @else {
+                            <app-icon name="shopping-cart" [size]="14" /> Añadir
+                          }
                         </button>
                       }
                     </div>

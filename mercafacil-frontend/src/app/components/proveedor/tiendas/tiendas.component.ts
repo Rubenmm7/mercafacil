@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProveedorService } from '../../../services/proveedor.service';
 import { Store } from '../../../models/models';
+import { IconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'app-proveedor-tiendas',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
   templateUrl: './tiendas.component.html',
   styleUrl: './tiendas.component.css'
 })

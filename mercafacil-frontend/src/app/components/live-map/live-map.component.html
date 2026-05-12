@@ -9,7 +9,7 @@
   </google-map>
 } @else if (mapsError()) {
   <div class="map-fallback">
-    <span class="map-fallback-icon">🗺️</span>
+    <span class="map-fallback-icon"><app-icon name="map" [size]="48" /></span>
     <p class="map-fallback-title">Mapa no disponible</p>
     <p class="map-fallback-hint">
       Añade tu clave en <code>environment.googleMapsApiKey</code> para ver el mapa interactivo.

@@ -66,7 +66,7 @@
   <div class="stats-inner">
     @for (stat of stats; track stat.label) {
       <div class="stat-item">
-        <span class="stat-icon">{{ stat.icon }}</span>
+        <span class="stat-icon"><app-icon [name]="stat.icon" [size]="26" /></span>
         <div>
           <div class="stat-val">{{ stat.value }}</div>
           <div class="stat-lbl">{{ stat.label }}</div>
@@ -97,7 +97,7 @@
             {{ store.rating }}
           </div>
           <div class="store-category-tag">{{ store.category }}</div>
-          <div class="store-delivery">🕐 {{ store.deliveryTime }}</div>
+          <div class="store-delivery"><app-icon name="clock" [size]="14" /> {{ store.deliveryTime }}</div>
         </a>
       }
     }
@@ -110,7 +110,7 @@
     <div class="section-header">
       <div>
         <h2>Encuéntranos en Jaén Plaza</h2>
-        <p class="mall-address">📍 Paraje de las Lagunillas, s/n · 23009 Jaén</p>
+        <p class="mall-address"><app-icon name="map-pin" [size]="14" /> Paraje de las Lagunillas, s/n · 23009 Jaén</p>
       </div>
       <a routerLink="/tiendas" class="see-all">Ver todas las tiendas →</a>
     </div>

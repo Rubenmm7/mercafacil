@@ -7,13 +7,14 @@ import { TrackingService } from '../../../services/tracking.service';
 import { AuthService } from '../../../services/auth.service';
 import { Order, OrderStatus } from '../../../models/models';
 import { LiveMapComponent } from '../../live-map/live-map.component';
+import { IconComponent } from '../../icon/icon.component';
 
 type Tab = 'mis' | 'disponibles';
 
 @Component({
   selector: 'app-repartidor-entregas',
   standalone: true,
-  imports: [DecimalPipe, LiveMapComponent],
+  imports: [DecimalPipe, LiveMapComponent, IconComponent],
   templateUrl: './entregas.component.html',
   styleUrl: './entregas.component.css'
 })

@@ -3,11 +3,12 @@ import { DecimalPipe } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { VendedorService } from '../../../services/vendedor.service';
 import { Store, StoreOfferDetail } from '../../../models/models';
+import { IconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'app-vendedor-ofertas',
   standalone: true,
-  imports: [ReactiveFormsModule, DecimalPipe],
+  imports: [ReactiveFormsModule, DecimalPipe, IconComponent],
   templateUrl: './ofertas.component.html',
   styleUrl: './ofertas.component.css'
 })
