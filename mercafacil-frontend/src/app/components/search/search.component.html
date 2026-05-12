@@ -88,7 +88,7 @@
               [size]="12" /></button>
         </span>
         }
-        @for (sid of selectedStores(); track sid) {
+        @for (sid of selectedStores(); track $index) {
         <span class="filter-chip" [style.background-color]="getStore(sid)?.bgColor"
           [style.color]="getStore(sid)?.color">
           {{getStore(sid)?.name}} <button (click)="toggleStore(sid)" aria-label="Quitar filtro"><app-icon name="x"

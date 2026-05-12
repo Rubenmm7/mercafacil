@@ -46,7 +46,8 @@ export const routes: Routes = [
   { path: 'devoluciones', component: InfoPageComponent, data: { pageId: 'devoluciones' } },
   { path: 'contacto',     component: InfoPageComponent, data: { pageId: 'contacto' } },
   { path: 'terminos',     component: InfoPageComponent, data: { pageId: 'terminos' } },
-  { path: 'privacidad',   component: InfoPageComponent, data: { pageId: 'privacidad' } },
+  { path: 'privacidad',        component: InfoPageComponent, data: { pageId: 'privacidad' } },
+  { path: 'politicas-envio',  component: InfoPageComponent, data: { pageId: 'politicas-envio' } },
 
   // Dashboard Vendedor
   {

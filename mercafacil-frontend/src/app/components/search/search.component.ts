@@ -1,5 +1,5 @@
 import { Component, OnInit, computed, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
@@ -51,21 +51,23 @@ export class SearchComponent implements OnInit {
   constructor(
     private api: ApiService,
     public cartService: CartService,
-    private router: Router
+    private route: ActivatedRoute
   ) {
-    const state = this.router.getCurrentNavigation()?.extras.state;
-    if (state) {
-      const q = (state['q'] as string) || '';
-      this.query.set(q);
-      this.localQuery = q;
-      if (state['categoria']) this.selectedCategory.set(state['categoria'] as string);
-      if (state['storeId']) this.selectedStores.set([state['storeId'] as number]);
-    }
+    const state = history.state as Record<string, unknown>;
+    if (state['q']) { this.query.set(state['q'] as string); this.localQuery = state['q'] as string; }
+    if (state['categoria']) this.selectedCategory.set(state['categoria'] as string);
+    if (state['storeId']) this.selectedStores.set([state['storeId'] as number]);
   }
 
   ngOnInit(): void {
     this.api.getStores().subscribe(s => this.stores.set(s));
     this.api.getCategories().subscribe(c => this.categories.set(c));
+
+    this.route.queryParamMap.subscribe(params => {
+      const storeId = params.get('storeId');
+      if (storeId) this.selectedStores.set([+storeId]);
+    });
+
     this.loadProducts();
   }
 

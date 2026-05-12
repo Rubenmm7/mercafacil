@@ -152,6 +152,59 @@ const PAGES: Record<string, PageContent> = {
     ]
   },
 
+  'politicas-envio': {
+    title: 'Políticas de Envío',
+    subtitle: 'Todo lo que necesitas saber sobre cómo entregamos tu pedido',
+    sections: [
+      {
+        title: 'Cobertura y zonas de entrega',
+        text: 'MercaFácil realiza entregas a domicilio dentro de la ciudad de Jaén y municipios del área metropolitana. Para verificar si tu dirección está dentro de nuestra zona de cobertura, introdúcela durante el proceso de compra.',
+        bullets: [
+          'Zona 1 – Jaén capital: entrega garantizada en todas las direcciones.',
+          'Zona 2 – Municipios limítrofes (Mengíbar, Villargordo, Torrequebradilla): sujeta a disponibilidad de repartidor.',
+          'Fuera de cobertura: recibirás un aviso antes de confirmar el pedido.',
+        ]
+      },
+      {
+        title: 'Plazos de entrega',
+        text: 'Los tiempos estimados se calculan desde que el vendedor confirma la preparación del pedido:',
+        bullets: [
+          'Entrega estándar: 30 – 90 minutos (según distancia y disponibilidad).',
+          'Pedidos realizados después de las 21:00 h se procesan al día siguiente a partir de las 9:00 h.',
+          'En días festivos locales el servicio puede estar limitado; se informará con antelación en la plataforma.',
+        ]
+      },
+      {
+        title: 'Coste del envío',
+        bullets: [
+          'Envío gratuito en pedidos iguales o superiores a 40 €.',
+          'Pedidos de menos de 40 €: tarifa fija de 2,99 € por envío.',
+          'El coste de envío se muestra antes de confirmar el pago.',
+        ]
+      },
+      {
+        title: 'Seguimiento del pedido',
+        text: 'Una vez que el repartidor recoge tu pedido, puedes seguir su ubicación en tiempo real desde la sección "Mis pedidos". El mapa se actualiza automáticamente hasta que la entrega se complete. También recibirás una notificación cuando el repartidor esté cerca de tu dirección.',
+      },
+      {
+        title: 'Instrucciones especiales de entrega',
+        text: 'Durante el proceso de compra puedes añadir notas de entrega (número de piso, código de portal, horario preferido, etc.). El repartidor las recibirá junto al pedido. Para modificarlas una vez confirmado el pedido, contacta con soporte lo antes posible.',
+      },
+      {
+        title: 'Incidencias en la entrega',
+        items: [
+          { q: '¿Qué pasa si no estoy en casa?', a: 'El repartidor intentará contactarte por el chat de la plataforma. Si no hay respuesta en 5 minutos, el pedido se marcará como "No entregado" y tendrás que contactar con soporte para gestionar una segunda entrega o el reembolso.' },
+          { q: '¿Qué hago si el pedido llega en mal estado?', a: 'Fotografía el estado del paquete antes de firmarlo y contáctanos en un plazo de 2 horas a través de soporte@mercafacil.es o desde el chat del pedido. Gestionaremos la reposición o el reembolso sin coste adicional.' },
+          { q: '¿Puedo cambiar la dirección de entrega tras confirmar?', a: 'Solo es posible si el pedido todavía está en estado "Pendiente". Accede a "Mis pedidos", selecciona el pedido y edita la dirección. Una vez en preparación, la dirección no puede modificarse.' },
+        ]
+      },
+      {
+        title: 'Contacto para incidencias de envío',
+        text: 'Para cualquier problema relacionado con la entrega, utiliza el chat integrado en "Mis pedidos" o escríbenos a soporte@mercafacil.es. Nuestro equipo de logística atiende de lunes a domingo de 9:00 a 21:00 h.',
+      }
+    ]
+  },
+
   privacidad: {
     title: 'Política de Privacidad',
     subtitle: 'Cómo tratamos tus datos personales',

@@ -54,12 +54,12 @@ export class LayoutComponent implements OnInit {
     { path: '/', label: 'Inicio' },
     { path: '/tiendas', label: 'Tiendas' },
     { path: '/buscar', label: 'Buscar productos' },
-    { path: '/envio', label: 'Información de envíos' }
+    { path: '/politicas-envio', label: 'Políticas de envío' }
   ];
 
   footerSupport = [
     { label: 'Ayuda y FAQ', path: '/ayuda' },
-    { label: 'Política de envíos', path: '/envio' },
+    { label: 'Políticas de envío', path: '/politicas-envio' },
     { label: 'Devoluciones', path: '/devoluciones' },
     { label: 'Contacto', path: '/contacto' },
     { label: 'Términos de uso', path: '/terminos' },
