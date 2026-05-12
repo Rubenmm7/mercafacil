@@ -11,5 +11,5 @@ import { IconComponent } from '../icon/icon.component';
   styleUrl: './proveedor.component.css'
 })
 export class ProveedorComponent {
-  constructor(public authService: AuthService) {}
+  constructor(public authService: AuthService) { }
 }

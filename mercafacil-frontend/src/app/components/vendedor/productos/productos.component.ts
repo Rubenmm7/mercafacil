@@ -14,26 +14,26 @@ import { IconComponent } from '../../icon/icon.component';
 })
 export class ProductosComponent implements OnInit {
   products = signal<ProductDetail[]>([]);
-  stores   = signal<Store[]>([]);
-  loading  = signal(true);
-  saving   = signal(false);
-  error    = signal('');
-  editing  = signal<ProductDetail | null>(null);
+  stores = signal<Store[]>([]);
+  loading = signal(true);
+  saving = signal(false);
+  error = signal('');
+  editing = signal<ProductDetail | null>(null);
   showForm = signal(false);
 
   form = new FormGroup({
-    name:        new FormControl('', Validators.required),
-    category:    new FormControl('', Validators.required),
+    name: new FormControl('', Validators.required),
+    category: new FormControl('', Validators.required),
     description: new FormControl(''),
-    unit:        new FormControl('', Validators.required),
-    image:       new FormControl(''),
-    storeId:     new FormControl<number | null>(null)
+    unit: new FormControl('', Validators.required),
+    image: new FormControl(''),
+    storeId: new FormControl<number | null>(null)
   });
 
   constructor(
     private vendedorService: VendedorService,
     private toastService: ToastService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.vendedorService.getStores().subscribe(s => this.stores.set(s));

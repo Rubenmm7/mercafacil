@@ -1,5 +1,16 @@
 package com.mercafacil.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
+import org.springframework.lang.NonNull;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.mercafacil.dto.OrderItemResponse;
 import com.mercafacil.dto.OrderResponse;
 import com.mercafacil.dto.RepartidorStatsDto;
@@ -7,24 +18,14 @@ import com.mercafacil.model.Order;
 import com.mercafacil.model.OrderStatus;
 import com.mercafacil.model.User;
 import com.mercafacil.repository.OrderRepository;
-import org.springframework.lang.NonNull;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 @Service
 @Transactional
 public class RepartidorService {
 
-    // Solo el repartidor puede poner un pedido EN_RUTA o ENTREGADO; ningún otro rol puede.
-    private static final Set<OrderStatus> REPARTIDOR_TRANSITIONS =
-            Set.of(OrderStatus.EN_RUTA, OrderStatus.ENTREGADO);
+    // Solo el repartidor puede poner un pedido EN_RUTA o ENTREGADO; ningún otro rol
+    // puede.
+    private static final Set<OrderStatus> REPARTIDOR_TRANSITIONS = Set.of(OrderStatus.EN_RUTA, OrderStatus.ENTREGADO);
 
     private final OrderRepository orderRepository;
 
@@ -46,8 +47,8 @@ public class RepartidorService {
         LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
         long deliveredToday = orders.stream()
                 .filter(o -> o.getStatus() == OrderStatus.ENTREGADO
-                          && o.getCreatedAt() != null
-                          && o.getCreatedAt().isAfter(startOfDay))
+                        && o.getCreatedAt() != null
+                        && o.getCreatedAt().isAfter(startOfDay))
                 .count();
 
         return new RepartidorStatsDto(orders.size(), pendingPool, enRuta, deliveredToday);
@@ -110,7 +111,7 @@ public class RepartidorService {
                 .map(i -> new OrderItemResponse(i.getProductId(), i.getStoreId(), i.getQuantity(), i.getUnitPrice()))
                 .toList();
         String clientEmail = o.getClient() != null ? o.getClient().getEmail() : null;
-        String createdAt   = o.getCreatedAt() != null ? o.getCreatedAt().toString() : null;
+        String createdAt = o.getCreatedAt() != null ? o.getCreatedAt().toString() : null;
         return new OrderResponse(o.getId(), clientEmail, o.getStatus().name(), o.getTotal(), items, createdAt,
                 o.getShippingAddress(), o.getDeliveryNotes());
     }

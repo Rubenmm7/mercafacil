@@ -15,7 +15,7 @@ import { environment } from '../../../environments/environment';
 export class ChatsListComponent implements OnInit {
   threads = signal<ChatThread[]>([]);
   loading = signal(true);
-  error   = signal('');
+  error = signal('');
 
   private readonly chatTypeLabels: Record<ChatType, string> = {
     CLIENTE_REPARTIDOR: 'Cliente · Repartidor',
@@ -23,7 +23,7 @@ export class ChatsListComponent implements OnInit {
     PROVEEDOR_VENDEDOR: 'Proveedor · Vendedor'
   };
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
     this.http.get<ChatThread[]>(`${environment.apiUrl}/messages/threads`).subscribe({

@@ -21,14 +21,14 @@ export interface ConfirmState {
 
 const ROLE_COLOR: Record<string, string> = {
   'Repartidor': '#4a6fa5',
-  'Vendedor':   '#27ae60',
-  'Proveedor':  '#8e44ad',
-  'Cliente':    '#666666',
+  'Vendedor': '#27ae60',
+  'Proveedor': '#8e44ad',
+  'Cliente': '#666666',
 };
 
 @Injectable({ providedIn: 'root' })
 export class ToastService {
-  readonly toasts       = signal<ToastItem[]>([]);
+  readonly toasts = signal<ToastItem[]>([]);
   readonly confirmState = signal<ConfirmState | null>(null);
 
   showMessage(params: {

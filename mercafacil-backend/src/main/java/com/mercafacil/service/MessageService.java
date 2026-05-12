@@ -1,5 +1,15 @@
 package com.mercafacil.service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.mercafacil.dto.ChatThreadDto;
 import com.mercafacil.dto.MarkReadRequest;
 import com.mercafacil.dto.MessageRequest;
@@ -12,15 +22,6 @@ import com.mercafacil.repository.MessageRepository;
 import com.mercafacil.repository.OrderRepository;
 import com.mercafacil.repository.StoreRepository;
 import com.mercafacil.repository.UserRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 @Service
 @Transactional
@@ -32,9 +33,9 @@ public class MessageService {
     private final StoreRepository storeRepository;
 
     public MessageService(MessageRepository messageRepository,
-                          UserRepository userRepository,
-                          OrderRepository orderRepository,
-                          StoreRepository storeRepository) {
+            UserRepository userRepository,
+            OrderRepository orderRepository,
+            StoreRepository storeRepository) {
         this.messageRepository = messageRepository;
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
@@ -94,7 +95,8 @@ public class MessageService {
         }
         if (user.getRol() == Role.REPARTIDOR) {
             // Dos consultas: una por pedidos asignados y otra por tipo de chat, porque
-            // order.deliverer puede ser null antes de la asignación y esos hilos también deben aparecer.
+            // order.deliverer puede ser null antes de la asignación y esos hilos también
+            // deben aparecer.
             all.addAll(messageRepository.findByOrder_Deliverer_IdOrderByFechaDesc(user.getId()));
             all.addAll(messageRepository.findByChatTypeInOrderByFechaDesc(
                     List.of(ChatType.CLIENTE_REPARTIDOR, ChatType.VENDEDOR_REPARTIDOR)));
@@ -118,13 +120,13 @@ public class MessageService {
 
     private String threadKey(Message m) {
         Long orderId = m.getOrder() != null ? m.getOrder().getId() : null;
-        Long shopId  = m.getShop()  != null ? m.getShop().getId()  : null;
+        Long shopId = m.getShop() != null ? m.getShop().getId() : null;
         return m.getChatType().name() + ":" + orderId + ":" + shopId;
     }
 
     private ChatThreadDto toThreadDto(Message m) {
         Long orderId = m.getOrder() != null ? m.getOrder().getId() : null;
-        Long shopId  = m.getShop()  != null ? m.getShop().getId()  : null;
+        Long shopId = m.getShop() != null ? m.getShop().getId() : null;
         String title = orderId != null ? "Pedido #" + orderId : "Tienda #" + shopId;
         String preview = m.getMensaje().length() > 80
                 ? m.getMensaje().substring(0, 77) + "..."
@@ -136,8 +138,7 @@ public class MessageService {
                 title,
                 preview,
                 m.getSender().getNombre() + " " + m.getSender().getApellidos(),
-                m.getFecha()
-        );
+                m.getFecha());
     }
 
     private MessageResponse toResponse(Message m) {
@@ -154,15 +155,14 @@ public class MessageService {
                 m.getId(),
                 m.getChatType(),
                 m.getOrder() != null ? m.getOrder().getId() : null,
-                m.getShop()  != null ? m.getShop().getId()  : null,
+                m.getShop() != null ? m.getShop().getId() : null,
                 m.getSender().getId(),
                 m.getSender().getNombre() + " " + m.getSender().getApellidos(),
                 repliedId,
                 repliedSenderName,
                 repliedMensaje,
                 m.getMensaje(),
-                m.getFecha()
-        );
+                m.getFecha());
     }
 
     @Transactional
@@ -183,11 +183,13 @@ public class MessageService {
             if (t.orderId() != null) {
                 count = messageRepository.countByOrder_IdAndChatTypeAndIsReadFalseAndSender_IdNot(
                         t.orderId(), t.chatType(), user.getId());
-                if (count > 0) result.put("order-" + t.orderId() + "-" + t.chatType().name(), count);
+                if (count > 0)
+                    result.put("order-" + t.orderId() + "-" + t.chatType().name(), count);
             } else if (t.shopId() != null) {
                 count = messageRepository.countByShop_IdAndChatTypeAndIsReadFalseAndSender_IdNot(
                         t.shopId(), t.chatType(), user.getId());
-                if (count > 0) result.put("shop-" + t.shopId() + "-" + t.chatType().name(), count);
+                if (count > 0)
+                    result.put("shop-" + t.shopId() + "-" + t.chatType().name(), count);
             }
         }
         return result;

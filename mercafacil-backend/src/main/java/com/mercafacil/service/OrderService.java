@@ -1,19 +1,23 @@
 package com.mercafacil.service;
 
-import com.mercafacil.dto.*;
-import com.mercafacil.model.Order;
-import com.mercafacil.model.Role;
-import com.mercafacil.model.OrderItem;
-import com.mercafacil.model.User;
-import com.mercafacil.repository.OrderRepository;
-import com.mercafacil.repository.StoreRepository;
+import java.util.List;
+import java.util.Objects;
+
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
+import com.mercafacil.dto.OrderItemRequest;
+import com.mercafacil.dto.OrderItemResponse;
+import com.mercafacil.dto.OrderRequest;
+import com.mercafacil.dto.OrderResponse;
+import com.mercafacil.model.Order;
+import com.mercafacil.model.OrderItem;
+import com.mercafacil.model.Role;
+import com.mercafacil.model.User;
+import com.mercafacil.repository.OrderRepository;
+import com.mercafacil.repository.StoreRepository;
 
 @Service
 public class OrderService {
@@ -73,7 +77,8 @@ public class OrderService {
     }
 
     private boolean canAccessOrder(Order order, User user) {
-        if (user.getRol() == Role.ADMIN) return true;
+        if (user.getRol() == Role.ADMIN)
+            return true;
 
         Long userId = Objects.requireNonNull(user.getId(), "Usuario autenticado sin ID");
         if (user.getRol() == Role.CLIENTE) {

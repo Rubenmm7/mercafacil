@@ -31,14 +31,14 @@ export class ShippingComponent implements OnInit {
     const now = new Date();
     const nowMin = now.getHours() * 60 + now.getMinutes();
     return [
-      { time: '09:00 – 12:00', label: 'Mañana',      start: 9  * 60, end: 12 * 60 },
-      { time: '12:00 – 15:00', label: 'Mediodía',    start: 12 * 60, end: 15 * 60 },
-      { time: '15:00 – 18:00', label: 'Tarde',       start: 15 * 60, end: 18 * 60 },
+      { time: '09:00 – 12:00', label: 'Mañana', start: 9 * 60, end: 12 * 60 },
+      { time: '12:00 – 15:00', label: 'Mediodía', start: 12 * 60, end: 15 * 60 },
+      { time: '15:00 – 18:00', label: 'Tarde', start: 15 * 60, end: 18 * 60 },
       { time: '18:00 – 21:00', label: 'Tarde-noche', start: 18 * 60, end: 21 * 60 },
     ].map(s => ({
       ...s,
-      past:      nowMin >= s.end,
-      active:    nowMin >= s.start && nowMin < s.end,
+      past: nowMin >= s.end,
+      active: nowMin >= s.start && nowMin < s.end,
       available: nowMin < s.end,
     }));
   }

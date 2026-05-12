@@ -15,16 +15,16 @@ El sistema incluye **seguimiento GPS en vivo** durante la entrega, **chat en tie
 
 ## Stack tecnológico
 
-| Capa | Tecnología |
-|------|-----------|
-| Backend | Java 21 · Spring Boot · Spring Security · Spring WebSocket (STOMP/SockJS) |
-| Frontend | Angular 21 · Standalone · Zoneless change detection · Signals |
-| Base de datos | MySQL |
-| ORM | Spring Data JPA / Hibernate |
-| Seguridad | JWT stateless |
-| Mapas | Google Maps JS API · `@angular/google-maps` |
-| Tiempo real | STOMP sobre WebSocket |
-| Infraestructura | Docker · Docker Compose · phpMyAdmin |
+| Capa            | Tecnología                                                                |
+| --------------- | ------------------------------------------------------------------------- |
+| Backend         | Java 21 · Spring Boot · Spring Security · Spring WebSocket (STOMP/SockJS) |
+| Frontend        | Angular 21 · Standalone · Zoneless change detection · Signals             |
+| Base de datos   | MySQL                                                                     |
+| ORM             | Spring Data JPA / Hibernate                                               |
+| Seguridad       | JWT stateless                                                             |
+| Mapas           | Google Maps JS API · `@angular/google-maps`                               |
+| Tiempo real     | STOMP sobre WebSocket                                                     |
+| Infraestructura | Docker · Docker Compose · phpMyAdmin                                      |
 
 ---
 
@@ -83,13 +83,13 @@ El flujo de pago incluye un formulario de dirección de entrega completo (calle,
 
 ## Roles del sistema
 
-| Rol | Descripción |
-|-----|-------------|
-| **CLIENTE** | Navega el catálogo, gestiona su carrito y sigue sus pedidos en tiempo real |
-| **VENDEDOR** | Gestiona sus productos y ofertas, ve los pedidos de su tienda y cambia su estado |
-| **REPARTIDOR** | Acepta pedidos disponibles, avanza su estado y emite su posición GPS |
-| **PROVEEDOR** | Supervisa las tiendas y se comunica con los vendedores |
-| **ADMIN** | Gestiona usuarios, cambia roles y consulta estadísticas globales |
+| Rol            | Descripción                                                                      |
+| -------------- | -------------------------------------------------------------------------------- |
+| **CLIENTE**    | Navega el catálogo, gestiona su carrito y sigue sus pedidos en tiempo real       |
+| **VENDEDOR**   | Gestiona sus productos y ofertas, ve los pedidos de su tienda y cambia su estado |
+| **REPARTIDOR** | Acepta pedidos disponibles, avanza su estado y emite su posición GPS             |
+| **PROVEEDOR**  | Supervisa las tiendas y se comunica con los vendedores                           |
+| **ADMIN**      | Gestiona usuarios, cambia roles y consulta estadísticas globales                 |
 
 ---
 

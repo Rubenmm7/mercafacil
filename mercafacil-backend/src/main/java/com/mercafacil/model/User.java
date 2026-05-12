@@ -1,12 +1,20 @@
 package com.mercafacil.model;
 
-import jakarta.persistence.*;
+import java.util.Collection;
+import java.util.List;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
@@ -37,21 +45,73 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority("ROLE_" + rol.name()));
     }
 
-    @Override public String getPassword()               { return password; }
-    @Override public String getUsername()               { return email; }
-    @Override public boolean isAccountNonExpired()      { return true; }
-    @Override public boolean isAccountNonLocked()       { return true; }
-    @Override public boolean isCredentialsNonExpired()  { return true; }
-    @Override public boolean isEnabled()                { return true; }
+    @Override
+    public String getPassword() {
+        return password;
+    }
 
-    public Long getId()                            { return id; }
-    public String getNombre()                      { return nombre; }
-    public void   setNombre(String nombre)         { this.nombre = nombre; }
-    public String getApellidos()                   { return apellidos; }
-    public void   setApellidos(String apellidos)   { this.apellidos = apellidos; }
-    public String getEmail()                       { return email; }
-    public void   setEmail(String email)           { this.email = email; }
-    public void   setPassword(String password)     { this.password = password; }
-    public Role   getRol()                         { return rol; }
-    public void   setRol(Role rol)                 { this.rol = rol; }
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Role getRol() {
+        return rol;
+    }
+
+    public void setRol(Role rol) {
+        this.rol = rol;
+    }
 }

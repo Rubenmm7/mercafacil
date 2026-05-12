@@ -8,15 +8,15 @@ import { ChatThread, ChatType, MessageResponse } from '../models/models';
 import { environment } from '../../environments/environment';
 
 const ROLE_LABEL: Record<ChatType, Record<string, string>> = {
-  CLIENTE_REPARTIDOR:  { CLIENTE: 'Repartidor', REPARTIDOR: 'Cliente' },
+  CLIENTE_REPARTIDOR: { CLIENTE: 'Repartidor', REPARTIDOR: 'Cliente' },
   VENDEDOR_REPARTIDOR: { VENDEDOR: 'Repartidor', REPARTIDOR: 'Vendedor' },
-  PROVEEDOR_VENDEDOR:  { PROVEEDOR: 'Vendedor',  VENDEDOR: 'Proveedor' },
+  PROVEEDOR_VENDEDOR: { PROVEEDOR: 'Vendedor', VENDEDOR: 'Proveedor' },
 };
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
-  private readonly authService  = inject(AuthService);
-  private readonly http         = inject(HttpClient);
+  private readonly authService = inject(AuthService);
+  private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
 
   private client: Client | null = null;
@@ -24,7 +24,7 @@ export class NotificationService {
 
   private readonly _unreadCounts = signal<Map<string, number>>(new Map());
   readonly unreadCounts = this._unreadCounts.asReadonly();
-  readonly totalUnread  = computed(() => {
+  readonly totalUnread = computed(() => {
     let sum = 0;
     this._unreadCounts().forEach(v => { sum += v; });
     return sum;
@@ -67,7 +67,7 @@ export class NotificationService {
       next: counts => this._unreadCounts.set(
         new Map(Object.entries(counts).map(([k, v]) => [k, Number(v)]))
       ),
-      error: () => {}
+      error: () => { }
     });
   }
 
@@ -84,16 +84,16 @@ export class NotificationService {
         this.subscribeToAllThreads();
         this.loadUnreadCounts();
       },
-      onDisconnect: () => {},
+      onDisconnect: () => { },
     });
-    this.client.onStompError = () => {};
+    this.client.onStompError = () => { };
     this.client.activate();
   }
 
   private subscribeToAllThreads(): void {
     this.http.get<ChatThread[]>(`${environment.apiUrl}/messages/threads`).subscribe({
       next: threads => threads.forEach(t => this.subscribeToThread(t)),
-      error: () => {}
+      error: () => { }
     });
   }
 
@@ -116,19 +116,19 @@ export class NotificationService {
       return next;
     });
 
-    const myRole      = this.authService.user()?.rol ?? 'CLIENTE';
-    const roleLabel   = ROLE_LABEL[msg.chatType]?.[myRole] ?? 'Usuario';
+    const myRole = this.authService.user()?.rol ?? 'CLIENTE';
+    const roleLabel = ROLE_LABEL[msg.chatType]?.[myRole] ?? 'Usuario';
     const threadTitle = msg.orderId != null
       ? `Pedido #${msg.orderId}`
       : `Tienda #${msg.shopId}`;
 
     this.toastService.showMessage({
-      body:            msg.mensaje,
-      title:           `${roleLabel} · ${threadTitle}`,
+      body: msg.mensaje,
+      title: `${roleLabel} · ${threadTitle}`,
       senderRoleLabel: roleLabel,
-      orderId:         msg.orderId,
-      shopId:          msg.shopId,
-      chatType:        msg.chatType,
+      orderId: msg.orderId,
+      shopId: msg.shopId,
+      chatType: msg.chatType,
     });
   }
 

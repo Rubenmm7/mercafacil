@@ -10,7 +10,7 @@ import { attachStoreLogo } from './store-logo';
 export class VendedorService {
   private readonly base = `${environment.apiUrl}/vendedor`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getStats(): Observable<VendedorStats> {
     return this.http.get<VendedorStats>(`${this.base}/stats`);

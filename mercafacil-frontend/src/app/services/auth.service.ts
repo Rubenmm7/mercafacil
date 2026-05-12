@@ -15,7 +15,7 @@ export class AuthService {
   readonly user = this._user.asReadonly();
   readonly loggedIn = computed(() => this._user() !== null);
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   login(email: string, password: string): Observable<AuthResponse> {
     return this.http

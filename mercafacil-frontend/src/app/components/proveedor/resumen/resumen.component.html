@@ -1,45 +1,45 @@
 @if (loading()) {
-  <div class="loading">Cargando estadísticas...</div>
+<div class="loading">Cargando estadísticas...</div>
 } @else if (error()) {
-  <div class="error-msg">{{ error() }}</div>
+<div class="error-msg">{{ error() }}</div>
 } @else {
-  <h1 class="page-title">Resumen</h1>
+<h1 class="page-title">Resumen</h1>
 
-  <!-- KPI cards -->
-  <div class="kpi-grid">
-    <div class="kpi-card">
-      <div class="kpi-icon"><app-icon name="store" [size]="28" /></div>
-      <div class="kpi-value">{{ stats()?.totalStores }}</div>
-      <div class="kpi-label">Tiendas del centro</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-icon"><app-icon name="message-circle" [size]="28" /></div>
-      <div class="kpi-value">{{ stats()?.activeChats }}</div>
-      <div class="kpi-label">Chats activos</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-icon"><app-icon name="package" [size]="28" /></div>
-      <div class="kpi-value">{{ stats()?.totalProducts }}</div>
-      <div class="kpi-label">Tiendas suministradas</div>
-    </div>
+<!-- KPI cards -->
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-icon"><app-icon name="store" [size]="28" /></div>
+    <div class="kpi-value">{{ stats()?.totalStores }}</div>
+    <div class="kpi-label">Tiendas del centro</div>
   </div>
+  <div class="kpi-card">
+    <div class="kpi-icon"><app-icon name="message-circle" [size]="28" /></div>
+    <div class="kpi-value">{{ stats()?.activeChats }}</div>
+    <div class="kpi-label">Chats activos</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon"><app-icon name="package" [size]="28" /></div>
+    <div class="kpi-value">{{ stats()?.totalProducts }}</div>
+    <div class="kpi-label">Tiendas suministradas</div>
+  </div>
+</div>
 
-  <!-- Info box -->
-  <div class="info-box">
-    <div class="info-header">
-      <span class="info-icon"><app-icon name="info" /></span>
-      <strong>Panel de proveedor</strong>
-    </div>
-    <p class="info-text">
-      Desde este panel puedes ver todas las tiendas del centro comercial y comunicarte con
-      sus vendedores a traves del chat. Usa la seccion "Tiendas" para ver la lista completa
-      y abrir una conversacion con cualquier vendedor.
-    </p>
+<!-- Info box -->
+<div class="info-box">
+  <div class="info-header">
+    <span class="info-icon"><app-icon name="info" /></span>
+    <strong>Panel de proveedor</strong>
   </div>
+  <p class="info-text">
+    Desde este panel puedes ver todas las tiendas del centro comercial y comunicarte con
+    sus vendedores a traves del chat. Usa la seccion "Tiendas" para ver la lista completa
+    y abrir una conversacion con cualquier vendedor.
+  </p>
+</div>
 
-  <!-- Accesos rápidos -->
-  <div class="quick-links">
-    <a routerLink="../tiendas" class="quick-card"><app-icon name="store" /> Ver tiendas</a>
-    <a routerLink="/chats"     class="quick-card"><app-icon name="message-circle" /> Mis conversaciones</a>
-  </div>
+<!-- Accesos rápidos -->
+<div class="quick-links">
+  <a routerLink="../tiendas" class="quick-card"><app-icon name="store" /> Ver tiendas</a>
+  <a routerLink="/chats" class="quick-card"><app-icon name="message-circle" /> Mis conversaciones</a>
+</div>
 }

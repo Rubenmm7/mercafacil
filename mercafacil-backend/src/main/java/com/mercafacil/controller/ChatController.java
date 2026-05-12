@@ -1,15 +1,16 @@
 package com.mercafacil.controller;
 
-import com.mercafacil.dto.MessageRequest;
-import com.mercafacil.dto.MessageResponse;
-import com.mercafacil.service.MessageService;
+import java.security.Principal;
+import java.util.Objects;
+
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
-import java.security.Principal;
-import java.util.Objects;
+import com.mercafacil.dto.MessageRequest;
+import com.mercafacil.dto.MessageResponse;
+import com.mercafacil.service.MessageService;
 
 // @Controller sin @RestController: gestiona mensajes STOMP sobre WebSocket, no peticiones HTTP.
 @Controller
@@ -25,8 +26,8 @@ public class ChatController {
 
     @MessageMapping("/chat/order/{orderId}")
     public void handleOrderChat(@DestinationVariable Long orderId,
-                                MessageRequest req,
-                                Principal principal) {
+            MessageRequest req,
+            Principal principal) {
         MessageResponse response = messageService.save(req, principal.getName());
         String suffix = req.chatType().name().toLowerCase().replace('_', '-');
         messaging.convertAndSend("/topic/chat/order/" + orderId + "/" + suffix, Objects.requireNonNull(response));
@@ -34,9 +35,10 @@ public class ChatController {
 
     @MessageMapping("/chat/shop/{shopId}")
     public void handleShopChat(@DestinationVariable Long shopId,
-                               MessageRequest req,
-                               Principal principal) {
+            MessageRequest req,
+            Principal principal) {
         MessageResponse response = messageService.save(req, principal.getName());
-        messaging.convertAndSend("/topic/chat/shop/" + shopId + "/proveedor-vendedor", Objects.requireNonNull(response));
+        messaging.convertAndSend("/topic/chat/shop/" + shopId + "/proveedor-vendedor",
+                Objects.requireNonNull(response));
     }
 }

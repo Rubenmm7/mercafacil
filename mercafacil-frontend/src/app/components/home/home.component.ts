@@ -101,17 +101,17 @@ export class HomeComponent implements OnInit {
   popularTerms = ['iPhone 17', 'Big Mac', 'Aceite Oliva', 'Rockrider'];
 
   stats: { icon: IconName; value: string; label: string }[] = [
-    { icon: 'map-pin',      value: '25+',     label: 'Establecimientos en Jaén' },
-    { icon: 'tag',          value: '+50.000', label: 'Productos comparados'     },
-    { icon: 'check-circle', value: 'Gratis',  label: 'Sin registro necesario'   },
-    { icon: 'refresh-cw',   value: 'Diario',  label: 'Precios actualizados'     },
+    { icon: 'map-pin', value: '25+', label: 'Establecimientos en Jaén' },
+    { icon: 'tag', value: '+50.000', label: 'Productos comparados' },
+    { icon: 'check-circle', value: 'Gratis', label: 'Sin registro necesario' },
+    { icon: 'refresh-cw', value: 'Diario', label: 'Precios actualizados' },
   ];
 
   constructor(
     private api: ApiService,
     private router: Router,
     private sanitizer: DomSanitizer,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     let pending = 3;

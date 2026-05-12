@@ -1,20 +1,21 @@
 package com.mercafacil.service;
 
-import com.mercafacil.dto.TrackingRequest;
-import com.mercafacil.dto.TrackingResponse;
-import com.mercafacil.model.Tracking;
-import com.mercafacil.model.User;
-import com.mercafacil.repository.OrderRepository;
-import com.mercafacil.repository.TrackingRepository;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import com.mercafacil.dto.TrackingRequest;
+import com.mercafacil.dto.TrackingResponse;
+import com.mercafacil.model.Tracking;
+import com.mercafacil.model.User;
+import com.mercafacil.repository.OrderRepository;
+import com.mercafacil.repository.TrackingRepository;
 
 @Service
 @Transactional
@@ -25,11 +26,11 @@ public class TrackingService {
     private final SimpMessagingTemplate messaging;
 
     public TrackingService(TrackingRepository trackingRepository,
-                           OrderRepository orderRepository,
-                           SimpMessagingTemplate messaging) {
+            OrderRepository orderRepository,
+            SimpMessagingTemplate messaging) {
         this.trackingRepository = trackingRepository;
-        this.orderRepository    = orderRepository;
-        this.messaging          = messaging;
+        this.orderRepository = orderRepository;
+        this.messaging = messaging;
     }
 
     public TrackingResponse saveLocation(Long orderId, TrackingRequest req, User repartidor) {
@@ -74,8 +75,7 @@ public class TrackingService {
                 t.getOrder().getId(),
                 t.getLatitud(),
                 t.getLongitud(),
-                t.getUltimaActualizacion()
-        );
+                t.getUltimaActualizacion());
     }
 
     private @NonNull Long requireId(Long id, String fieldName) {

@@ -24,8 +24,8 @@ public class ProveedorService {
     private final MessageRepository messageRepository;
 
     public ProveedorService(StoreRepository storeRepository,
-                            StoreOfferRepository storeOfferRepository,
-                            MessageRepository messageRepository) {
+            StoreOfferRepository storeOfferRepository,
+            MessageRepository messageRepository) {
         this.storeRepository = storeRepository;
         this.storeOfferRepository = storeOfferRepository;
         this.messageRepository = messageRepository;

@@ -24,15 +24,15 @@ export class ChatComponent implements OnInit, OnDestroy {
   @ViewChild('messagesArea') private messagesArea!: ElementRef<HTMLElement>;
   @ViewChild('messageInput') private messageInput?: ElementRef<HTMLTextAreaElement>;
 
-  orderId  = signal<number | null>(null);
-  shopId   = signal<number | null>(null);
+  orderId = signal<number | null>(null);
+  shopId = signal<number | null>(null);
   chatType = signal<ChatType>('CLIENTE_REPARTIDOR');
 
-  messages   = signal<MessageResponse[]>([]);
+  messages = signal<MessageResponse[]>([]);
   newMessage = signal('');
   replyingTo = signal<MessageResponse | null>(null);
-  loading    = signal(true);
-  error      = signal('');
+  loading = signal(true);
+  error = signal('');
 
   currentUserId = computed(() => {
     const token = this.authService.getToken();
@@ -44,9 +44,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   });
 
-  isAtBottom     = signal(true);
+  isAtBottom = signal(true);
   autoScrollLock = signal(true);
-  unreadCount    = signal(0);
+  unreadCount = signal(0);
 
   private subscription?: Subscription;
   private readonly BOTTOM_THRESHOLD = 80;
@@ -57,11 +57,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     private chatService: ChatService,
     public authService: AuthService,
     private notificationService: NotificationService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const params = this.route.snapshot.params;
-    const qp     = this.route.snapshot.queryParams;
+    const qp = this.route.snapshot.queryParams;
 
     if (params['orderId']) {
       this.orderId.set(+params['orderId']);
@@ -111,7 +111,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   private loadHistory(): void {
     const orderId = this.orderId();
-    const shopId  = this.shopId();
+    const shopId = this.shopId();
     let url: string;
 
     if (orderId != null) {
@@ -142,7 +142,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     this.chatService.connect(token).then(() => {
       const orderId = this.orderId();
-      const shopId  = this.shopId();
+      const shopId = this.shopId();
 
       let obs$;
       if (orderId != null) {
@@ -177,14 +177,14 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
 
     const orderId = this.orderId();
-    const shopId  = this.shopId();
+    const shopId = this.shopId();
 
     const req: MessageRequest = {
       chatType: this.chatType(),
-      orderId:  orderId  ?? undefined,
-      shopId:   shopId   ?? undefined,
+      orderId: orderId ?? undefined,
+      shopId: shopId ?? undefined,
       replyToMessageId: this.replyingTo()?.id,
-      mensaje:  text
+      mensaje: text
     };
 
     if (orderId != null) {
@@ -225,9 +225,9 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   chatTitle(): string {
     const orderId = this.orderId();
-    const shopId  = this.shopId();
+    const shopId = this.shopId();
     if (orderId != null) return `Pedido #${orderId}`;
-    if (shopId  != null) return `Tienda #${shopId}`;
+    if (shopId != null) return `Tienda #${shopId}`;
     return 'Chat';
   }
 
@@ -251,7 +251,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   private buildChatKey(): string {
     const orderId = this.orderId();
-    const shopId  = this.shopId();
+    const shopId = this.shopId();
     return orderId != null
       ? `order-${orderId}-${this.chatType()}`
       : `shop-${shopId}-${this.chatType()}`;
@@ -259,11 +259,11 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   private markThreadRead(): void {
     const orderId = this.orderId();
-    const shopId  = this.shopId();
+    const shopId = this.shopId();
     const req: MarkReadRequest = {
       chatType: this.chatType(),
-      orderId:  orderId  ?? undefined,
-      shopId:   shopId   ?? undefined,
+      orderId: orderId ?? undefined,
+      shopId: shopId ?? undefined,
     };
     this.http.post(`${environment.apiUrl}/messages/read`, req).subscribe();
   }

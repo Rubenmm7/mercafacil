@@ -11,5 +11,5 @@ import { IconComponent } from '../icon/icon.component';
   styleUrl: './admin.component.css'
 })
 export class AdminComponent {
-  constructor(public authService: AuthService) {}
+  constructor(public authService: AuthService) { }
 }

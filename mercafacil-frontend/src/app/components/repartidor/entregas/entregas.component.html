@@ -15,86 +15,80 @@
 </div>
 
 @if (loading()) {
-  <div class="loading">Cargando entregas...</div>
+<div class="loading">Cargando entregas...</div>
 } @else if (shownOrders().length === 0) {
-  <div class="empty">
-    @if (activeTab() === 'mis') { No tienes entregas asignadas. }
-    @else { No hay pedidos disponibles en este momento. }
-  </div>
+<div class="empty">
+  @if (activeTab() === 'mis') { No tienes entregas asignadas. }
+  @else { No hay pedidos disponibles en este momento. }
+</div>
 } @else {
-  <div class="orders-list">
-    @for (order of shownOrders(); track order.id) {
-      <div class="order-card" [class]="'order-card status-' + order.status.toLowerCase()">
+<div class="orders-list">
+  @for (order of shownOrders(); track order.id) {
+  <div class="order-card" [class]="'order-card status-' + order.status.toLowerCase()">
 
-        <div class="order-header">
-          <div class="order-id">#{{ order.id }}</div>
-          <span class="status-badge">{{ statusLabels[order.status] }}</span>
-          <span class="order-total">{{ order.total | number:'1.2-2' }} €</span>
-        </div>
+    <div class="order-header">
+      <div class="order-id">#{{ order.id }}</div>
+      <span class="status-badge">{{ statusLabels[order.status] }}</span>
+      <span class="order-total">{{ order.total | number:'1.2-2' }} €</span>
+    </div>
 
-        <div class="order-meta">
-          <span><app-icon name="user" [size]="14" /> {{ order.clientEmail }}</span>
-          <span><app-icon name="clock" [size]="14" /> {{ formatDate(order.createdAt) }}</span>
-          <span><app-icon name="shopping-bag" [size]="14" /> {{ order.items.length }} artículo(s)</span>
-        </div>
+    <div class="order-meta">
+      <span><app-icon name="user" [size]="14" /> {{ order.clientEmail }}</span>
+      <span><app-icon name="clock" [size]="14" /> {{ formatDate(order.createdAt) }}</span>
+      <span><app-icon name="shopping-bag" [size]="14" /> {{ order.items.length }} artículo(s)</span>
+    </div>
 
-        <div class="order-actions">
-          @if (activeTab() === 'disponibles') {
-            <button class="btn-accept"
-                    [disabled]="updating() === order.id"
-                    (click)="accept(order)">
-              @if (updating() === order.id) { Aceptando... }
-              @else { <app-icon name="check-circle" [size]="16" /> Aceptar entrega }
-            </button>
-          } @else {
-            @if (nextStatus[order.status]) {
-              <button class="btn-advance"
-                      [disabled]="updating() === order.id"
-                      (click)="advance(order)">
-                @if (updating() === order.id) { Actualizando... } @else { {{ nextStatusLabel[order.status] }} }
-              </button>
-            }
-            <button class="btn-chat" (click)="openVendedorChat(order.id)" title="Chat con vendedor">
-              <app-icon name="message-circle" [size]="14" /> Enviar mensaje a vendedor
-            </button>
-            @if (simulatingOrderId() === order.id) {
-              <span class="gps-active" title="Enviando ubicación GPS en tiempo real">
-                <app-icon name="radio" [size]="14" /> GPS activo
-              </span>
-            }
-          }
-        </div>
+    <div class="order-actions">
+      @if (activeTab() === 'disponibles') {
+      <button class="btn-accept" [disabled]="updating() === order.id" (click)="accept(order)">
+        @if (updating() === order.id) { Aceptando... }
+        @else { <app-icon name="check-circle" [size]="16" /> Aceptar entrega }
+      </button>
+      } @else {
+      @if (nextStatus[order.status]) {
+      <button class="btn-advance" [disabled]="updating() === order.id" (click)="advance(order)">
+        @if (updating() === order.id) { Actualizando... } @else { {{ nextStatusLabel[order.status] }} }
+      </button>
+      }
+      <button class="btn-chat" (click)="openVendedorChat(order.id)" title="Chat con vendedor">
+        <app-icon name="message-circle" [size]="14" /> Enviar mensaje a vendedor
+      </button>
+      @if (simulatingOrderId() === order.id) {
+      <span class="gps-active" title="Enviando ubicación GPS en tiempo real">
+        <app-icon name="radio" [size]="14" /> GPS activo
+      </span>
+      }
+      }
+    </div>
 
-        @if (order.status === 'EN_RUTA') {
-          <div class="delivery-address-block">
-            <span class="addr-label"><app-icon name="map-pin" [size]="14" /> Dirección de entrega</span>
-            @if (order.shippingAddress) {
-              <div class="addr-main">{{ order.shippingAddress }}</div>
-              @if (order.deliveryNotes) {
-                <div class="delivery-notes"><app-icon name="message-circle" [size]="14" /> "{{ order.deliveryNotes }}"</div>
-              }
-              <a [href]="mapsNavUrl(order)" target="_blank" rel="noopener" class="btn-navigate">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                </svg>
-                Navegar con Google Maps
-              </a>
-            } @else {
-              <div class="addr-missing">Sin dirección (pedido anterior al nuevo checkout)</div>
-            }
-          </div>
-        }
-
-        @if (simulatingOrderId() === order.id && simPosition(); as pos) {
-          <div class="repartidor-map-wrapper">
-            <app-live-map
-              [lat]="pos.lat"
-              [lng]="pos.lng"
-              [label]="'Mi posición — Pedido #' + order.id" />
-          </div>
-        }
-
-      </div>
+    @if (order.status === 'EN_RUTA') {
+    <div class="delivery-address-block">
+      <span class="addr-label"><app-icon name="map-pin" [size]="14" /> Dirección de entrega</span>
+      @if (order.shippingAddress) {
+      <div class="addr-main">{{ order.shippingAddress }}</div>
+      @if (order.deliveryNotes) {
+      <div class="delivery-notes"><app-icon name="message-circle" [size]="14" /> "{{ order.deliveryNotes }}"</div>
+      }
+      <a [href]="mapsNavUrl(order)" target="_blank" rel="noopener" class="btn-navigate">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+        </svg>
+        Navegar con Google Maps
+      </a>
+      } @else {
+      <div class="addr-missing">Sin dirección (pedido anterior al nuevo checkout)</div>
+      }
+    </div>
     }
+
+    @if (simulatingOrderId() === order.id && simPosition(); as pos) {
+    <div class="repartidor-map-wrapper">
+      <app-live-map [lat]="pos.lat" [lng]="pos.lng" [label]="'Mi posición — Pedido #' + order.id" />
+    </div>
+    }
+
   </div>
+  }
+</div>
 }

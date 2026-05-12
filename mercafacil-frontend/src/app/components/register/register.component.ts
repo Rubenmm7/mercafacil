@@ -20,7 +20,7 @@ export class RegisterComponent {
   readonly errorMsg = signal('');
   readonly loading = signal(false);
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: AuthService, private router: Router) { }
 
   onSubmit(): void {
     if (this.password !== this.confirmPassword) {

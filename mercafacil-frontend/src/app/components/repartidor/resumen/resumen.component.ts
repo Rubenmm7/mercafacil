@@ -12,11 +12,11 @@ import { IconComponent } from '../../icon/icon.component';
   styleUrl: './resumen.component.css'
 })
 export class ResumenRepartidorComponent implements OnInit {
-  stats   = signal<RepartidorStats | null>(null);
+  stats = signal<RepartidorStats | null>(null);
   loading = signal(true);
-  error   = signal('');
+  error = signal('');
 
-  constructor(private repartidorService: RepartidorService) {}
+  constructor(private repartidorService: RepartidorService) { }
 
   ngOnInit(): void {
     this.repartidorService.getStats().subscribe({

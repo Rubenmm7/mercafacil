@@ -13,12 +13,12 @@ import { IconComponent } from '../../icon/icon.component';
   styleUrl: './resumen.component.css'
 })
 export class ResumenComponent implements OnInit {
-  stats    = signal<VendedorStats | null>(null);
+  stats = signal<VendedorStats | null>(null);
   lowStock = signal<StoreOfferDetail[]>([]);
-  loading  = signal(true);
-  error    = signal('');
+  loading = signal(true);
+  error = signal('');
 
-  constructor(private vendedorService: VendedorService) {}
+  constructor(private vendedorService: VendedorService) { }
 
   ngOnInit(): void {
     this.vendedorService.getStats().subscribe({

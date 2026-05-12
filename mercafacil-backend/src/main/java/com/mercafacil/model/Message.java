@@ -1,7 +1,19 @@
 package com.mercafacil.model;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "messages")
@@ -45,20 +57,67 @@ public class Message {
         fecha = LocalDateTime.now();
     }
 
-    public Long getId()                        { return id; }
-    public ChatType getChatType()              { return chatType; }
-    public void setChatType(ChatType t)        { this.chatType = t; }
-    public Order getOrder()                    { return order; }
-    public void setOrder(Order order)          { this.order = order; }
-    public Store getShop()                     { return shop; }
-    public void setShop(Store shop)            { this.shop = shop; }
-    public User getSender()                    { return sender; }
-    public void setSender(User sender)         { this.sender = sender; }
-    public Message getReplyTo()                { return replyTo; }
-    public void setReplyTo(Message replyTo)    { this.replyTo = replyTo; }
-    public String getMensaje()                 { return mensaje; }
-    public void setMensaje(String mensaje)     { this.mensaje = mensaje; }
-    public LocalDateTime getFecha()            { return fecha; }
-    public boolean isRead()                    { return isRead; }
-    public void setRead(boolean read)          { this.isRead = read; }
+    public Long getId() {
+        return id;
+    }
+
+    public ChatType getChatType() {
+        return chatType;
+    }
+
+    public void setChatType(ChatType t) {
+        this.chatType = t;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public Store getShop() {
+        return shop;
+    }
+
+    public void setShop(Store shop) {
+        this.shop = shop;
+    }
+
+    public User getSender() {
+        return sender;
+    }
+
+    public void setSender(User sender) {
+        this.sender = sender;
+    }
+
+    public Message getReplyTo() {
+        return replyTo;
+    }
+
+    public void setReplyTo(Message replyTo) {
+        this.replyTo = replyTo;
+    }
+
+    public String getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
+    }
+
+    public LocalDateTime getFecha() {
+        return fecha;
+    }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        this.isRead = read;
+    }
 }

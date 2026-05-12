@@ -58,12 +58,12 @@ export class LayoutComponent implements OnInit {
   ];
 
   footerSupport = [
-    { label: 'Ayuda y FAQ',        path: '/ayuda' },
+    { label: 'Ayuda y FAQ', path: '/ayuda' },
     { label: 'Política de envíos', path: '/envio' },
-    { label: 'Devoluciones',       path: '/devoluciones' },
-    { label: 'Contacto',           path: '/contacto' },
-    { label: 'Términos de uso',    path: '/terminos' },
-    { label: 'Privacidad',         path: '/privacidad' },
+    { label: 'Devoluciones', path: '/devoluciones' },
+    { label: 'Contacto', path: '/contacto' },
+    { label: 'Términos de uso', path: '/terminos' },
+    { label: 'Privacidad', path: '/privacidad' },
   ];
 
   constructor(
@@ -98,7 +98,7 @@ export class LayoutComponent implements OnInit {
   }
 
   toggleMobileMenu(): void { this.mobileMenuOpen = !this.mobileMenuOpen; }
-  closeMobileMenu(): void  { this.mobileMenuOpen = false; }
+  closeMobileMenu(): void { this.mobileMenuOpen = false; }
 
   logout(): void {
     this.authService.logout();

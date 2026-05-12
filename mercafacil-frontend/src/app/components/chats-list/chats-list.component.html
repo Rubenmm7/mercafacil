@@ -2,38 +2,38 @@
   <h1 class="chats-title">Mis chats</h1>
 
   @if (loading()) {
-    <div class="state-center">
-      <div class="spinner"></div>
-      <span>Cargando chats...</span>
-    </div>
+  <div class="state-center">
+    <div class="spinner"></div>
+    <span>Cargando chats...</span>
+  </div>
   } @else if (error()) {
-    <div class="state-center state-error">{{ error() }}</div>
+  <div class="state-center state-error">{{ error() }}</div>
   } @else if (threads().length === 0) {
-    <div class="state-center state-empty">
-      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-      </svg>
-      <span>Aún no tienes ningún chat.</span>
-    </div>
+  <div class="state-center state-empty">
+    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+    <span>Aún no tienes ningún chat.</span>
+  </div>
   } @else {
-    <ul class="thread-list">
-      @for (t of threads(); track t.chatType + ':' + (t.orderId ?? t.shopId)) {
-        <li class="thread-item" (click)="open(t)">
-          <div class="thread-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-            </svg>
-          </div>
-          <div class="thread-body">
-            <div class="thread-row-top">
-              <span class="thread-title">{{ t.title }}</span>
-              <span class="thread-date">{{ formatDate(t.lastMessageDate) }}</span>
-            </div>
-            <span class="thread-subtitle">{{ chatTypeLabel(t.chatType) }}</span>
-            <p class="thread-preview"><strong>{{ t.lastSenderName }}:</strong> {{ t.lastMessage }}</p>
-          </div>
-        </li>
-      }
-    </ul>
+  <ul class="thread-list">
+    @for (t of threads(); track t.chatType + ':' + (t.orderId ?? t.shopId)) {
+    <li class="thread-item" (click)="open(t)">
+      <div class="thread-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+      </div>
+      <div class="thread-body">
+        <div class="thread-row-top">
+          <span class="thread-title">{{ t.title }}</span>
+          <span class="thread-date">{{ formatDate(t.lastMessageDate) }}</span>
+        </div>
+        <span class="thread-subtitle">{{ chatTypeLabel(t.chatType) }}</span>
+        <p class="thread-preview"><strong>{{ t.lastSenderName }}:</strong> {{ t.lastMessage }}</p>
+      </div>
+    </li>
+    }
+  </ul>
   }
 </div>

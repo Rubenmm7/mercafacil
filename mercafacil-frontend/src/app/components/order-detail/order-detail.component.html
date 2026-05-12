@@ -2,72 +2,69 @@
   <button class="back-btn" (click)="goBack()">← Volver a pedidos</button>
 
   @if (loading()) {
-    <div class="state-box">Cargando pedido...</div>
+  <div class="state-box">Cargando pedido...</div>
   } @else if (error()) {
-    <div class="state-box state-error">{{ error() }}</div>
+  <div class="state-box state-error">{{ error() }}</div>
   } @else if (order(); as o) {
-    <div class="summary-card">
-      <div class="summary-left">
-        <h1>Pedido #{{ o.id }}</h1>
-        <p>Realizado el {{ formatDate(o.createdAt) }}</p>
-      </div>
-      <div class="summary-right">
-        <span class="status-badge status-{{ o.status.toLowerCase() }}">{{ statusLabel(o.status) }}</span>
-        <strong class="order-total">{{ o.total | number:'1.2-2' }}€</strong>
-        @if (o.status !== 'ENTREGADO') {
-          <button class="btn-msg-repartidor" (click)="navigateToChat()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-            </svg>
-            Enviar mensaje al repartidor
-          </button>
-        }
-      </div>
+  <div class="summary-card">
+    <div class="summary-left">
+      <h1>Pedido #{{ o.id }}</h1>
+      <p>Realizado el {{ formatDate(o.createdAt) }}</p>
     </div>
-
-    <section class="panel">
-      <h2>Timeline del pedido</h2>
-      <div class="timeline">
-        @for (step of timelineSteps(); track step.key) {
-          <div class="step" [class.done]="isDone(step.key)" [class.current]="isCurrent(step.key)">
-            <div class="dot"></div>
-            <div>
-              <h3>{{ step.title }}</h3>
-              <p>{{ step.desc }}</p>
-            </div>
-          </div>
-        }
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2>Seguimiento en tiempo real</h2>
-      @if (trackingLoading() && !tracking()) {
-        <p class="muted">Buscando última posición del repartidor...</p>
-      } @else if (!tracking()) {
-        <p class="muted">Aún no hay ubicación disponible para este pedido.</p>
-      } @else {
-        <div class="tracking-live-badge">
-          <span class="live-dot"></span> En directo
-        </div>
-        <div class="tracking-map-wrapper">
-          <app-live-map
-            [lat]="tracking()!.latitud"
-            [lng]="tracking()!.longitud"
-            [label]="'Repartidor — Pedido #' + o.id" />
-        </div>
-        <div class="tracking-coords">
-          <span class="coord-item">
-            <span class="coord-label">Lat</span>
-            <strong>{{ tracking()!.latitud | number:'1.4-6' }}°</strong>
-          </span>
-          <span class="coord-item">
-            <span class="coord-label">Lng</span>
-            <strong>{{ tracking()!.longitud | number:'1.4-6' }}°</strong>
-          </span>
-          <span class="coord-timestamp">Actualizado {{ formatDate(tracking()!.ultimaActualizacion) }}</span>
-        </div>
+    <div class="summary-right">
+      <span class="status-badge status-{{ o.status.toLowerCase() }}">{{ statusLabel(o.status) }}</span>
+      <strong class="order-total">{{ o.total | number:'1.2-2' }}€</strong>
+      @if (o.status !== 'ENTREGADO') {
+      <button class="btn-msg-repartidor" (click)="navigateToChat()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+        Enviar mensaje al repartidor
+      </button>
       }
-    </section>
+    </div>
+  </div>
+
+  <section class="panel">
+    <h2>Timeline del pedido</h2>
+    <div class="timeline">
+      @for (step of timelineSteps(); track step.key) {
+      <div class="step" [class.done]="isDone(step.key)" [class.current]="isCurrent(step.key)">
+        <div class="dot"></div>
+        <div>
+          <h3>{{ step.title }}</h3>
+          <p>{{ step.desc }}</p>
+        </div>
+      </div>
+      }
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Seguimiento en tiempo real</h2>
+    @if (trackingLoading() && !tracking()) {
+    <p class="muted">Buscando última posición del repartidor...</p>
+    } @else if (!tracking()) {
+    <p class="muted">Aún no hay ubicación disponible para este pedido.</p>
+    } @else {
+    <div class="tracking-live-badge">
+      <span class="live-dot"></span> En directo
+    </div>
+    <div class="tracking-map-wrapper">
+      <app-live-map [lat]="tracking()!.latitud" [lng]="tracking()!.longitud" [label]="'Repartidor — Pedido #' + o.id" />
+    </div>
+    <div class="tracking-coords">
+      <span class="coord-item">
+        <span class="coord-label">Lat</span>
+        <strong>{{ tracking()!.latitud | number:'1.4-6' }}°</strong>
+      </span>
+      <span class="coord-item">
+        <span class="coord-label">Lng</span>
+        <strong>{{ tracking()!.longitud | number:'1.4-6' }}°</strong>
+      </span>
+      <span class="coord-timestamp">Actualizado {{ formatDate(tracking()!.ultimaActualizacion) }}</span>
+    </div>
+    }
+  </section>
   }
 </div>

@@ -10,8 +10,8 @@ interface QuantityBody { quantity: number; }
 // Estructura de petición al backend (igual que CartItem pero sin estado de UI)
 interface CartItemRequest {
   productId: number; productName: string; productImage: string;
-  storeId: number;   storeName: string;  brand: string;
-  price: number;     quantity: number;   unit: string;
+  storeId: number; storeName: string; brand: string;
+  price: number; quantity: number; unit: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -20,8 +20,8 @@ export class CartService {
   private readonly api = `${environment.apiUrl}/cart`;
   private readonly _items = signal<CartItem[]>([]);
 
-  readonly items  = this._items.asReadonly();
-  readonly count  = computed(() => this._items().reduce((sum, i) => sum + i.quantity, 0));
+  readonly items = this._items.asReadonly();
+  readonly count = computed(() => this._items().reduce((sum, i) => sum + i.quantity, 0));
 
   constructor(private http: HttpClient, private authService: AuthService) {
     // Sincroniza el carrito según si el usuario está autenticado o es invitado
@@ -34,8 +34,8 @@ export class CartService {
     });
   }
 
-  getItems(): CartItem[]  { return this._items(); }
-  getCartCount(): number  { return this.count(); }
+  getItems(): CartItem[] { return this._items(); }
+  getCartCount(): number { return this.count(); }
 
   addToCart(item: CartItem): void {
     if (this.authService.loggedIn()) {
@@ -54,7 +54,7 @@ export class CartService {
       const existing = cur.find(i => i.productId === item.productId && i.storeId === item.storeId);
       this._items.set(existing
         ? cur.map(i => i.productId === item.productId && i.storeId === item.storeId
-            ? { ...i, quantity: i.quantity + 1 } : i)
+          ? { ...i, quantity: i.quantity + 1 } : i)
         : [...cur, { ...item }]);
       this.saveLocal();
     }
@@ -101,7 +101,7 @@ export class CartService {
     if (local.length > 0) {
       this.http.post<CartItem[]>(`${this.api}/merge`, local.map(i => this.toReq(i))).subscribe({
         next: items => { this._items.set(items); localStorage.removeItem(this.CART_KEY); },
-        error:  ()   => this.fetchFromApi()
+        error: () => this.fetchFromApi()
       });
     } else {
       this.fetchFromApi();
@@ -110,8 +110,8 @@ export class CartService {
 
   private fetchFromApi(): void {
     this.http.get<CartItem[]>(this.api).subscribe({
-      next:  items => this._items.set(items),
-      error: ()    => this._items.set([])
+      next: items => this._items.set(items),
+      error: () => this._items.set([])
     });
   }
 
@@ -127,8 +127,8 @@ export class CartService {
   private toReq(item: CartItem): CartItemRequest {
     return {
       productId: item.productId, productName: item.productName, productImage: item.productImage,
-      storeId:   item.storeId,   storeName:   item.storeName,   brand:        item.brand,
-      price:     item.price,     quantity:    item.quantity,    unit:         item.unit
+      storeId: item.storeId, storeName: item.storeName, brand: item.brand,
+      price: item.price, quantity: item.quantity, unit: item.unit
     };
   }
 }

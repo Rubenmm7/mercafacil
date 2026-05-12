@@ -15,12 +15,12 @@ import { IconComponent } from '../../icon/icon.component';
 export class TiendasProveedorComponent implements OnInit {
   stores = signal<StoreWithLogo[]>([]);
   loading = signal(true);
-  error   = signal('');
+  error = signal('');
 
   constructor(
     private proveedorService: ProveedorService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.proveedorService.getStores().subscribe({

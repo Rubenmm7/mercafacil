@@ -1,204 +1,199 @@
 @if (cartItems().length === 0) {
-  <div class="empty-cart">
-    <p>Tu carrito está vacío.</p>
-    <button class="btn-back" (click)="goBack()">← Volver al carrito</button>
-  </div>
+<div class="empty-cart">
+  <p>Tu carrito está vacío.</p>
+  <button class="btn-back" (click)="goBack()">← Volver al carrito</button>
+</div>
 } @else {
-  <div class="checkout-page">
-    <h1 class="page-title">Finalizar compra</h1>
+<div class="checkout-page">
+  <h1 class="page-title">Finalizar compra</h1>
 
-    <div class="checkout-layout">
+  <div class="checkout-layout">
 
-      <!-- Left column: forms -->
-      <div class="checkout-forms">
-        <form [formGroup]="form" (ngSubmit)="submit()">
+    <!-- Left column: forms -->
+    <div class="checkout-forms">
+      <form [formGroup]="form" (ngSubmit)="submit()">
 
-          <!-- Section 1: Delivery address -->
-          <div class="form-section">
-            <div class="section-header">
-              <span class="section-num">1</span>
-              <h2><app-icon name="map-pin" [size]="22" /> Dirección de entrega</h2>
-            </div>
-
-            <div class="form-grid">
-              <div class="field full">
-                <label>Calle / Avenida *</label>
-                <input formControlName="calle" placeholder="Ej: Calle Mayor"
-                       [class.error-input]="isInvalid('calle')">
-                @if (isInvalid('calle')) {
-                  <span class="error-text">{{ getError('calle') }}</span>
-                }
-              </div>
-
-              <div class="field">
-                <label>Número *</label>
-                <input formControlName="numero" placeholder="42"
-                       [class.error-input]="isInvalid('numero')">
-                @if (isInvalid('numero')) {
-                  <span class="error-text">{{ getError('numero') }}</span>
-                }
-              </div>
-
-              <div class="field">
-                <label>Piso / Puerta</label>
-                <input formControlName="piso" placeholder="3º B (opcional)">
-              </div>
-
-              <div class="field">
-                <label>Código Postal *</label>
-                <input formControlName="cp" placeholder="28001" maxlength="5"
-                       [class.error-input]="isInvalid('cp')">
-                @if (isInvalid('cp')) {
-                  <span class="error-text">{{ getError('cp') }}</span>
-                }
-              </div>
-
-              <div class="field">
-                <label>Ciudad *</label>
-                <input formControlName="ciudad" placeholder="Madrid"
-                       [class.error-input]="isInvalid('ciudad')">
-                @if (isInvalid('ciudad')) {
-                  <span class="error-text">{{ getError('ciudad') }}</span>
-                }
-              </div>
-
-              <div class="field full">
-                <label>Provincia *</label>
-                <input formControlName="provincia" placeholder="Madrid"
-                       [class.error-input]="isInvalid('provincia')">
-                @if (isInvalid('provincia')) {
-                  <span class="error-text">{{ getError('provincia') }}</span>
-                }
-              </div>
-
-              <div class="field full">
-                <label>Comentarios para el repartidor</label>
-                <textarea formControlName="notas" rows="3"
-                          placeholder="Ej: Timbre roto, llamar por teléfono. Portal siempre abierto..."
-                          [class.error-input]="isInvalid('notas')"></textarea>
-                @if (isInvalid('notas')) {
-                  <span class="error-text">{{ getError('notas') }}</span>
-                }
-              </div>
-            </div>
+        <!-- Section 1: Delivery address -->
+        <div class="form-section">
+          <div class="section-header">
+            <span class="section-num">1</span>
+            <h2><app-icon name="map-pin" [size]="22" /> Dirección de entrega</h2>
           </div>
 
-          <!-- Section 2: Card payment -->
-          <div class="form-section">
-            <div class="section-header">
-              <span class="section-num">2</span>
-              <h2><app-icon name="credit-card" [size]="22" /> Datos de pago</h2>
-              <div class="card-brands">
-                <span class="brand visa">VISA</span>
-                <span class="brand mc">MC</span>
-                <span class="brand amex">AMEX</span>
-              </div>
+          <div class="form-grid">
+            <div class="field full">
+              <label>Calle / Avenida *</label>
+              <input formControlName="calle" placeholder="Ej: Calle Mayor" [class.error-input]="isInvalid('calle')">
+              @if (isInvalid('calle')) {
+              <span class="error-text">{{ getError('calle') }}</span>
+              }
             </div>
 
-            <!-- Visual card preview -->
-            <div class="card-preview">
-              <div class="card-label-small">TITULAR</div>
-              <div class="card-holder">{{ form.get('cardName')?.value || 'NOMBRE TITULAR' }}</div>
-              <div class="card-number-display">•••• •••• •••• {{ last4 }}</div>
-              <div class="card-bottom-row">
-                <span>
-                  <span class="card-label-small">CADUCA</span>
-                  {{ form.get('expiry')?.value || 'MM/AA' }}
-                </span>
-                <span><span class="card-label-small">CVV</span> •••</span>
-              </div>
+            <div class="field">
+              <label>Número *</label>
+              <input formControlName="numero" placeholder="42" [class.error-input]="isInvalid('numero')">
+              @if (isInvalid('numero')) {
+              <span class="error-text">{{ getError('numero') }}</span>
+              }
             </div>
 
-            <div class="form-grid">
-              <div class="field full">
-                <label>Nombre en la tarjeta *</label>
-                <input formControlName="cardName" placeholder="Juan García López"
-                       [class.error-input]="isInvalid('cardName')">
-                @if (isInvalid('cardName')) {
-                  <span class="error-text">{{ getError('cardName') }}</span>
-                }
-              </div>
-
-              <div class="field full">
-                <label>Número de tarjeta *</label>
-                <input formControlName="cardNumber" placeholder="4532123456783456"
-                       maxlength="16" class="monospace"
-                       [class.error-input]="isInvalid('cardNumber')">
-                @if (isInvalid('cardNumber')) {
-                  <span class="error-text">{{ getError('cardNumber') }}</span>
-                }
-              </div>
-
-              <div class="field">
-                <label>Fecha de caducidad * (MM/AA)</label>
-                <input formControlName="expiry" placeholder="09/28" maxlength="5"
-                       [class.error-input]="isInvalid('expiry')">
-                @if (isInvalid('expiry')) {
-                  <span class="error-text">{{ getError('expiry') }}</span>
-                }
-              </div>
-
-              <div class="field">
-                <label>CVV *</label>
-                <input formControlName="cvv" placeholder="•••" maxlength="4" type="password"
-                       [class.error-input]="isInvalid('cvv')">
-                @if (isInvalid('cvv')) {
-                  <span class="error-text">{{ getError('cvv') }}</span>
-                }
-              </div>
+            <div class="field">
+              <label>Piso / Puerta</label>
+              <input formControlName="piso" placeholder="3º B (opcional)">
             </div>
 
-            <div class="secure-badge"><app-icon name="lock" [size]="16" /> Pago simulado — Ningún cargo real se realizará</div>
-          </div>
-
-        </form>
-      </div>
-
-      <!-- Right column: order summary -->
-      <div class="checkout-summary">
-        <div class="summary-card">
-          <h3>Resumen del pedido</h3>
-
-          <div class="summary-items">
-            @for (item of cartItems(); track item.productId + '-' + item.storeId) {
-              <div class="summary-item">
-                <span>{{ item.productName }} ×{{ item.quantity }}</span>
-                <span>{{ item.price * item.quantity | number:'1.2-2' }} €</span>
-              </div>
-            }
-          </div>
-
-          <div class="summary-totals">
-            <div class="summary-row">
-              <span>Subtotal</span>
-              <span>{{ subtotal() | number:'1.2-2' }} €</span>
+            <div class="field">
+              <label>Código Postal *</label>
+              <input formControlName="cp" placeholder="28001" maxlength="5" [class.error-input]="isInvalid('cp')">
+              @if (isInvalid('cp')) {
+              <span class="error-text">{{ getError('cp') }}</span>
+              }
             </div>
-            <div class="summary-row">
-              <span>Envío</span>
-              <span>{{ deliveryFee | number:'1.2-2' }} €</span>
+
+            <div class="field">
+              <label>Ciudad *</label>
+              <input formControlName="ciudad" placeholder="Madrid" [class.error-input]="isInvalid('ciudad')">
+              @if (isInvalid('ciudad')) {
+              <span class="error-text">{{ getError('ciudad') }}</span>
+              }
             </div>
-            <div class="summary-total">
-              <span>Total</span>
-              <span>{{ total() | number:'1.2-2' }} €</span>
+
+            <div class="field full">
+              <label>Provincia *</label>
+              <input formControlName="provincia" placeholder="Madrid" [class.error-input]="isInvalid('provincia')">
+              @if (isInvalid('provincia')) {
+              <span class="error-text">{{ getError('provincia') }}</span>
+              }
+            </div>
+
+            <div class="field full">
+              <label>Comentarios para el repartidor</label>
+              <textarea formControlName="notas" rows="3"
+                placeholder="Ej: Timbre roto, llamar por teléfono. Portal siempre abierto..."
+                [class.error-input]="isInvalid('notas')"></textarea>
+              @if (isInvalid('notas')) {
+              <span class="error-text">{{ getError('notas') }}</span>
+              }
             </div>
           </div>
-
-          @if (submitError()) {
-            <div class="submit-error">{{ submitError() }}</div>
-          }
-
-          <button class="btn-confirm" (click)="submit()" [disabled]="submitting()">
-            @if (submitting()) {
-              Procesando...
-            } @else {
-              <app-icon name="check" [size]="18" /> Confirmar y pagar — {{ total() | number:'1.2-2' }} €
-            }
-          </button>
-
-          <a class="back-link" (click)="goBack()">← Volver al carrito</a>
         </div>
-      </div>
 
+        <!-- Section 2: Card payment -->
+        <div class="form-section">
+          <div class="section-header">
+            <span class="section-num">2</span>
+            <h2><app-icon name="credit-card" [size]="22" /> Datos de pago</h2>
+            <div class="card-brands">
+              <span class="brand visa">VISA</span>
+              <span class="brand mc">MC</span>
+              <span class="brand amex">AMEX</span>
+            </div>
+          </div>
+
+          <!-- Visual card preview -->
+          <div class="card-preview">
+            <div class="card-label-small">TITULAR</div>
+            <div class="card-holder">{{ form.get('cardName')?.value || 'NOMBRE TITULAR' }}</div>
+            <div class="card-number-display">•••• •••• •••• {{ last4 }}</div>
+            <div class="card-bottom-row">
+              <span>
+                <span class="card-label-small">CADUCA</span>
+                {{ form.get('expiry')?.value || 'MM/AA' }}
+              </span>
+              <span><span class="card-label-small">CVV</span> •••</span>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="field full">
+              <label>Nombre en la tarjeta *</label>
+              <input formControlName="cardName" placeholder="Juan García López"
+                [class.error-input]="isInvalid('cardName')">
+              @if (isInvalid('cardName')) {
+              <span class="error-text">{{ getError('cardName') }}</span>
+              }
+            </div>
+
+            <div class="field full">
+              <label>Número de tarjeta *</label>
+              <input formControlName="cardNumber" placeholder="4532123456783456" maxlength="16" class="monospace"
+                [class.error-input]="isInvalid('cardNumber')">
+              @if (isInvalid('cardNumber')) {
+              <span class="error-text">{{ getError('cardNumber') }}</span>
+              }
+            </div>
+
+            <div class="field">
+              <label>Fecha de caducidad * (MM/AA)</label>
+              <input formControlName="expiry" placeholder="09/28" maxlength="5"
+                [class.error-input]="isInvalid('expiry')">
+              @if (isInvalid('expiry')) {
+              <span class="error-text">{{ getError('expiry') }}</span>
+              }
+            </div>
+
+            <div class="field">
+              <label>CVV *</label>
+              <input formControlName="cvv" placeholder="•••" maxlength="4" type="password"
+                [class.error-input]="isInvalid('cvv')">
+              @if (isInvalid('cvv')) {
+              <span class="error-text">{{ getError('cvv') }}</span>
+              }
+            </div>
+          </div>
+
+          <div class="secure-badge"><app-icon name="lock" [size]="16" /> Pago simulado — Ningún cargo real se realizará
+          </div>
+        </div>
+
+      </form>
     </div>
+
+    <!-- Right column: order summary -->
+    <div class="checkout-summary">
+      <div class="summary-card">
+        <h3>Resumen del pedido</h3>
+
+        <div class="summary-items">
+          @for (item of cartItems(); track item.productId + '-' + item.storeId) {
+          <div class="summary-item">
+            <span>{{ item.productName }} ×{{ item.quantity }}</span>
+            <span>{{ item.price * item.quantity | number:'1.2-2' }} €</span>
+          </div>
+          }
+        </div>
+
+        <div class="summary-totals">
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span>{{ subtotal() | number:'1.2-2' }} €</span>
+          </div>
+          <div class="summary-row">
+            <span>Envío</span>
+            <span>{{ deliveryFee | number:'1.2-2' }} €</span>
+          </div>
+          <div class="summary-total">
+            <span>Total</span>
+            <span>{{ total() | number:'1.2-2' }} €</span>
+          </div>
+        </div>
+
+        @if (submitError()) {
+        <div class="submit-error">{{ submitError() }}</div>
+        }
+
+        <button class="btn-confirm" (click)="submit()" [disabled]="submitting()">
+          @if (submitting()) {
+          Procesando...
+          } @else {
+          <app-icon name="check" [size]="18" /> Confirmar y pagar — {{ total() | number:'1.2-2' }} €
+          }
+        </button>
+
+        <a class="back-link" (click)="goBack()">← Volver al carrito</a>
+      </div>
+    </div>
+
   </div>
+</div>
 }

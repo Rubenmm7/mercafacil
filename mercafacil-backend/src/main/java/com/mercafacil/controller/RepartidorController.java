@@ -1,16 +1,22 @@
 package com.mercafacil.controller;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.mercafacil.dto.OrderResponse;
 import com.mercafacil.dto.RepartidorStatsDto;
 import com.mercafacil.model.User;
 import com.mercafacil.service.RepartidorService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/repartidor")
@@ -40,14 +46,14 @@ public class RepartidorController {
 
     @PatchMapping("/orders/{id}/accept")
     public ResponseEntity<OrderResponse> acceptOrder(@PathVariable Long id,
-                                                     @AuthenticationPrincipal User user) {
+            @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(repartidorService.acceptOrder(id, user));
     }
 
     @PatchMapping("/orders/{id}/status")
     public ResponseEntity<OrderResponse> updateOrderStatus(@PathVariable Long id,
-                                                           @RequestBody Map<String, String> body,
-                                                           @AuthenticationPrincipal User user) {
+            @RequestBody Map<String, String> body,
+            @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(repartidorService.updateOrderStatus(id, body.get("status"), user));
     }
 }

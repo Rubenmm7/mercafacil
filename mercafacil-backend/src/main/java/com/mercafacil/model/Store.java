@@ -46,9 +46,12 @@ public class Store {
 
     private String category;
 
-    public Store() {}
+    public Store() {
+    }
 
-    public Store(int id, String name, String logo, String color, String bgColor, String address, String city, String phone, String hours, double rating, String deliveryTime, int minOrder, double deliveryFee, String category) {
+    public Store(int id, String name, String logo, String color, String bgColor, String address, String city,
+            String phone, String hours, double rating, String deliveryTime, int minOrder, double deliveryFee,
+            String category) {
         this.id = (long) id;
         this.name = name;
         this.logo = logo;
@@ -65,34 +68,123 @@ public class Store {
         this.category = category;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public User getVendedor() { return vendedor; }
-    public void setVendedor(User vendedor) { this.vendedor = vendedor; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public String getLogo() { return logo; }
-    public void setLogo(String logo) { this.logo = logo; }
-    public String getColor() { return color; }
-    public void setColor(String color) { this.color = color; }
-    public String getBgColor() { return bgColor; }
-    public void setBgColor(String bgColor) { this.bgColor = bgColor; }
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
-    public String getCity() { return city; }
-    public void setCity(String city) { this.city = city; }
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
-    public String getHours() { return hours; }
-    public void setHours(String hours) { this.hours = hours; }
-    public Double getRating() { return rating; }
-    public void setRating(Double rating) { this.rating = rating; }
-    public String getDeliveryTime() { return deliveryTime; }
-    public void setDeliveryTime(String deliveryTime) { this.deliveryTime = deliveryTime; }
-    public Integer getMinOrder() { return minOrder; }
-    public void setMinOrder(Integer minOrder) { this.minOrder = minOrder; }
-    public Double getDeliveryFee() { return deliveryFee; }
-    public void setDeliveryFee(Double deliveryFee) { this.deliveryFee = deliveryFee; }
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getVendedor() {
+        return vendedor;
+    }
+
+    public void setVendedor(User vendedor) {
+        this.vendedor = vendedor;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getBgColor() {
+        return bgColor;
+    }
+
+    public void setBgColor(String bgColor) {
+        this.bgColor = bgColor;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getHours() {
+        return hours;
+    }
+
+    public void setHours(String hours) {
+        this.hours = hours;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
+    public String getDeliveryTime() {
+        return deliveryTime;
+    }
+
+    public void setDeliveryTime(String deliveryTime) {
+        this.deliveryTime = deliveryTime;
+    }
+
+    public Integer getMinOrder() {
+        return minOrder;
+    }
+
+    public void setMinOrder(Integer minOrder) {
+        this.minOrder = minOrder;
+    }
+
+    public Double getDeliveryFee() {
+        return deliveryFee;
+    }
+
+    public void setDeliveryFee(Double deliveryFee) {
+        this.deliveryFee = deliveryFee;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 }

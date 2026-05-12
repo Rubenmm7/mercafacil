@@ -28,7 +28,7 @@ function expiryNotPast(control: AbstractControl): ValidationErrors | null {
   const match = val.match(/^(0[1-9]|1[0-2])\/(\d{2})$/);
   if (!match) return null;
   const month = parseInt(match[1], 10);
-  const year  = 2000 + parseInt(match[2], 10);
+  const year = 2000 + parseInt(match[2], 10);
   return new Date(year, month, 1) <= new Date() ? { expiryPast: true } : null;
 }
 
@@ -40,13 +40,13 @@ function expiryNotPast(control: AbstractControl): ValidationErrors | null {
   styleUrl: './checkout.component.css'
 })
 export class CheckoutComponent {
-  readonly cartItems   = computed(() => this.cartService.items());
-  readonly subtotal    = computed(() =>
+  readonly cartItems = computed(() => this.cartService.items());
+  readonly subtotal = computed(() =>
     this.cartItems().reduce((sum, i) => sum + i.price * i.quantity, 0)
   );
   readonly deliveryFee = 2.50;
-  readonly total       = computed(() => this.subtotal() + this.deliveryFee);
-  readonly submitting  = signal(false);
+  readonly total = computed(() => this.subtotal() + this.deliveryFee);
+  readonly submitting = signal(false);
   readonly submitError = signal<string | null>(null);
 
   readonly form: FormGroup;
@@ -58,17 +58,17 @@ export class CheckoutComponent {
     private router: Router
   ) {
     this.form = this.fb.group({
-      calle:      ['', [Validators.required, Validators.minLength(3)]],
-      numero:     ['', [Validators.required, Validators.pattern(/^\d+\w*$/)]],
-      piso:       [''],
-      cp:         ['', [Validators.required, Validators.pattern(/^\d{5}$/)]],
-      ciudad:     ['', [Validators.required, Validators.minLength(2)]],
-      provincia:  ['', [Validators.required, Validators.minLength(2)]],
-      notas:      ['', [Validators.maxLength(300)]],
-      cardName:   ['', [Validators.required, Validators.minLength(3)]],
+      calle: ['', [Validators.required, Validators.minLength(3)]],
+      numero: ['', [Validators.required, Validators.pattern(/^\d+\w*$/)]],
+      piso: [''],
+      cp: ['', [Validators.required, Validators.pattern(/^\d{5}$/)]],
+      ciudad: ['', [Validators.required, Validators.minLength(2)]],
+      provincia: ['', [Validators.required, Validators.minLength(2)]],
+      notas: ['', [Validators.maxLength(300)]],
+      cardName: ['', [Validators.required, Validators.minLength(3)]],
       cardNumber: ['', [Validators.required, Validators.pattern(/^\d{16}$/), luhnCheck]],
-      expiry:     ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/), expiryNotPast]],
-      cvv:        ['', [Validators.required, Validators.pattern(/^\d{3,4}$/)]]
+      expiry: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/), expiryNotPast]],
+      cvv: ['', [Validators.required, Validators.pattern(/^\d{3,4}$/)]]
     });
   }
 
@@ -85,12 +85,12 @@ export class CheckoutComponent {
   getError(field: string): string {
     const c = this.form.get(field);
     if (!c || !c.errors) return '';
-    if (c.errors['required'])    return 'Campo obligatorio';
-    if (c.errors['minlength'])   return `Mínimo ${c.errors['minlength'].requiredLength} caracteres`;
-    if (c.errors['maxlength'])   return `Máximo ${c.errors['maxlength'].requiredLength} caracteres`;
-    if (c.errors['pattern'])     return 'Formato no válido';
-    if (c.errors['luhn'])        return 'Número de tarjeta no válido';
-    if (c.errors['expiryPast'])  return 'Tarjeta caducada';
+    if (c.errors['required']) return 'Campo obligatorio';
+    if (c.errors['minlength']) return `Mínimo ${c.errors['minlength'].requiredLength} caracteres`;
+    if (c.errors['maxlength']) return `Máximo ${c.errors['maxlength'].requiredLength} caracteres`;
+    if (c.errors['pattern']) return 'Formato no válido';
+    if (c.errors['luhn']) return 'Número de tarjeta no válido';
+    if (c.errors['expiryPast']) return 'Tarjeta caducada';
     return 'Valor no válido';
   }
 

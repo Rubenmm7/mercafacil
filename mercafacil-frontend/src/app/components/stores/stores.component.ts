@@ -34,7 +34,7 @@ export class StoresComponent implements OnInit {
     });
   });
 
-  constructor(private api: ApiService, private router: Router) {}
+  constructor(private api: ApiService, private router: Router) { }
 
   ngOnInit(): void {
     this.api.getStores().subscribe({

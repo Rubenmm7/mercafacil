@@ -1,11 +1,20 @@
 package com.mercafacil.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 // Entidad que representa un item del carrito de compras persistido en BD
 @Entity
-@Table(name = "cart_items",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id", "store_id"}))
+@Table(name = "cart_items", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id", "product_id",
+        "store_id" }))
 public class CartItem {
 
     @Id
@@ -45,25 +54,87 @@ public class CartItem {
 
     // Getters & Setters
 
-    public Long    getId()                          { return id; }
-    public User    getUser()                        { return user; }
-    public void    setUser(User user)               { this.user = user; }
-    public Long    getProductId()                   { return productId; }
-    public void    setProductId(Long v)             { this.productId = v; }
-    public String  getProductName()                 { return productName; }
-    public void    setProductName(String v)         { this.productName = v; }
-    public String  getProductImage()                { return productImage; }
-    public void    setProductImage(String v)        { this.productImage = v; }
-    public Long    getStoreId()                     { return storeId; }
-    public void    setStoreId(Long v)               { this.storeId = v; }
-    public String  getStoreName()                   { return storeName; }
-    public void    setStoreName(String v)           { this.storeName = v; }
-    public String  getBrand()                       { return brand; }
-    public void    setBrand(String v)               { this.brand = v; }
-    public Double  getPrice()                       { return price; }
-    public void    setPrice(Double v)               { this.price = v; }
-    public Integer getQuantity()                    { return quantity; }
-    public void    setQuantity(Integer v)           { this.quantity = v; }
-    public String  getUnit()                        { return unit; }
-    public void    setUnit(String v)                { this.unit = v; }
+    public Long getId() {
+        return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long v) {
+        this.productId = v;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String v) {
+        this.productName = v;
+    }
+
+    public String getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(String v) {
+        this.productImage = v;
+    }
+
+    public Long getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Long v) {
+        this.storeId = v;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String v) {
+        this.storeName = v;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String v) {
+        this.brand = v;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double v) {
+        this.price = v;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer v) {
+        this.quantity = v;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String v) {
+        this.unit = v;
+    }
 }

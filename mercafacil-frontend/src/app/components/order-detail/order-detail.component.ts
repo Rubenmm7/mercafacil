@@ -30,10 +30,10 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   readonly trackingLoading = signal(false);
 
   private readonly timeline: TimelineStep[] = [
-    { key: 'PENDIENTE',   title: 'Pedido confirmado',  desc: 'Tu compra fue registrada correctamente.' },
-    { key: 'PREPARACION', title: 'En preparación',     desc: 'La tienda está preparando tu pedido.' },
-    { key: 'EN_RUTA',     title: 'En ruta',            desc: 'El repartidor va camino a la entrega.' },
-    { key: 'ENTREGADO',   title: 'Entregado',          desc: 'Pedido entregado con éxito.' }
+    { key: 'PENDIENTE', title: 'Pedido confirmado', desc: 'Tu compra fue registrada correctamente.' },
+    { key: 'PREPARACION', title: 'En preparación', desc: 'La tienda está preparando tu pedido.' },
+    { key: 'EN_RUTA', title: 'En ruta', desc: 'El repartidor va camino a la entrega.' },
+    { key: 'ENTREGADO', title: 'Entregado', desc: 'Pedido entregado con éxito.' }
   ];
 
   private trackingSub: Subscription | null = null;
@@ -44,7 +44,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     private api: ApiService,
     private authService: AuthService,
     private trackingService: TrackingService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const orderId = Number(this.route.snapshot.paramMap.get('id'));
@@ -103,10 +103,10 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
 
   statusLabel(status: OrderStatus): string {
     const map: Record<OrderStatus, string> = {
-      PENDIENTE:   'Pendiente',
+      PENDIENTE: 'Pendiente',
       PREPARACION: 'En preparación',
-      EN_RUTA:     'En ruta',
-      ENTREGADO:   'Entregado'
+      EN_RUTA: 'En ruta',
+      ENTREGADO: 'Entregado'
     };
     return map[status] ?? status;
   }
@@ -132,15 +132,15 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     } else {
       this.trackingService.connect(token)
         .then(() => this.subscribeTracking(orderId))
-        .catch(() => {});
+        .catch(() => { });
     }
   }
 
   private loadLastTracking(orderId: number): void {
     this.trackingLoading.set(true);
     this.trackingService.getLastLocation(orderId).subscribe({
-      next:  pos => { this.tracking.set(pos); this.trackingLoading.set(false); },
-      error: ()  => { this.trackingLoading.set(false); }
+      next: pos => { this.tracking.set(pos); this.trackingLoading.set(false); },
+      error: () => { this.trackingLoading.set(false); }
     });
   }
 

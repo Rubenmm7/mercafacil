@@ -1,14 +1,14 @@
 @if (toastService.confirmState(); as state) {
-  <div class="modal-backdrop" (click)="cancel()">
-    <div class="modal-card" (click)="$event.stopPropagation()">
-      @if (state.title) {
-        <h3 class="modal-title">{{ state.title }}</h3>
-      }
-      <p class="modal-message">{{ state.message }}</p>
-      <div class="modal-actions">
-        <button class="btn-cancel"  (click)="cancel()">Cancelar</button>
-        <button class="btn-confirm" (click)="confirm()">Confirmar</button>
-      </div>
+<div class="modal-backdrop" (click)="cancel()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    @if (state.title) {
+    <h3 class="modal-title">{{ state.title }}</h3>
+    }
+    <p class="modal-message">{{ state.message }}</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="cancel()">Cancelar</button>
+      <button class="btn-confirm" (click)="confirm()">Confirmar</button>
     </div>
   </div>
+</div>
 }

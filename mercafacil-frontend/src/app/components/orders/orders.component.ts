@@ -14,21 +14,21 @@ import { IconComponent } from '../icon/icon.component';
   styleUrl: './orders.component.css'
 })
 export class OrdersComponent implements OnInit {
-  readonly orders   = signal<Order[]>([]);
-  readonly loading  = signal(true);
+  readonly orders = signal<Order[]>([]);
+  readonly loading = signal(true);
   readonly errorMsg = signal<string | null>(null);
 
   private readonly statusLabels: Record<OrderStatus, string> = {
-    PENDIENTE:   'Pendiente',
+    PENDIENTE: 'Pendiente',
     PREPARACION: 'En preparación',
-    EN_RUTA:     'En ruta',
-    ENTREGADO:   'Entregado'
+    EN_RUTA: 'En ruta',
+    ENTREGADO: 'Entregado'
   };
 
   constructor(
     private api: ApiService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadOrders();

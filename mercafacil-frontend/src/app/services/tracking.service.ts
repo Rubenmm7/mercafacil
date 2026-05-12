@@ -12,7 +12,7 @@ export class TrackingService {
   private client: Client | null = null;
   private connected = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // --- REST ---
 

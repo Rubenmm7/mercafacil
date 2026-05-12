@@ -22,7 +22,11 @@
 
       <form class="hero-search-form" (ngSubmit)="handleSearch()">
         <div class="hero-search-box">
-          <svg class="hero-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <svg class="hero-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af"
+            stroke-width="2">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.3-4.3" />
+          </svg>
           <input type="text" placeholder="¿Qué producto buscas hoy?" [(ngModel)]="searchQuery" name="heroQ" />
           <button type="submit" class="hero-search-btn">Buscar →</button>
         </div>
@@ -31,7 +35,7 @@
       <div class="popular-row">
         <span class="popular-label">Populares —</span>
         @for (term of popularTerms; track term) {
-          <button class="popular-chip" (click)="searchTerm(term)">{{ term }}</button>
+        <button class="popular-chip" (click)="searchTerm(term)">{{ term }}</button>
         }
       </div>
     </div>
@@ -40,21 +44,24 @@
     <div class="hero-panel">
       <div class="panel-label">CATEGORÍAS DISPONIBLES</div>
       @if (loading()) {
-        @for (i of [1,2,3,4,5]; track i) {
-          <div class="panel-row-skeleton"></div>
-        }
+      @for (i of [1,2,3,4,5]; track i) {
+      <div class="panel-row-skeleton"></div>
+      }
       } @else {
-        @for (g of categoryGroups(); track g.name) {
-          <button class="panel-row" (click)="searchCategory(g.name)">
-            <div class="panel-row-icon" [style.background]="g.bgColor" [innerHTML]="iconHtml(g.name)"></div>
-            <div class="panel-row-info">
-              <span class="panel-row-name">{{ g.name }}</span>
-              <span class="panel-row-stores">{{ g.storeNames }}</span>
-            </div>
-            <span class="panel-row-badge">{{ g.stores.length }} tienda{{ g.stores.length !== 1 ? 's' : '' }}</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="panel-row-arrow"><path d="M9 18l6-6-6-6"/></svg>
-          </button>
-        }
+      @for (g of categoryGroups(); track g.name) {
+      <button class="panel-row" (click)="searchCategory(g.name)">
+        <div class="panel-row-icon" [style.background]="g.bgColor" [innerHTML]="iconHtml(g.name)"></div>
+        <div class="panel-row-info">
+          <span class="panel-row-name">{{ g.name }}</span>
+          <span class="panel-row-stores">{{ g.storeNames }}</span>
+        </div>
+        <span class="panel-row-badge">{{ g.stores.length }} tienda{{ g.stores.length !== 1 ? 's' : '' }}</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          class="panel-row-arrow">
+          <path d="M9 18l6-6-6-6" />
+        </svg>
+      </button>
+      }
       }
     </div>
 
@@ -65,13 +72,13 @@
 <div class="stats-bar">
   <div class="stats-inner">
     @for (stat of stats; track stat.label) {
-      <div class="stat-item">
-        <span class="stat-icon"><app-icon [name]="stat.icon" [size]="26" /></span>
-        <div>
-          <div class="stat-val">{{ stat.value }}</div>
-          <div class="stat-lbl">{{ stat.label }}</div>
-        </div>
+    <div class="stat-item">
+      <span class="stat-icon"><app-icon [name]="stat.icon" [size]="26" /></span>
+      <div>
+        <div class="stat-val">{{ stat.value }}</div>
+        <div class="stat-lbl">{{ stat.label }}</div>
       </div>
+    </div>
     }
   </div>
 </div>
@@ -84,28 +91,32 @@
   </div>
   <div class="stores-grid">
     @if (stores().length === 0 && loading()) {
-      @for (i of [1,2,3,4,5,6,7,8,9,10]; track i) {
-        <div class="store-card skeleton-card"></div>
-      }
+    @for (i of [1,2,3,4,5,6,7,8,9,10]; track i) {
+    <div class="store-card skeleton-card"></div>
+    }
     } @else {
-      @for (store of stores(); track store.id) {
-        <a routerLink="/tiendas" class="store-card">
-          <div class="store-logo" [class.has-logo]="!!store.logoUrl" [style.background-color]="store.logoUrl ? '#ffffff' : store.color">
-            @if (store.logoUrl) {
-              <img [src]="store.logoUrl" [alt]="store.name" />
-            } @else {
-              <span>{{ store.logo }}</span>
-            }
-          </div>
-          <div class="store-name">{{ store.name }}</div>
-          <div class="store-rating">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="#f97316" stroke="#f97316" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            {{ store.rating }}
-          </div>
-          <div class="store-category-tag">{{ store.category }}</div>
-          <div class="store-delivery"><app-icon name="clock" [size]="14" /> {{ store.deliveryTime }}</div>
-        </a>
-      }
+    @for (store of stores(); track store.id) {
+    <a routerLink="/tiendas" class="store-card">
+      <div class="store-logo" [class.has-logo]="!!store.logoUrl"
+        [style.background-color]="store.logoUrl ? '#ffffff' : store.color">
+        @if (store.logoUrl) {
+        <img [src]="store.logoUrl" [alt]="store.name" />
+        } @else {
+        <span>{{ store.logo }}</span>
+        }
+      </div>
+      <div class="store-name">{{ store.name }}</div>
+      <div class="store-rating">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="#f97316" stroke="#f97316" stroke-width="2">
+          <polygon
+            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+        </svg>
+        {{ store.rating }}
+      </div>
+      <div class="store-category-tag">{{ store.category }}</div>
+      <div class="store-delivery"><app-icon name="clock" [size]="14" /> {{ store.deliveryTime }}</div>
+    </a>
+    }
     }
   </div>
 </section>
@@ -123,38 +134,39 @@
     <div class="mall-layout">
       <div class="mall-map-wrap">
         @if (loading()) {
-          <div class="mall-skeleton"></div>
+        <div class="mall-skeleton"></div>
         } @else {
-          <app-mall-map
-            [stores]="stores()"
-            [selectedId]="selectedMallStore()"
-            (storeSelected)="selectMallStore($event)" />
+        <app-mall-map [stores]="stores()" [selectedId]="selectedMallStore()"
+          (storeSelected)="selectMallStore($event)" />
         }
       </div>
       <div class="mall-store-panel">
         @for (store of sortedStores(); track store.id) {
-          <button class="mall-store-row"
-                  [class.active]="selectedMallStore() === store.id"
-                  (click)="selectMallStore(store.id)">
-            <div class="mall-store-logo" [class.has-logo]="!!store.logoUrl" [style.background-color]="store.logoUrl ? '#ffffff' : store.color">
-              @if (store.logoUrl) {
-                <img [src]="store.logoUrl" [alt]="store.name" />
-              } @else {
-                <span>{{ store.logo }}</span>
-              }
+        <button class="mall-store-row" [class.active]="selectedMallStore() === store.id"
+          (click)="selectMallStore(store.id)">
+          <div class="mall-store-logo" [class.has-logo]="!!store.logoUrl"
+            [style.background-color]="store.logoUrl ? '#ffffff' : store.color">
+            @if (store.logoUrl) {
+            <img [src]="store.logoUrl" [alt]="store.name" />
+            } @else {
+            <span>{{ store.logo }}</span>
+            }
+          </div>
+          <div class="mall-store-info">
+            <span class="mall-store-name">{{ store.name }}</span>
+            <span class="mall-store-cat">{{ store.category }}</span>
+          </div>
+          <div class="mall-store-meta">
+            <div class="mall-store-rating">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="#f97316" stroke="#f97316" stroke-width="2">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              {{ store.rating }}
             </div>
-            <div class="mall-store-info">
-              <span class="mall-store-name">{{ store.name }}</span>
-              <span class="mall-store-cat">{{ store.category }}</span>
-            </div>
-            <div class="mall-store-meta">
-              <div class="mall-store-rating">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="#f97316" stroke="#f97316" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                {{ store.rating }}
-              </div>
-              <span class="mall-store-link" (click)="$event.stopPropagation(); viewProducts(store)">Ver productos ›</span>
-            </div>
-          </button>
+            <span class="mall-store-link" (click)="$event.stopPropagation(); viewProducts(store)">Ver productos ›</span>
+          </div>
+        </button>
         }
       </div>
     </div>
@@ -169,37 +181,41 @@
   </div>
   <div class="products-grid">
     @if (featuredProducts().length === 0 && loading()) {
-      @for (i of [1,2,3,4,5,6,7,8]; track i) {
-        <div class="product-card skeleton-card skeleton-product"></div>
-      }
+    @for (i of [1,2,3,4,5,6,7,8]; track i) {
+    <div class="product-card skeleton-card skeleton-product"></div>
+    }
     } @else {
-      @for (product of featuredProducts(); track product.id) {
-        <a [routerLink]="['/buscar']" [queryParams]="{q: product.name}" class="product-card">
-          <div class="product-image">
-            @if (product.image) {
-              <img [src]="product.image" [alt]="product.name" />
-            } @else {
-              <div class="product-placeholder">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a7c4b5" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                <span>{{ product.name }}</span>
-              </div>
-            }
-            @if (getFirstStoreName(product)) {
-              <div class="product-store-badge">{{ getFirstStoreName(product) }}</div>
-            }
-          </div>
-          <div class="product-info">
-            <div class="product-cat-tag">{{ product.category }}</div>
-            <h4>{{ product.name }}</h4>
-            <div class="product-price">
-              Desde <span class="price-hi">{{ getMinPrice(product) | number:'1.2-2' }}€</span>
-              @if (getMinPrice(product) !== getMaxPrice(product)) {
-                <span class="price-to"> hasta {{ getMaxPrice(product) | number:'1.2-2' }}€</span>
-              }
-            </div>
-          </div>
-        </a>
-      }
+    @for (product of featuredProducts(); track product.id) {
+    <a [routerLink]="['/buscar']" [queryParams]="{q: product.name}" class="product-card">
+      <div class="product-image">
+        @if (product.image) {
+        <img [src]="product.image" [alt]="product.name" />
+        } @else {
+        <div class="product-placeholder">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a7c4b5" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <circle cx="8.5" cy="8.5" r="1.5" />
+            <polyline points="21 15 16 10 5 21" />
+          </svg>
+          <span>{{ product.name }}</span>
+        </div>
+        }
+        @if (getFirstStoreName(product)) {
+        <div class="product-store-badge">{{ getFirstStoreName(product) }}</div>
+        }
+      </div>
+      <div class="product-info">
+        <div class="product-cat-tag">{{ product.category }}</div>
+        <h4>{{ product.name }}</h4>
+        <div class="product-price">
+          Desde <span class="price-hi">{{ getMinPrice(product) | number:'1.2-2' }}€</span>
+          @if (getMinPrice(product) !== getMaxPrice(product)) {
+          <span class="price-to"> hasta {{ getMaxPrice(product) | number:'1.2-2' }}€</span>
+          }
+        </div>
+      </div>
+    </a>
+    }
     }
   </div>
 </section>
@@ -233,7 +249,10 @@
     <div class="steps-grid">
       <div class="step-card">
         <div class="step-icon" style="background:#dcfce7">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1a7a4a" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1a7a4a" stroke-width="2">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.3-4.3" />
+          </svg>
           <div class="step-num" style="background:#1a7a4a">01</div>
         </div>
         <h4>Busca tu producto</h4>
@@ -241,7 +260,10 @@
       </div>
       <div class="step-card">
         <div class="step-icon" style="background:#dbeafe">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+            <polyline points="17 6 23 6 23 12" />
+          </svg>
           <div class="step-num" style="background:#2563eb">02</div>
         </div>
         <h4>Compara precios</h4>
@@ -249,7 +271,9 @@
       </div>
       <div class="step-card">
         <div class="step-icon" style="background:#ffedd5">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+          </svg>
           <div class="step-num" style="background:#f97316">03</div>
         </div>
         <h4>Añade al carrito</h4>
@@ -257,7 +281,9 @@
       </div>
       <div class="step-card">
         <div class="step-icon" style="background:#ede9fe">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
           <div class="step-num" style="background:#8b5cf6">04</div>
         </div>
         <h4>Recibe en casa</h4>
@@ -272,9 +298,15 @@
   <div class="cta-card">
     <div class="cta-circle cta-circle-1"></div>
     <div class="cta-circle cta-circle-2"></div>
-    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2" style="position:relative"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2"
+      style="position:relative">
+      <polyline points="23 4 23 10 17 10" />
+      <polyline points="1 20 1 14 7 14" />
+      <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+    </svg>
     <h2 class="cta-title">Precios actualizados cada día</h2>
-    <p class="cta-desc">Nuestro sistema actualiza automáticamente los precios de todos los establecimientos cada mañana para que siempre tengas la información más reciente.</p>
+    <p class="cta-desc">Nuestro sistema actualiza automáticamente los precios de todos los establecimientos cada mañana
+      para que siempre tengas la información más reciente.</p>
     <button class="cta-btn" (click)="goToSearch()">Empezar a comparar</button>
   </div>
 </section>

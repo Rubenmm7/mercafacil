@@ -1,10 +1,11 @@
 package com.mercafacil.service;
 
-import com.mercafacil.model.Product;
-import com.mercafacil.repository.ProductRepository;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.mercafacil.model.Product;
+import com.mercafacil.repository.ProductRepository;
 
 @Service
 public class ProductService {

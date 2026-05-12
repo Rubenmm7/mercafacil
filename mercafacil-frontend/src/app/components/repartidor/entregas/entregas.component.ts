@@ -19,36 +19,36 @@ type Tab = 'mis' | 'disponibles';
   styleUrl: './entregas.component.css'
 })
 export class EntregasComponent implements OnInit, OnDestroy {
-  myOrders       = signal<Order[]>([]);
-  available      = signal<Order[]>([]);
-  activeTab      = signal<Tab>('mis');
-  loading        = signal(true);
-  updating       = signal<number | null>(null);
-  error          = signal('');
+  myOrders = signal<Order[]>([]);
+  available = signal<Order[]>([]);
+  activeTab = signal<Tab>('mis');
+  loading = signal(true);
+  updating = signal<number | null>(null);
+  error = signal('');
   // ID del pedido cuya simulación GPS está activa
   simulatingOrderId = signal<number | null>(null);
   // Última posición enviada por la simulación (refleja la ubicación del repartidor en tiempo real en el mapa)
-  simPosition       = signal<{ lat: number; lng: number } | null>(null);
+  simPosition = signal<{ lat: number; lng: number } | null>(null);
 
   shownOrders = computed(() =>
     this.activeTab() === 'mis' ? this.myOrders() : this.available()
   );
 
   readonly statusLabels: Record<OrderStatus, string> = {
-    PENDIENTE:   'Pendiente',
+    PENDIENTE: 'Pendiente',
     PREPARACION: 'En preparación',
-    EN_RUTA:     'En ruta',
-    ENTREGADO:   'Entregado'
+    EN_RUTA: 'En ruta',
+    ENTREGADO: 'Entregado'
   };
 
   readonly nextStatus: Partial<Record<OrderStatus, OrderStatus>> = {
     PREPARACION: 'EN_RUTA',
-    EN_RUTA:     'ENTREGADO'
+    EN_RUTA: 'ENTREGADO'
   };
 
   readonly nextStatusLabel: Partial<Record<OrderStatus, string>> = {
     PREPARACION: 'Recoger pedido',
-    EN_RUTA:     'Marcar entregado'
+    EN_RUTA: 'Marcar entregado'
   };
 
   // Coordenadas actuales de la simulación (se van actualizando con cada tick)
@@ -61,7 +61,7 @@ export class EntregasComponent implements OnInit, OnDestroy {
     private trackingService: TrackingService,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadAll();
@@ -74,7 +74,7 @@ export class EntregasComponent implements OnInit, OnDestroy {
   loadAll(): void {
     this.loading.set(true);
     forkJoin({
-      my:    this.repartidorService.getMyOrders(),
+      my: this.repartidorService.getMyOrders(),
       avail: this.repartidorService.getAvailableOrders()
     }).subscribe({
       next: ({ my, avail }) => {
@@ -114,8 +114,8 @@ export class EntregasComponent implements OnInit, OnDestroy {
         this.myOrders.update(list => list.map(o => o.id === updated.id ? updated : o));
         this.updating.set(null);
         // Al pasar a EN_RUTA arranca la simulación GPS; al entregarlo la detiene
-        if (updated.status === 'EN_RUTA')    this.startSimulation(updated.id);
-        if (updated.status === 'ENTREGADO')  this.stopSimulation();
+        if (updated.status === 'EN_RUTA') this.startSimulation(updated.id);
+        if (updated.status === 'ENTREGADO') this.stopSimulation();
       },
       error: () => { this.error.set('Error al actualizar estado'); this.updating.set(null); }
     });
@@ -151,7 +151,7 @@ export class EntregasComponent implements OnInit, OnDestroy {
       this.simLng += (Math.random() - 0.5) * 0.001;
       this.simPosition.set({ lat: this.simLat, lng: this.simLng });
       this.trackingService.sendLocation(orderId, this.simLat, this.simLng)
-        .subscribe({ error: () => {} });
+        .subscribe({ error: () => { } });
     }, 4000);
   }
 

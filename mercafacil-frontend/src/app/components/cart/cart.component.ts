@@ -61,7 +61,7 @@ export class CartComponent implements OnInit {
     public cartService: CartService,
     private api: ApiService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.api.getStores().subscribe(s => this.stores.set(s));

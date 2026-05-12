@@ -1,17 +1,33 @@
 package com.mercafacil.service;
 
-import com.mercafacil.dto.*;
-import com.mercafacil.model.*;
-import com.mercafacil.repository.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
+
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
+import com.mercafacil.dto.OrderItemResponse;
+import com.mercafacil.dto.OrderResponse;
+import com.mercafacil.dto.ProductDto;
+import com.mercafacil.dto.ProductRequest;
+import com.mercafacil.dto.StoreDto;
+import com.mercafacil.dto.StoreOfferDto;
+import com.mercafacil.dto.StoreOfferRequest;
+import com.mercafacil.dto.VendedorStatsDto;
+import com.mercafacil.model.Order;
+import com.mercafacil.model.OrderStatus;
+import com.mercafacil.model.Product;
+import com.mercafacil.model.Store;
+import com.mercafacil.model.StoreOffer;
+import com.mercafacil.model.User;
+import com.mercafacil.repository.OrderRepository;
+import com.mercafacil.repository.ProductRepository;
+import com.mercafacil.repository.StoreOfferRepository;
+import com.mercafacil.repository.StoreRepository;
 
 @Service
 @Transactional
@@ -25,9 +41,9 @@ public class VendedorService {
     private final OrderRepository orderRepository;
 
     public VendedorService(StoreRepository storeRepository,
-                           StoreOfferRepository storeOfferRepository,
-                           ProductRepository productRepository,
-                           OrderRepository orderRepository) {
+            StoreOfferRepository storeOfferRepository,
+            ProductRepository productRepository,
+            OrderRepository orderRepository) {
         this.storeRepository = storeRepository;
         this.storeOfferRepository = storeOfferRepository;
         this.productRepository = productRepository;
@@ -74,7 +90,8 @@ public class VendedorService {
     @Transactional(readOnly = true)
     public List<OrderResponse> getMyOrders(User vendedor) {
         var storeIds = myStoreIds(vendedor);
-        if (storeIds.isEmpty()) return List.of();
+        if (storeIds.isEmpty())
+            return List.of();
         return orderRepository.findByStoreIds(storeIds).stream()
                 .map(this::toOrderResponse).toList();
     }
@@ -87,7 +104,8 @@ public class VendedorService {
         var storeIds = myStoreIds(vendedor);
         boolean ownsOrder = order.getItems().stream()
                 .anyMatch(i -> storeIds.contains(i.getStoreId()));
-        if (!ownsOrder) throw new AccessDeniedException("No tienes permiso sobre este pedido");
+        if (!ownsOrder)
+            throw new AccessDeniedException("No tienes permiso sobre este pedido");
 
         var status = OrderStatus.valueOf(newStatus);
         if (status != OrderStatus.PREPARACION)
@@ -102,7 +120,8 @@ public class VendedorService {
     @Transactional(readOnly = true)
     public List<ProductDto> getMyProducts(User vendedor) {
         var storeIds = myStoreIds(vendedor);
-        if (storeIds.isEmpty()) return List.of();
+        if (storeIds.isEmpty())
+            return List.of();
         return storeOfferRepository.findByStoreIdIn(storeIds).stream()
                 .map(StoreOffer::getProduct)
                 .distinct()
@@ -147,7 +166,8 @@ public class VendedorService {
 
         boolean ownsProduct = product.getStoreOffers().stream()
                 .anyMatch(o -> storeIds.contains(o.getStoreId()));
-        if (!ownsProduct) throw new AccessDeniedException("No tienes permiso sobre este producto");
+        if (!ownsProduct)
+            throw new AccessDeniedException("No tienes permiso sobre este producto");
 
         product.setName(req.name());
         product.setCategory(req.category());
@@ -165,7 +185,8 @@ public class VendedorService {
 
         boolean ownsProduct = product.getStoreOffers().stream()
                 .anyMatch(o -> storeIds.contains(o.getStoreId()));
-        if (!ownsProduct) throw new AccessDeniedException("No tienes permiso sobre este producto");
+        if (!ownsProduct)
+            throw new AccessDeniedException("No tienes permiso sobre este producto");
 
         productRepository.delete(product);
     }
@@ -173,7 +194,8 @@ public class VendedorService {
     @Transactional(readOnly = true)
     public List<StoreOfferDto> getLowStockOffers(User vendedor) {
         var storeIds = myStoreIds(vendedor);
-        if (storeIds.isEmpty()) return List.of();
+        if (storeIds.isEmpty())
+            return List.of();
         return storeOfferRepository.findByStoreIdInAndStockLessThan(storeIds, LOW_STOCK_THRESHOLD)
                 .stream().map(this::toOfferDto).toList();
     }
@@ -199,7 +221,8 @@ public class VendedorService {
         offer.setOriginalPrice(req.originalPrice());
         offer.setStock(req.stock());
         offer.setInStock(req.stock() > 0);
-        if (req.brand() != null) offer.setBrand(req.brand());
+        if (req.brand() != null)
+            offer.setBrand(req.brand());
         return toOfferDto(storeOfferRepository.save(offer));
     }
 
@@ -214,14 +237,14 @@ public class VendedorService {
                 .map(i -> new OrderItemResponse(i.getProductId(), i.getStoreId(), i.getQuantity(), i.getUnitPrice()))
                 .toList();
         String clientEmail = o.getClient() != null ? o.getClient().getEmail() : null;
-        String createdAt   = o.getCreatedAt() != null ? o.getCreatedAt().toString() : null;
+        String createdAt = o.getCreatedAt() != null ? o.getCreatedAt().toString() : null;
         return new OrderResponse(o.getId(), clientEmail, o.getStatus().name(), o.getTotal(), items, createdAt,
                 o.getShippingAddress(), o.getDeliveryNotes());
     }
 
     private ProductDto toProductDto(Product p, List<Long> storeIds) {
-        var offers = p.getStoreOffers() == null ? List.<StoreOfferDto>of() :
-                p.getStoreOffers().stream()
+        var offers = p.getStoreOffers() == null ? List.<StoreOfferDto>of()
+                : p.getStoreOffers().stream()
                         .filter(o -> storeIds.contains(o.getStoreId()))
                         .map(this::toOfferDto)
                         .toList();
@@ -232,7 +255,7 @@ public class VendedorService {
     private StoreOfferDto toOfferDto(StoreOffer o) {
         String productName = o.getProduct() != null ? o.getProduct().getName() : null;
         String productUnit = o.getProduct() != null ? o.getProduct().getUnit() : null;
-        Long productId     = o.getProduct() != null ? o.getProduct().getId()   : null;
+        Long productId = o.getProduct() != null ? o.getProduct().getId() : null;
         return new StoreOfferDto(o.getId(), productId, productName, productUnit,
                 o.getStoreId(), o.getStoreName(), o.getPrice(), o.getOriginalPrice(),
                 o.getStock(), o.isInStock(), o.getBrand());

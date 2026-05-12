@@ -13,16 +13,16 @@ import { IconComponent } from '../../icon/icon.component';
   styleUrl: './pedidos.component.css'
 })
 export class PedidosComponent implements OnInit {
-  orders  = signal<Order[]>([]);
+  orders = signal<Order[]>([]);
   loading = signal(true);
-  error   = signal('');
+  error = signal('');
   updating = signal<number | null>(null);
 
   readonly statusLabels: Record<OrderStatus, string> = {
-    PENDIENTE:   'Pendiente',
+    PENDIENTE: 'Pendiente',
     PREPARACION: 'En preparación',
-    EN_RUTA:     'En ruta',
-    ENTREGADO:   'Entregado'
+    EN_RUTA: 'En ruta',
+    ENTREGADO: 'Entregado'
   };
 
   readonly nextStatus: Partial<Record<OrderStatus, OrderStatus>> = {
@@ -33,7 +33,7 @@ export class PedidosComponent implements OnInit {
     PENDIENTE: 'Iniciar preparación'
   };
 
-  constructor(private vendedorService: VendedorService, private router: Router) {}
+  constructor(private vendedorService: VendedorService, private router: Router) { }
 
   ngOnInit(): void {
     this.load();

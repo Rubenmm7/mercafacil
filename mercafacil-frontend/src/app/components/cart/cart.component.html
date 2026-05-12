@@ -1,97 +1,111 @@
 <!-- Empty state -->
 @if (isEmpty()) {
-  <div class="empty-cart">
-    <div class="empty-icon"><app-icon name="shopping-cart" [size]="64" /></div>
-    <h2>Tu carrito está vacío</h2>
-    <p>Busca productos en nuestras tiendas y añádelos al carrito</p>
-    <button class="btn-primary" (click)="goToSearch()">Explorar productos</button>
-  </div>
+<div class="empty-cart">
+  <div class="empty-icon"><app-icon name="shopping-cart" [size]="64" /></div>
+  <h2>Tu carrito está vacío</h2>
+  <p>Busca productos en nuestras tiendas y añádelos al carrito</p>
+  <button class="btn-primary" (click)="goToSearch()">Explorar productos</button>
+</div>
 } @else {
-  <div class="cart-page">
-    <div class="cart-header">
-      <button class="back-btn" (click)="goToSearch()">← </button>
-      <h1>Mi carrito <span class="item-count">({{cartItems().length}} {{cartItems().length === 1 ? 'producto' : 'productos'}})</span></h1>
-    </div>
+<div class="cart-page">
+  <div class="cart-header">
+    <button class="back-btn" (click)="goToSearch()">← </button>
+    <h1>Mi carrito <span class="item-count">({{cartItems().length}} {{cartItems().length === 1 ? 'producto' :
+        'productos'}})</span></h1>
+  </div>
 
-    <div class="cart-layout">
-      <!-- Items by store -->
-      <div class="cart-items">
-        @for (group of itemsByStore(); track group.storeId) {
-          <div class="store-group">
-            <div class="store-group-header" [style.--store-bg]="group.store?.bgColor || '#f3f4f6'" [style.--store-color]="group.store?.color || '#999'">
-              <div class="sg-left">
-                <div class="sg-logo" [class.has-logo]="!!group.store?.logoUrl" [style.background-color]="group.store?.logoUrl ? '#ffffff' : (group.store?.color || '#999')">
-                  @if (group.store?.logoUrl) {
-                    <img [src]="group.store?.logoUrl" [alt]="group.storeName" />
-                  } @else {
-                    <span>{{group.store?.logo}}</span>
-                  }
-                </div>
-                <span class="sg-name">{{group.storeName}}</span>
-                <span class="sg-count">· {{group.items.length}} {{group.items.length === 1 ? 'producto' : 'productos'}}</span>
-              </div>
-              <div class="sg-shipping" [class.free]="isFreeShipping(group.items)">
-                <app-icon name="truck" [size]="16" />
-                {{isFreeShipping(group.items) ? 'Envío gratis' : 'Envío: ' + (group.store?.deliveryFee | number:'1.2-2') + '€'}}
-              </div>
+  <div class="cart-layout">
+    <!-- Items by store -->
+    <div class="cart-items">
+      @for (group of itemsByStore(); track group.storeId) {
+      <div class="store-group">
+        <div class="store-group-header" [style.--store-bg]="group.store?.bgColor || '#f3f4f6'"
+          [style.--store-color]="group.store?.color || '#999'">
+          <div class="sg-left">
+            <div class="sg-logo" [class.has-logo]="!!group.store?.logoUrl"
+              [style.background-color]="group.store?.logoUrl ? '#ffffff' : (group.store?.color || '#999')">
+              @if (group.store?.logoUrl) {
+              <img [src]="group.store?.logoUrl" [alt]="group.storeName" />
+              } @else {
+              <span>{{group.store?.logo}}</span>
+              }
             </div>
-
-            @for (item of group.items; track item.productId + '-' + item.storeId) {
-              <div class="cart-item">
-                <div class="ci-image"><img [src]="item.productImage" [alt]="item.productName" /></div>
-                <div class="ci-info">
-                  <div class="ci-name">{{item.productName}}</div>
-                  <div class="ci-meta">{{item.brand}} · {{item.unit}}</div>
-                  <div class="ci-price">{{item.price | number:'1.2-2'}}€/ud</div>
-                </div>
-                <div class="ci-qty">
-                  <button class="qty-btn" (click)="updateQty(item.productId, item.storeId, item.quantity - 1)">−</button>
-                  <span>{{item.quantity}}</span>
-                  <button class="qty-btn plus" (click)="updateQty(item.productId, item.storeId, item.quantity + 1)">+</button>
-                </div>
-                <div class="ci-total">{{(item.price * item.quantity) | number:'1.2-2'}}€</div>
-                <button class="ci-remove" (click)="remove(item.productId, item.storeId)" title="Eliminar"><app-icon name="trash" [size]="18" /></button>
-              </div>
-            }
-
-            <div class="store-subtotal">
-              <span>Subtotal {{group.storeName}}</span>
-              <strong>{{storeSubtotal(group.items) | number:'1.2-2'}}€</strong>
-            </div>
-
-            @if (!isFreeShipping(group.items)) {
-              <div class="free-shipping-progress">
-                Añade <strong>{{remainingForFree(group.items) | number:'1.2-2'}}€</strong> más para envío gratis en {{group.storeName}}
-                <div class="progress-bar"><div class="progress-fill" [style.width.%]="freeProgress(group.items)"></div></div>
-              </div>
-            }
+            <span class="sg-name">{{group.storeName}}</span>
+            <span class="sg-count">· {{group.items.length}} {{group.items.length === 1 ? 'producto' :
+              'productos'}}</span>
           </div>
+          <div class="sg-shipping" [class.free]="isFreeShipping(group.items)">
+            <app-icon name="truck" [size]="16" />
+            {{isFreeShipping(group.items) ? 'Envío gratis' : 'Envío: ' + (group.store?.deliveryFee | number:'1.2-2') +
+            '€'}}
+          </div>
+        </div>
+
+        @for (item of group.items; track item.productId + '-' + item.storeId) {
+        <div class="cart-item">
+          <div class="ci-image"><img [src]="item.productImage" [alt]="item.productName" /></div>
+          <div class="ci-info">
+            <div class="ci-name">{{item.productName}}</div>
+            <div class="ci-meta">{{item.brand}} · {{item.unit}}</div>
+            <div class="ci-price">{{item.price | number:'1.2-2'}}€/ud</div>
+          </div>
+          <div class="ci-qty">
+            <button class="qty-btn" (click)="updateQty(item.productId, item.storeId, item.quantity - 1)">−</button>
+            <span>{{item.quantity}}</span>
+            <button class="qty-btn plus" (click)="updateQty(item.productId, item.storeId, item.quantity + 1)">+</button>
+          </div>
+          <div class="ci-total">{{(item.price * item.quantity) | number:'1.2-2'}}€</div>
+          <button class="ci-remove" (click)="remove(item.productId, item.storeId)" title="Eliminar"><app-icon
+              name="trash" [size]="18" /></button>
+        </div>
+        }
+
+        <div class="store-subtotal">
+          <span>Subtotal {{group.storeName}}</span>
+          <strong>{{storeSubtotal(group.items) | number:'1.2-2'}}€</strong>
+        </div>
+
+        @if (!isFreeShipping(group.items)) {
+        <div class="free-shipping-progress">
+          Añade <strong>{{remainingForFree(group.items) | number:'1.2-2'}}€</strong> más para envío gratis en
+          {{group.storeName}}
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="freeProgress(group.items)"></div>
+          </div>
+        </div>
         }
       </div>
+      }
+    </div>
 
-      <!-- Order summary -->
-      <div class="order-summary">
-        <div class="summary-card">
-          <h3>Resumen del pedido</h3>
-          <div class="summary-rows">
-            <div class="summary-row"><span>Subtotal ({{totalUnits()}} uds.)</span><span>{{subtotal() | number:'1.2-2'}}€</span></div>
-            <div class="summary-row"><span>Envío ({{itemsByStore().length}} tienda{{itemsByStore().length > 1 ? 's' : ''}})</span><span [class.free-text]="deliveryFees() === 0">{{deliveryFees() === 0 ? 'Gratis' : (deliveryFees() | number:'1.2-2') + '€'}}</span></div>
-            <div class="summary-total"><span>Total</span><span class="total-value">{{total() | number:'1.2-2'}}€</span></div>
-          </div>
-          <button class="checkout-btn" (click)="checkout()">
-            Proceder al pago ›
-          </button>
-          <button class="continue-btn" (click)="goToSearch()">Seguir comprando</button>
-          <div class="trust-badges">
-            <div><app-icon name="shield" [size]="16" /> Pago 100% seguro</div>
-            <div><app-icon name="package" [size]="16" /> Devolución gratuita 24h</div>
-            <div><app-icon name="truck" [size]="16" /> Seguimiento en tiempo real</div>
+    <!-- Order summary -->
+    <div class="order-summary">
+      <div class="summary-card">
+        <h3>Resumen del pedido</h3>
+        <div class="summary-rows">
+          <div class="summary-row"><span>Subtotal ({{totalUnits()}} uds.)</span><span>{{subtotal() |
+              number:'1.2-2'}}€</span></div>
+          <div class="summary-row"><span>Envío ({{itemsByStore().length}} tienda{{itemsByStore().length > 1 ? 's' :
+              ''}})</span><span [class.free-text]="deliveryFees() === 0">{{deliveryFees() === 0 ? 'Gratis' :
+              (deliveryFees() | number:'1.2-2') + '€'}}</span></div>
+          <div class="summary-total"><span>Total</span><span class="total-value">{{total() | number:'1.2-2'}}€</span>
           </div>
         </div>
-        <div class="delivery-note">
-          <app-icon name="truck" [size]="16" /> Elige la franja horaria de entrega al tramitar el pedido. Los pedidos realizados antes de las 14:00h pueden ser entregados el mismo día.
+        <button class="checkout-btn" (click)="checkout()">
+          Proceder al pago ›
+        </button>
+        <button class="continue-btn" (click)="goToSearch()">Seguir comprando</button>
+        <div class="trust-badges">
+          <div><app-icon name="shield" [size]="16" /> Pago 100% seguro</div>
+          <div><app-icon name="package" [size]="16" /> Devolución gratuita 24h</div>
+          <div><app-icon name="truck" [size]="16" /> Seguimiento en tiempo real</div>
         </div>
+      </div>
+      <div class="delivery-note">
+        <app-icon name="truck" [size]="16" /> Elige la franja horaria de entrega al tramitar el pedido. Los pedidos
+        realizados antes de las 14:00h pueden ser entregados el mismo día.
       </div>
     </div>
   </div>
+</div>
 }

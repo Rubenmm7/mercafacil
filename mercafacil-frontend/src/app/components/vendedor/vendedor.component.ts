@@ -11,5 +11,5 @@ import { IconComponent } from '../icon/icon.component';
   styleUrl: './vendedor.component.css'
 })
 export class VendedorComponent {
-  constructor(public authService: AuthService) {}
+  constructor(public authService: AuthService) { }
 }

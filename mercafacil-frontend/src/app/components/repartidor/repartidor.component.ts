@@ -11,5 +11,5 @@ import { IconComponent } from '../icon/icon.component';
   styleUrl: './repartidor.component.css'
 })
 export class RepartidorComponent {
-  constructor(public authService: AuthService) {}
+  constructor(public authService: AuthService) { }
 }

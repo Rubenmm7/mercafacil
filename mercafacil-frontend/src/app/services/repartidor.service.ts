@@ -8,7 +8,7 @@ import { Order, RepartidorStats } from '../models/models';
 export class RepartidorService {
   private readonly base = `${environment.apiUrl}/repartidor`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getStats(): Observable<RepartidorStats> {
     return this.http.get<RepartidorStats>(`${this.base}/stats`);

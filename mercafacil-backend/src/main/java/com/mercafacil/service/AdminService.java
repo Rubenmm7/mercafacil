@@ -1,5 +1,13 @@
 package com.mercafacil.service;
 
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.lang.NonNull;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.mercafacil.dto.AdminStatsDto;
 import com.mercafacil.dto.CreateUserRequest;
 import com.mercafacil.dto.UpdateUserRequest;
@@ -9,13 +17,6 @@ import com.mercafacil.model.User;
 import com.mercafacil.repository.OrderRepository;
 import com.mercafacil.repository.StoreRepository;
 import com.mercafacil.repository.UserRepository;
-import org.springframework.lang.NonNull;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -27,9 +28,9 @@ public class AdminService {
     private final PasswordEncoder passwordEncoder;
 
     public AdminService(UserRepository userRepository,
-                        StoreRepository storeRepository,
-                        OrderRepository orderRepository,
-                        PasswordEncoder passwordEncoder) {
+            StoreRepository storeRepository,
+            OrderRepository orderRepository,
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.storeRepository = storeRepository;
         this.orderRepository = orderRepository;
@@ -46,8 +47,7 @@ public class AdminService {
                 countByRole(users, Role.VENDEDOR),
                 countByRole(users, Role.REPARTIDOR),
                 countByRole(users, Role.PROVEEDOR),
-                countByRole(users, Role.ADMIN)
-        );
+                countByRole(users, Role.ADMIN));
     }
 
     public List<UserDto> getAllUsers() {

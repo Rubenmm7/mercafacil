@@ -5,76 +5,75 @@
 <!-- Selector de tienda -->
 <div class="store-tabs">
   @for (s of stores(); track s.id) {
-    <button class="store-tab"
-            [class.active]="selectedStore()?.id === s.id"
-            (click)="selectStore(s)">
-      <span class="store-tab-logo" [class.has-logo]="!!s.logoUrl" [style.background-color]="s.logoUrl ? '#ffffff' : s.color">
-        @if (s.logoUrl) {
-          <img [src]="s.logoUrl" [alt]="s.name" />
-        } @else {
-          <span>{{ s.logo }}</span>
-        }
-      </span>
-      {{ s.name }}
-    </button>
+  <button class="store-tab" [class.active]="selectedStore()?.id === s.id" (click)="selectStore(s)">
+    <span class="store-tab-logo" [class.has-logo]="!!s.logoUrl"
+      [style.background-color]="s.logoUrl ? '#ffffff' : s.color">
+      @if (s.logoUrl) {
+      <img [src]="s.logoUrl" [alt]="s.name" />
+      } @else {
+      <span>{{ s.logo }}</span>
+      }
+    </span>
+    {{ s.name }}
+  </button>
   }
 </div>
 
 @if (loading()) {
-  <div class="loading">Cargando ofertas...</div>
+<div class="loading">Cargando ofertas...</div>
 } @else if (offers().length === 0) {
-  <div class="empty">No hay ofertas en esta tienda.</div>
+<div class="empty">No hay ofertas en esta tienda.</div>
 } @else {
-  <div class="offers-list">
-    @for (offer of offers(); track offer.id) {
-      <div class="offer-row" [class.low-stock]="isLowStock(offer.stock)">
+<div class="offers-list">
+  @for (offer of offers(); track offer.id) {
+  <div class="offer-row" [class.low-stock]="isLowStock(offer.stock)">
 
-        @if (editing()?.id === offer.id) {
-          <!-- Modo edición inline -->
-          <div class="offer-edit">
-            <div class="offer-title">{{ offer.productName }} <span class="unit">· {{ offer.productUnit }}</span></div>
-            <form [formGroup]="form" (ngSubmit)="saveOffer()" class="edit-form">
-              <label>Precio (€) *
-                <input formControlName="price" type="number" min="0" step="0.01" />
-              </label>
-              <label>Precio original (€)
-                <input formControlName="originalPrice" type="number" min="0" step="0.01" placeholder="Tachado" />
-              </label>
-              <label>Stock (uds.) *
-                <input formControlName="stock" type="number" min="0" />
-              </label>
-              <label>Marca
-                <input formControlName="brand" type="text" />
-              </label>
-              <div class="edit-actions">
-                <button type="button" class="btn-secondary" (click)="cancelEdit()">Cancelar</button>
-                <button type="submit" class="btn-primary" [disabled]="form.invalid || saving() === offer.id">
-                  @if (saving() === offer.id) { Guardando... } @else { Guardar }
-                </button>
-              </div>
-            </form>
-          </div>
-        } @else {
-          <!-- Vista normal -->
-          <div class="offer-info">
-            <span class="offer-product">{{ offer.productName }}</span>
-            <span class="offer-unit">{{ offer.productUnit }}</span>
-            <span class="offer-brand">{{ offer.brand }}</span>
-          </div>
-          <div class="offer-prices">
-            <span class="price-current">{{ offer.price | number:'1.2-2' }} €</span>
-            @if (offer.originalPrice) {
-              <span class="price-original">{{ offer.originalPrice | number:'1.2-2' }} €</span>
-            }
-          </div>
-          <div class="offer-stock" [class.stock-low]="isLowStock(offer.stock)">
-            @if (isLowStock(offer.stock)) { <app-icon name="alert-triangle" [size]="14" /> }
-            {{ offer.stock }} uds.
-          </div>
-          <button class="btn-edit" (click)="startEdit(offer)"><app-icon name="edit" [size]="14" /> Editar</button>
-        }
-
-      </div>
+    @if (editing()?.id === offer.id) {
+    <!-- Modo edición inline -->
+    <div class="offer-edit">
+      <div class="offer-title">{{ offer.productName }} <span class="unit">· {{ offer.productUnit }}</span></div>
+      <form [formGroup]="form" (ngSubmit)="saveOffer()" class="edit-form">
+        <label>Precio (€) *
+          <input formControlName="price" type="number" min="0" step="0.01" />
+        </label>
+        <label>Precio original (€)
+          <input formControlName="originalPrice" type="number" min="0" step="0.01" placeholder="Tachado" />
+        </label>
+        <label>Stock (uds.) *
+          <input formControlName="stock" type="number" min="0" />
+        </label>
+        <label>Marca
+          <input formControlName="brand" type="text" />
+        </label>
+        <div class="edit-actions">
+          <button type="button" class="btn-secondary" (click)="cancelEdit()">Cancelar</button>
+          <button type="submit" class="btn-primary" [disabled]="form.invalid || saving() === offer.id">
+            @if (saving() === offer.id) { Guardando... } @else { Guardar }
+          </button>
+        </div>
+      </form>
+    </div>
+    } @else {
+    <!-- Vista normal -->
+    <div class="offer-info">
+      <span class="offer-product">{{ offer.productName }}</span>
+      <span class="offer-unit">{{ offer.productUnit }}</span>
+      <span class="offer-brand">{{ offer.brand }}</span>
+    </div>
+    <div class="offer-prices">
+      <span class="price-current">{{ offer.price | number:'1.2-2' }} €</span>
+      @if (offer.originalPrice) {
+      <span class="price-original">{{ offer.originalPrice | number:'1.2-2' }} €</span>
+      }
+    </div>
+    <div class="offer-stock" [class.stock-low]="isLowStock(offer.stock)">
+      @if (isLowStock(offer.stock)) { <app-icon name="alert-triangle" [size]="14" /> }
+      {{ offer.stock }} uds.
+    </div>
+    <button class="btn-edit" (click)="startEdit(offer)"><app-icon name="edit" [size]="14" /> Editar</button>
     }
+
   </div>
+  }
+</div>
 }

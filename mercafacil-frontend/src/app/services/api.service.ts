@@ -10,7 +10,7 @@ import { attachStoreLogo } from './store-logo';
 export class ApiService {
   private readonly baseUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getStores(): Observable<StoreWithLogo[]> {
     return this.http.get<Store[]>(`${this.baseUrl}/stores`).pipe(

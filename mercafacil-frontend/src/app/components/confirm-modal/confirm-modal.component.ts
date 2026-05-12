@@ -10,6 +10,6 @@ import { ToastService } from '../../services/toast.service';
 export class ConfirmModalComponent {
   readonly toastService = inject(ToastService);
 
-  confirm(): void { this.toastService.resolveConfirm(true);  }
-  cancel(): void  { this.toastService.resolveConfirm(false); }
+  confirm(): void { this.toastService.resolveConfirm(true); }
+  cancel(): void { this.toastService.resolveConfirm(false); }
 }

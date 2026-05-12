@@ -21,7 +21,7 @@ export class LoginComponent {
     private auth: AuthService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   onSubmit(): void {
     this.errorMsg.set('');

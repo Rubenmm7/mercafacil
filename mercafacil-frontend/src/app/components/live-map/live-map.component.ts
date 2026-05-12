@@ -12,15 +12,15 @@ import { IconComponent } from '../icon/icon.component';
   styleUrl: './live-map.component.css'
 })
 export class LiveMapComponent implements OnInit {
-  readonly lat   = input.required<number>();
-  readonly lng   = input.required<number>();
-  readonly zoom  = input(16);
+  readonly lat = input.required<number>();
+  readonly lng = input.required<number>();
+  readonly zoom = input(16);
   readonly label = input<string>('');
 
   readonly mapsReady = signal(false);
   readonly mapsError = signal(false);
 
-  readonly center  = computed<google.maps.LatLngLiteral>(() => ({ lat: this.lat(), lng: this.lng() }));
+  readonly center = computed<google.maps.LatLngLiteral>(() => ({ lat: this.lat(), lng: this.lng() }));
   readonly options = computed<google.maps.MapOptions>(() => ({
     disableDefaultUI: false,
     streetViewControl: false,
@@ -30,7 +30,7 @@ export class LiveMapComponent implements OnInit {
     gestureHandling: 'greedy'
   }));
 
-  constructor(private loader: MapsLoaderService) {}
+  constructor(private loader: MapsLoaderService) { }
 
   ngOnInit(): void {
     this.loader.load().then(ok => {

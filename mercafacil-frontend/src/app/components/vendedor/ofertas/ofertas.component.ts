@@ -13,22 +13,22 @@ import { IconComponent } from '../../icon/icon.component';
   styleUrl: './ofertas.component.css'
 })
 export class OfertasComponent implements OnInit {
-  stores        = signal<Store[]>([]);
-  offers        = signal<StoreOfferDetail[]>([]);
+  stores = signal<Store[]>([]);
+  offers = signal<StoreOfferDetail[]>([]);
   selectedStore = signal<Store | null>(null);
-  loading       = signal(false);
-  saving        = signal<number | null>(null);
-  editing       = signal<StoreOfferDetail | null>(null);
-  error         = signal('');
+  loading = signal(false);
+  saving = signal<number | null>(null);
+  editing = signal<StoreOfferDetail | null>(null);
+  error = signal('');
 
   form = new FormGroup({
-    price:         new FormControl<number>(0, [Validators.required, Validators.min(0)]),
+    price: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
     originalPrice: new FormControl<number | null>(null),
-    stock:         new FormControl<number>(0, [Validators.required, Validators.min(0)]),
-    brand:         new FormControl('')
+    stock: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
+    brand: new FormControl('')
   });
 
-  constructor(private vendedorService: VendedorService) {}
+  constructor(private vendedorService: VendedorService) { }
 
   ngOnInit(): void {
     this.vendedorService.getStores().subscribe(s => {

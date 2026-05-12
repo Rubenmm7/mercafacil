@@ -6,7 +6,7 @@ import { CreateUserRequest, UpdateUserRequest, UserAdmin, Role } from '../../../
 import { IconComponent, IconName } from '../../icon/icon.component';
 
 function passwordsMatch(group: AbstractControl): ValidationErrors | null {
-  const pass    = group.get('password')?.value as string;
+  const pass = group.get('password')?.value as string;
   const confirm = group.get('confirmPassword')?.value as string;
   if (!pass && !confirm) return null;
   return pass === confirm ? null : { passwordMismatch: true };
@@ -20,13 +20,13 @@ function passwordsMatch(group: AbstractControl): ValidationErrors | null {
   styleUrl: './usuarios.component.css'
 })
 export class UsuariosAdminComponent implements OnInit {
-  users   = signal<UserAdmin[]>([]);
+  users = signal<UserAdmin[]>([]);
   loading = signal(true);
-  error   = signal('');
-  saving  = signal(false);
+  error = signal('');
+  saving = signal(false);
 
-  showModal  = signal(false);
-  modalMode  = signal<'create' | 'edit'>('create');
+  showModal = signal(false);
+  modalMode = signal<'create' | 'edit'>('create');
   editUserId = signal<number | null>(null);
 
   readonly roles: Role[] = ['ADMIN', 'CLIENTE', 'VENDEDOR', 'REPARTIDOR', 'PROVEEDOR'];
@@ -39,11 +39,11 @@ export class UsuariosAdminComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.form = this.fb.group({
-      nombre:          ['', Validators.required],
-      apellidos:       ['', Validators.required],
-      email:           ['', [Validators.required, Validators.email]],
-      rol:             ['CLIENTE', Validators.required],
-      password:        [''],
+      nombre: ['', Validators.required],
+      apellidos: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      rol: ['CLIENTE', Validators.required],
+      password: [''],
       confirmPassword: ['']
     }, { validators: passwordsMatch });
   }
@@ -55,7 +55,7 @@ export class UsuariosAdminComponent implements OnInit {
   loadUsers(): void {
     this.loading.set(true);
     this.adminService.getUsers().subscribe({
-      next: u  => { this.users.set(u); this.loading.set(false); },
+      next: u => { this.users.set(u); this.loading.set(false); },
       error: () => { this.error.set('No se pudieron cargar los usuarios'); this.loading.set(false); }
     });
   }
@@ -162,7 +162,7 @@ export class UsuariosAdminComponent implements OnInit {
 
   get passwordMismatch(): boolean {
     return !!(this.form.hasError('passwordMismatch') &&
-              this.form.get('confirmPassword')?.touched);
+      this.form.get('confirmPassword')?.touched);
   }
 
   rolLabel(rol: Role): string {

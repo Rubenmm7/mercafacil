@@ -1,34 +1,34 @@
 <div class="toast-stack">
   @for (toast of toastService.toasts(); track trackById($index, toast)) {
-    <div class="toast-card" [style.border-left-color]="toast.borderColor ?? '#4a6fa5'">
-      <div class="toast-body">
-        @if (toast.senderRoleLabel) {
-          <div class="toast-avatar" [style.background]="toast.borderColor ?? '#4a6fa5'">
-            {{ toast.senderRoleLabel.charAt(0) }}
-          </div>
-        } @else {
-          <div class="toast-avatar toast-avatar--error">!</div>
-        }
-        <div class="toast-text">
-          @if (toast.title) {
-            <div class="toast-title">{{ toast.title }}</div>
-          }
-          <div class="toast-msg">{{ toast.body }}</div>
-        </div>
-        <button class="toast-close" (click)="dismiss(toast.id)" aria-label="Cerrar"><app-icon name="x" [size]="16" /></button>
+  <div class="toast-card" [style.border-left-color]="toast.borderColor ?? '#4a6fa5'">
+    <div class="toast-body">
+      @if (toast.senderRoleLabel) {
+      <div class="toast-avatar" [style.background]="toast.borderColor ?? '#4a6fa5'">
+        {{ toast.senderRoleLabel.charAt(0) }}
       </div>
-      <div class="toast-footer">
-        <span class="toast-time">ahora mismo</span>
-        @if (toast.chatType) {
-          <button class="toast-action" (click)="goToChat(toast)">Ver chat →</button>
+      } @else {
+      <div class="toast-avatar toast-avatar--error">!</div>
+      }
+      <div class="toast-text">
+        @if (toast.title) {
+        <div class="toast-title">{{ toast.title }}</div>
         }
+        <div class="toast-msg">{{ toast.body }}</div>
       </div>
-      <div class="toast-progress">
-        <div class="toast-progress-bar"
-             [style.background]="toast.borderColor ?? '#e74c3c'"
-             [style.animation-duration]="toast.type === 'error' ? '5s' : '4s'">
-        </div>
+      <button class="toast-close" (click)="dismiss(toast.id)" aria-label="Cerrar"><app-icon name="x"
+          [size]="16" /></button>
+    </div>
+    <div class="toast-footer">
+      <span class="toast-time">ahora mismo</span>
+      @if (toast.chatType) {
+      <button class="toast-action" (click)="goToChat(toast)">Ver chat →</button>
+      }
+    </div>
+    <div class="toast-progress">
+      <div class="toast-progress-bar" [style.background]="toast.borderColor ?? '#e74c3c'"
+        [style.animation-duration]="toast.type === 'error' ? '5s' : '4s'">
       </div>
     </div>
+  </div>
   }
 </div>

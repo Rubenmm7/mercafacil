@@ -7,7 +7,7 @@ import { AdminStats, UserAdmin, Role, CreateUserRequest, UpdateUserRequest } fro
 export class AdminService {
   private base = '/api/admin';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getStats(): Observable<AdminStats> {
     return this.http.get<AdminStats>(`${this.base}/stats`);

@@ -31,18 +31,18 @@ export interface MallZoneView extends MallZone {
 //             ─ fila inferior (y:154-282): McDonald's · Terraza
 const FLOOR_ZONES: MallZone[] = [
   // ── Planta Baja ──────────────────────────────────────────────
-  { floor: 'baja', storeId:  5, x:   4, y:   4, w: 124, h: 126 }, // Zara
-  { floor: 'baja', storeId:  6, x: 132, y:   4, w: 124, h: 126 }, // Primark
-  { floor: 'baja', storeId: 10, x: 260, y:   4, w: 112, h: 126 }, // Tiendanimal
-  { floor: 'baja', storeId:  9, x: 386, y:   4, w: 166, h: 282 }, // Decathlon (anchor)
-  { floor: 'baja', storeId:  7, x:   4, y: 154, w: 182, h: 128 }, // MediaMarkt
-  { floor: 'baja', storeId:  8, x: 190, y: 154, w: 182, h: 128 }, // Game
+  { floor: 'baja', storeId: 5, x: 4, y: 4, w: 124, h: 126 }, // Zara
+  { floor: 'baja', storeId: 6, x: 132, y: 4, w: 124, h: 126 }, // Primark
+  { floor: 'baja', storeId: 10, x: 260, y: 4, w: 112, h: 126 }, // Tiendanimal
+  { floor: 'baja', storeId: 9, x: 386, y: 4, w: 166, h: 282 }, // Decathlon (anchor)
+  { floor: 'baja', storeId: 7, x: 4, y: 154, w: 182, h: 128 }, // MediaMarkt
+  { floor: 'baja', storeId: 8, x: 190, y: 154, w: 182, h: 128 }, // Game
 
   // ── Planta Alta (zona de restauración) ───────────────────────
-  { floor: 'alta', storeId:  2, x:   4, y:   4, w: 177, h: 126 }, // Popeyes
-  { floor: 'alta', storeId:  3, x: 185, y:   4, w: 177, h: 126 }, // Vips
-  { floor: 'alta', storeId:  4, x: 366, y:   4, w: 186, h: 126 }, // Foster's Hollywood
-  { floor: 'alta', storeId:  1, x:   4, y: 154, w: 260, h: 128 }, // McDonald's
+  { floor: 'alta', storeId: 2, x: 4, y: 4, w: 177, h: 126 }, // Popeyes
+  { floor: 'alta', storeId: 3, x: 185, y: 4, w: 177, h: 126 }, // Vips
+  { floor: 'alta', storeId: 4, x: 366, y: 4, w: 186, h: 126 }, // Foster's Hollywood
+  { floor: 'alta', storeId: 1, x: 4, y: 154, w: 260, h: 128 }, // McDonald's
 ];
 
 function splitLabel(name: string): string[] {
@@ -58,7 +58,7 @@ function splitLabel(name: string): string[] {
   styleUrl: './mall-map.component.css'
 })
 export class MallMapComponent {
-  readonly stores     = input.required<Store[]>();
+  readonly stores = input.required<Store[]>();
   readonly selectedId = input<number | null>(null);
   readonly storeSelected = output<number>();
 
