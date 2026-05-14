@@ -1,7 +1,19 @@
 <div class="orders-page">
   <div class="orders-header">
-    <h1>Mis pedidos</h1>
-    <p class="subtitle">Consulta el estado e historial de tus compras</p>
+    <div>
+      <h1>Mis pedidos</h1>
+      <p class="subtitle">Consulta el estado e historial de tus compras</p>
+    </div>
+    <button class="btn-history" [class.active]="showHistory()" (click)="toggleHistory()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="12 6 12 12 16 14" />
+      </svg>
+      Historial de pedidos
+      @if (historyOrders().length > 0) {
+        <span class="history-count">{{ historyOrders().length }}</span>
+      }
+    </button>
   </div>
 
   @if (loading()) {
@@ -16,53 +28,115 @@
     <p>{{ errorMsg() }}</p>
     <button class="btn-primary" (click)="loadOrders()">Reintentar</button>
   </div>
-  } @else if (orders().length === 0) {
-  <div class="orders-empty">
-    <div class="empty-icon"><app-icon name="package" [size]="48" /></div>
-    <h2>Todavía no tienes pedidos</h2>
-    <p>Cuando realices una compra, aparecerá aquí con su estado en tiempo real.</p>
-    <button class="btn-primary" (click)="goToSearch()">Explorar productos</button>
-  </div>
-  } @else {
-  <div class="orders-list">
-    @for (order of orders(); track order.id) {
-    <div class="order-card">
-      <div class="order-card-header">
-        <div class="order-meta">
-          <span class="order-id">Pedido #{{ order.id }}</span>
-          <span class="order-date">{{ formatDate(order.createdAt) }}</span>
-        </div>
-        <span class="status-badge status-{{ order.status.toLowerCase() }}">
-          {{ statusLabel(order.status) }}
-        </span>
-      </div>
+  } @else if (!showHistory()) {
 
-      <div class="order-card-body">
-        <div class="order-info">
-          <span class="order-items-count">
-            {{ order.items.length }} {{ order.items.length === 1 ? 'producto' : 'productos' }}
+    @if (activeOrders().length === 0) {
+    <div class="orders-empty">
+      <div class="empty-icon"><app-icon name="package" [size]="48" /></div>
+      <h2>No tienes pedidos activos</h2>
+      <p>Cuando realices una compra, aparecerá aquí con su estado en tiempo real.</p>
+      <button class="btn-primary" (click)="goToSearch()">Explorar productos</button>
+    </div>
+    } @else {
+    <div class="orders-list">
+      @for (order of activeOrders(); track order.id) {
+      <div class="order-card">
+        <div class="order-card-header">
+          <div class="order-meta">
+            <span class="order-id">Pedido #{{ order.id }}</span>
+            <span class="order-date">{{ formatDate(order.createdAt) }}</span>
+          </div>
+          <span class="status-badge status-{{ order.status.toLowerCase() }}">
+            {{ statusLabel(order.status) }}
           </span>
-          <strong class="order-total">{{ order.total | number:'1.2-2' }}€</strong>
         </div>
-      </div>
 
-      @if (order.status !== 'ENTREGADO') {
-      <div class="order-card-actions">
-        <button class="btn-detail" (click)="openDetail(order.id)">
-          Ver detalle
-        </button>
+        <div class="order-card-body">
+          <div class="order-info">
+            <span class="order-items-count">
+              {{ order.items.length }} {{ order.items.length === 1 ? 'producto' : 'productos' }}
+            </span>
+            <strong class="order-total">{{ order.total | number:'1.2-2' }}€</strong>
+          </div>
+        </div>
 
-        <button class="btn-chat" (click)="openChat(order.id)">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-          </svg>
-          Enviar mensaje al repartidor
-        </button>
-
+        <div class="order-card-actions">
+          <button class="btn-detail" (click)="openDetail(order.id)">
+            Ver detalle
+          </button>
+          <span class="btn-chat-wrap">
+            <button class="btn-chat" (click)="openChat(order.id)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+              Enviar mensaje al repartidor
+            </button>
+            @if (unreadForOrder(order.id) > 0) {
+              <span class="chat-unread-badge">{{ unreadForOrder(order.id) > 99 ? '99+' : unreadForOrder(order.id) }}</span>
+            }
+          </span>
+          @if (order.status === 'PENDIENTE') {
+          <button class="btn-cancel" (click)="cancelOrder(order)">
+            <app-icon name="x" [size]="15" /> Cancelar pedido
+          </button>
+          }
+        </div>
       </div>
       }
     </div>
     }
-  </div>
+
+  } @else {
+
+    <div class="history-header">
+      <app-icon name="clock" [size]="20" />
+      <span>Pedidos entregados</span>
+    </div>
+
+    @if (historyOrders().length === 0) {
+    <div class="orders-empty">
+      <div class="empty-icon"><app-icon name="check-circle" [size]="48" /></div>
+      <h2>Sin pedidos entregados aún</h2>
+      <p>Aquí aparecerán tus pedidos una vez sean entregados.</p>
+    </div>
+    } @else {
+    <div class="orders-list">
+      @for (order of historyOrders(); track order.id) {
+      <div class="order-card order-card--delivered">
+        <div class="order-card-header">
+          <div class="order-meta">
+            <span class="order-id">Pedido #{{ order.id }}</span>
+            <span class="order-date">{{ formatDate(order.createdAt) }}</span>
+          </div>
+          <span class="status-badge status-{{ order.status.toLowerCase() }}">{{ statusLabel(order.status) }}</span>
+        </div>
+
+        <div class="order-card-body">
+          <div class="order-info">
+            <span class="order-items-count">
+              {{ order.items.length }} {{ order.items.length === 1 ? 'producto' : 'productos' }}
+            </span>
+            <strong class="order-total">{{ order.total | number:'1.2-2' }}€</strong>
+          </div>
+          @if (order.deliveredAt) {
+          <div class="delivered-date">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+            Entregado el {{ formatDate(order.deliveredAt) }}
+          </div>
+          }
+        </div>
+
+        <div class="order-card-actions">
+          <button class="btn-detail" (click)="openDetail(order.id)">
+            Ver detalle
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+    }
+
   }
 </div>

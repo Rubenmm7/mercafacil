@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,13 +62,6 @@ public class MessageService {
                     .orElseThrow(() -> new IllegalArgumentException("Shop not found: " + shopId));
             msg.setShop(shop);
         }
-        Long replyToMessageId = req.replyToMessageId();
-        if (replyToMessageId != null) {
-            var replyTo = messageRepository.findById(replyToMessageId)
-                    .orElseThrow(() -> new IllegalArgumentException("Reply target not found: " + replyToMessageId));
-            validateReplyTarget(req, replyTo);
-            msg.setReplyTo(replyTo);
-        }
 
         return toResponse(messageRepository.save(msg));
     }
@@ -91,18 +83,18 @@ public class MessageService {
         List<Message> all = new ArrayList<>();
 
         if (user.getRol() == Role.CLIENTE) {
-            all.addAll(messageRepository.findByOrder_Client_IdOrderByFechaDesc(user.getId()));
+            all.addAll(messageRepository.findByOrder_Client_IdOrderByFechaDesc(user.getId()).stream()
+                    .filter(m -> m.getChatType() == ChatType.CLIENTE_REPARTIDOR)
+                    .toList());
         }
         if (user.getRol() == Role.REPARTIDOR) {
-            // Dos consultas: una por pedidos asignados y otra por tipo de chat, porque
-            // order.deliverer puede ser null antes de la asignación y esos hilos también
-            // deben aparecer.
             all.addAll(messageRepository.findByOrder_Deliverer_IdOrderByFechaDesc(user.getId()));
             all.addAll(messageRepository.findByChatTypeInOrderByFechaDesc(
                     List.of(ChatType.CLIENTE_REPARTIDOR, ChatType.VENDEDOR_REPARTIDOR)));
         }
         all.addAll(messageRepository.findBySender_IdOrderByFechaDesc(user.getId()));
 
+        // Deduplicar: para cada hilo (chatType + orden/tienda) quedarse con el mensaje más reciente
         Map<String, Message> latestByThread = new LinkedHashMap<>();
         for (Message m : all) {
             String key = threadKey(m);
@@ -116,53 +108,6 @@ public class MessageService {
                 .sorted(Comparator.comparing(Message::getFecha).reversed())
                 .map(this::toThreadDto)
                 .toList();
-    }
-
-    private String threadKey(Message m) {
-        Long orderId = m.getOrder() != null ? m.getOrder().getId() : null;
-        Long shopId = m.getShop() != null ? m.getShop().getId() : null;
-        return m.getChatType().name() + ":" + orderId + ":" + shopId;
-    }
-
-    private ChatThreadDto toThreadDto(Message m) {
-        Long orderId = m.getOrder() != null ? m.getOrder().getId() : null;
-        Long shopId = m.getShop() != null ? m.getShop().getId() : null;
-        String title = orderId != null ? "Pedido #" + orderId : "Tienda #" + shopId;
-        String preview = m.getMensaje().length() > 80
-                ? m.getMensaje().substring(0, 77) + "..."
-                : m.getMensaje();
-        return new ChatThreadDto(
-                m.getChatType(),
-                orderId,
-                shopId,
-                title,
-                preview,
-                m.getSender().getNombre() + " " + m.getSender().getApellidos(),
-                m.getFecha());
-    }
-
-    private MessageResponse toResponse(Message m) {
-        Message replied = m.getReplyTo();
-        String repliedSenderName = null;
-        String repliedMensaje = null;
-        Long repliedId = null;
-        if (replied != null) {
-            repliedId = replied.getId();
-            repliedSenderName = replied.getSender().getNombre() + " " + replied.getSender().getApellidos();
-            repliedMensaje = replied.getMensaje();
-        }
-        return new MessageResponse(
-                m.getId(),
-                m.getChatType(),
-                m.getOrder() != null ? m.getOrder().getId() : null,
-                m.getShop() != null ? m.getShop().getId() : null,
-                m.getSender().getId(),
-                m.getSender().getNombre() + " " + m.getSender().getApellidos(),
-                repliedId,
-                repliedSenderName,
-                repliedMensaje,
-                m.getMensaje(),
-                m.getFecha());
     }
 
     @Transactional
@@ -195,16 +140,38 @@ public class MessageService {
         return result;
     }
 
-    private void validateReplyTarget(MessageRequest req, Message target) {
-        if (target.getChatType() != req.chatType()) {
-            throw new IllegalArgumentException("Reply target belongs to a different chat type");
-        }
-        Long reqOrderId = req.orderId();
-        Long reqShopId = req.shopId();
-        Long targetOrderId = target.getOrder() != null ? target.getOrder().getId() : null;
-        Long targetShopId = target.getShop() != null ? target.getShop().getId() : null;
-        if (!Objects.equals(reqOrderId, targetOrderId) || !Objects.equals(reqShopId, targetShopId)) {
-            throw new IllegalArgumentException("Reply target belongs to a different thread");
-        }
+    private String threadKey(Message m) {
+        Long orderId = m.getOrder() != null ? m.getOrder().getId() : null;
+        Long shopId = m.getShop() != null ? m.getShop().getId() : null;
+        return m.getChatType().name() + ":" + orderId + ":" + shopId;
+    }
+
+    private ChatThreadDto toThreadDto(Message m) {
+        Long orderId = m.getOrder() != null ? m.getOrder().getId() : null;
+        Long shopId = m.getShop() != null ? m.getShop().getId() : null;
+        String title = orderId != null ? "Pedido #" + orderId : "Tienda #" + shopId;
+        String preview = m.getMensaje().length() > 80
+                ? m.getMensaje().substring(0, 77) + "..."
+                : m.getMensaje();
+        return new ChatThreadDto(
+                m.getChatType(),
+                orderId,
+                shopId,
+                title,
+                preview,
+                m.getSender().getNombre() + " " + m.getSender().getApellidos(),
+                m.getFecha());
+    }
+
+    private MessageResponse toResponse(Message m) {
+        return new MessageResponse(
+                m.getId(),
+                m.getChatType(),
+                m.getOrder() != null ? m.getOrder().getId() : null,
+                m.getShop() != null ? m.getShop().getId() : null,
+                m.getSender().getId(),
+                m.getSender().getNombre() + " " + m.getSender().getApellidos(),
+                m.getMensaje(),
+                m.getFecha());
     }
 }

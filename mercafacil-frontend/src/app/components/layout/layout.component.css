@@ -93,22 +93,7 @@
   background: var(--bg-input, #ffffff);
   transition: border-color 0.2s;
 }
-.search-ico-wrap {
-  width: 42px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  color: var(--text-muted, #9ca3af);
-  background: var(--bg-alt, #f9fafb);
-  border-right: 1px solid var(--border, #e5e7eb);
-}
 .search-box:focus-within { border-color: #1a7a4a; }
-.search-ico {
-  display: block;
-  pointer-events: none;
-}
 .search-box input {
   flex: 1;
   padding: 9px 12px;
@@ -219,7 +204,6 @@
 
 /* ── Mobile nav ──────────────────────────────────────────────────── */
 .mobile-search { padding-bottom: 10px; margin: 0; }
-.mobile-search .search-ico-wrap { width: 38px; height: 38px; }
 .mobile-search .search-box input { font-size: 0.85rem; padding: 8px 10px; }
 .mobile-search .search-btn { width: 44px; height: 38px; }
 .mobile-nav {
@@ -305,7 +289,6 @@
 :host-context(html.dark) .header { background: var(--header-bg, #161b22); border-color: var(--header-border, rgba(255,255,255,0.08)); }
 :host-context(html.dark) .mobile-nav { background: var(--header-bg, #161b22); }
 :host-context(html.dark) .search-box { background: var(--bg-input, #21262d); }
-:host-context(html.dark) .search-ico-wrap { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.08); }
 :host-context(html.dark) .nav-unread-badge { border-color: var(--header-bg, #161b22); }
 
 /* ── Responsive ──────────────────────────────────────────────────── */

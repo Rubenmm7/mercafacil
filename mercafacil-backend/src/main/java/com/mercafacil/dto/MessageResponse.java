@@ -10,9 +10,6 @@ public record MessageResponse(
     Long shopId,
     Long senderId,
     String senderName,
-    Long replyToMessageId,
-    String replyToSenderName,
-    String replyToMensaje,
     String mensaje,
     LocalDateTime fecha
 ) {}

@@ -10,5 +10,8 @@ public record OrderResponse(
         List<OrderItemResponse> items,
         String createdAt,
         String shippingAddress,
-        String deliveryNotes
+        String deliveryNotes,
+        String deliveredAt,
+        Double deliveryLat,
+        Double deliveryLng
 ) {}

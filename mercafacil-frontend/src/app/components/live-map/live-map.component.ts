@@ -1,13 +1,13 @@
 import { Component, OnInit, computed, input, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
-import { GoogleMap, MapMarker } from '@angular/google-maps';
+import { GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
 import { MapsLoaderService } from '../../services/maps-loader.service';
 import { IconComponent } from '../icon/icon.component';
 
 @Component({
   selector: 'app-live-map',
   standalone: true,
-  imports: [GoogleMap, MapMarker, DecimalPipe, IconComponent],
+  imports: [GoogleMap, MapAdvancedMarker, DecimalPipe, IconComponent],
   templateUrl: './live-map.component.html',
   styleUrl: './live-map.component.css'
 })
@@ -27,7 +27,8 @@ export class LiveMapComponent implements OnInit {
     mapTypeControl: false,
     fullscreenControl: true,
     zoomControl: true,
-    gestureHandling: 'greedy'
+    gestureHandling: 'greedy',
+    mapId: 'DEMO_MAP_ID'
   }));
 
   constructor(private loader: MapsLoaderService) { }

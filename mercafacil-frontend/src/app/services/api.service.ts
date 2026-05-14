@@ -40,7 +40,7 @@ export class ApiService {
     );
   }
 
-  createOrder(items: CartItem[], shippingAddress: string, deliveryNotes?: string): Observable<Order> {
+  createOrder(items: CartItem[], shippingAddress: string, deliveryNotes?: string, deliveryLat?: number, deliveryLng?: number): Observable<Order> {
     const payload = {
       items: items.map(i => ({
         productId: i.productId,
@@ -49,7 +49,9 @@ export class ApiService {
         unitPrice: i.price
       })),
       shippingAddress,
-      deliveryNotes: deliveryNotes ?? null
+      deliveryNotes: deliveryNotes ?? null,
+      deliveryLat: deliveryLat ?? null,
+      deliveryLng: deliveryLng ?? null
     };
     return this.http.post<Order>(`${this.baseUrl}/orders`, payload);
   }
@@ -60,6 +62,10 @@ export class ApiService {
 
   getMyOrderById(orderId: number): Observable<Order> {
     return this.http.get<Order>(`${this.baseUrl}/orders/${orderId}`);
+  }
+
+  cancelOrder(orderId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/orders/${orderId}`);
   }
 
   private handleError<T>(fallback: T) {

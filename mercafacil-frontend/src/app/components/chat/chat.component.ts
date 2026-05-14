@@ -1,8 +1,6 @@
-import {
-  Component, OnInit, OnDestroy,
-  signal, computed, ViewChild, ElementRef
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -22,7 +20,6 @@ import { environment } from '../../../environments/environment';
 })
 export class ChatComponent implements OnInit, OnDestroy {
   @ViewChild('messagesArea') private messagesArea!: ElementRef<HTMLElement>;
-  @ViewChild('messageInput') private messageInput?: ElementRef<HTMLTextAreaElement>;
 
   orderId = signal<number | null>(null);
   shopId = signal<number | null>(null);
@@ -30,29 +27,14 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   messages = signal<MessageResponse[]>([]);
   newMessage = signal('');
-  replyingTo = signal<MessageResponse | null>(null);
   loading = signal(true);
   error = signal('');
 
-  currentUserId = computed(() => {
-    const token = this.authService.getToken();
-    if (!token) return null;
-    try {
-      return JSON.parse(atob(token.split('.')[1])).sub as string;
-    } catch {
-      return null;
-    }
-  });
-
-  isAtBottom = signal(true);
-  autoScrollLock = signal(true);
-  unreadCount = signal(0);
-
   private subscription?: Subscription;
-  private readonly BOTTOM_THRESHOLD = 80;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private http: HttpClient,
     private chatService: ChatService,
     public authService: AuthService,
@@ -71,10 +53,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.chatType.set('PROVEEDOR_VENDEDOR');
     }
 
-    const chatKey = this.buildChatKey();
-    this.notificationService.setActiveChat(chatKey);
     this.markThreadRead();
-
     this.loadHistory();
     this.connectWs();
   }
@@ -82,89 +61,10 @@ export class ChatComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
     this.chatService.disconnect();
-    this.notificationService.clearActiveChat();
   }
 
-  onScroll(): void {
-    const el = this.messagesArea?.nativeElement;
-    if (!el) return;
-    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
-    const atBottom = distanceFromBottom <= this.BOTTOM_THRESHOLD;
-    this.isAtBottom.set(atBottom);
-    if (atBottom) this.unreadCount.set(0);
-  }
-
-  toggleAutoScrollLock(): void {
-    const next = !this.autoScrollLock();
-    this.autoScrollLock.set(next);
-    if (next) {
-      this.unreadCount.set(0);
-      this.scheduleScrollToBottom();
-    }
-  }
-
-  jumpToBottom(): void {
-    this.unreadCount.set(0);
-    this.isAtBottom.set(true);
-    this.scheduleScrollToBottom();
-  }
-
-  private loadHistory(): void {
-    const orderId = this.orderId();
-    const shopId = this.shopId();
-    let url: string;
-
-    if (orderId != null) {
-      url = `${environment.apiUrl}/messages/order/${orderId}?type=${this.chatType()}`;
-    } else if (shopId != null) {
-      url = `${environment.apiUrl}/messages/shop/${shopId}?type=PROVEEDOR_VENDEDOR`;
-    } else {
-      this.loading.set(false);
-      return;
-    }
-
-    this.http.get<MessageResponse[]>(url).subscribe({
-      next: msgs => {
-        this.messages.set(msgs);
-        this.loading.set(false);
-        this.scheduleScrollToBottom();
-      },
-      error: () => {
-        this.error.set('No se pudo cargar el historial');
-        this.loading.set(false);
-      }
-    });
-  }
-
-  private connectWs(): void {
-    const token = this.authService.getToken();
-    if (!token) return;
-
-    this.chatService.connect(token).then(() => {
-      const orderId = this.orderId();
-      const shopId = this.shopId();
-
-      let obs$;
-      if (orderId != null) {
-        obs$ = this.chatService.subscribeToOrder(orderId, this.chatType());
-      } else if (shopId != null) {
-        obs$ = this.chatService.subscribeToShop(shopId);
-      } else {
-        return;
-      }
-
-      this.subscription = obs$.subscribe(msg => {
-        const own = this.isOwnMessage(msg);
-        this.messages.update(list => [...list, msg]);
-        if (own || this.autoScrollLock() || this.isAtBottom()) {
-          this.scheduleScrollToBottom();
-        } else {
-          this.unreadCount.update(n => n + 1);
-        }
-      });
-    }).catch(() => {
-      this.error.set('No se pudo conectar al chat');
-    });
+  goBack(): void {
+    this.router.navigate(['/chats']);
   }
 
   send(): void {
@@ -176,26 +76,21 @@ export class ChatComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const orderId = this.orderId();
-    const shopId = this.shopId();
-
     const req: MessageRequest = {
       chatType: this.chatType(),
-      orderId: orderId ?? undefined,
-      shopId: shopId ?? undefined,
-      replyToMessageId: this.replyingTo()?.id,
+      orderId: this.orderId() ?? undefined,
+      shopId: this.shopId() ?? undefined,
       mensaje: text
     };
 
-    if (orderId != null) {
-      this.chatService.sendToOrder(orderId, req);
-    } else if (shopId != null) {
-      this.chatService.sendToShop(shopId, req);
+    if (this.orderId() != null) {
+      this.chatService.sendToOrder(this.orderId()!, req);
+    } else if (this.shopId() != null) {
+      this.chatService.sendToShop(this.shopId()!, req);
     }
 
     this.newMessage.set('');
-    this.replyingTo.set(null);
-    this.scheduleScrollToBottom();
+    this.scrollToBottom();
   }
 
   onKeyDown(event: KeyboardEvent): void {
@@ -205,29 +100,13 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  setReplyTarget(msg: MessageResponse): void {
-    this.replyingTo.set(msg);
-    this.focusMessageInput();
-  }
-
-  clearReplyTarget(): void {
-    this.replyingTo.set(null);
-  }
-
-  replyPreview(text?: string): string {
-    if (!text) return '';
-    return text.length > 80 ? `${text.slice(0, 80)}...` : text;
-  }
-
   isOwnMessage(msg: MessageResponse): boolean {
     return msg.senderId === this.authService.user()?.id;
   }
 
   chatTitle(): string {
-    const orderId = this.orderId();
-    const shopId = this.shopId();
-    if (orderId != null) return `Pedido #${orderId}`;
-    if (shopId != null) return `Tienda #${shopId}`;
+    if (this.orderId() != null) return `Pedido #${this.orderId()}`;
+    if (this.shopId() != null) return `Tienda #${this.shopId()}`;
     return 'Chat';
   }
 
@@ -249,45 +128,73 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
   }
 
-  private buildChatKey(): string {
+  private loadHistory(): void {
     const orderId = this.orderId();
     const shopId = this.shopId();
-    return orderId != null
-      ? `order-${orderId}-${this.chatType()}`
-      : `shop-${shopId}-${this.chatType()}`;
+    const url = orderId != null
+      ? `${environment.apiUrl}/messages/order/${orderId}?type=${this.chatType()}`
+      : shopId != null
+        ? `${environment.apiUrl}/messages/shop/${shopId}?type=PROVEEDOR_VENDEDOR`
+        : null;
+
+    if (!url) {
+      this.loading.set(false);
+      return;
+    }
+
+    this.http.get<MessageResponse[]>(url).subscribe({
+      next: msgs => {
+        this.messages.set(msgs);
+        this.loading.set(false);
+        this.scrollToBottom();
+      },
+      error: () => {
+        this.error.set('No se pudo cargar el historial');
+        this.loading.set(false);
+      }
+    });
+  }
+
+  private connectWs(): void {
+    const token = this.authService.getToken();
+    if (!token) return;
+
+    this.chatService.connect(token).then(() => {
+      const orderId = this.orderId();
+      const shopId = this.shopId();
+      if (orderId == null && shopId == null) return;
+
+      const stream$ = orderId != null
+        ? this.chatService.subscribeToOrder(orderId, this.chatType())
+        : this.chatService.subscribeToShop(shopId!);
+
+      this.subscription = stream$.subscribe(msg => {
+        this.messages.update(list => [...list, msg]);
+        this.scrollToBottom();
+      });
+    }).catch(() => {
+      this.error.set('No se pudo conectar al chat');
+    });
   }
 
   private markThreadRead(): void {
-    const orderId = this.orderId();
-    const shopId = this.shopId();
     const req: MarkReadRequest = {
       chatType: this.chatType(),
-      orderId: orderId ?? undefined,
-      shopId: shopId ?? undefined,
+      orderId: this.orderId() ?? undefined,
+      shopId: this.shopId() ?? undefined,
     };
-    this.http.post(`${environment.apiUrl}/messages/read`, req).subscribe();
-  }
-
-  private scheduleScrollToBottom(): void {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => this.scrollToBottom());
+    this.http.post(`${environment.apiUrl}/messages/read`, req).subscribe({
+      next: () => this.notificationService.reloadUnreadCounts(),
+      error: () => { }
     });
   }
 
   private scrollToBottom(): void {
-    const el = this.messagesArea?.nativeElement;
-    if (!el) return;
-    el.scrollTop = el.scrollHeight;
-    this.isAtBottom.set(true);
-  }
-
-  private focusMessageInput(): void {
     requestAnimationFrame(() => {
-      const el = this.messageInput?.nativeElement;
+      const el = this.messagesArea?.nativeElement;
       if (!el) return;
-      el.focus();
-      const len = el.value.length;
-      el.setSelectionRange(len, len);
+      el.scrollTop = el.scrollHeight;
     });
   }
+
 }

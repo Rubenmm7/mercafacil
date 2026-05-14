@@ -37,6 +37,28 @@
   align-items: center;
   gap: 0.65rem;
   margin-bottom: 1.1rem;
+  flex-wrap: wrap;
+}
+
+.btn-autofill {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #7c3aed;
+  background: #ede9fe;
+  border: 1px solid #c4b5fd;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-autofill:hover {
+  background: #ddd6fe;
+  color: #5b21b6;
 }
 
 .section-header h2 {
@@ -444,3 +466,148 @@ input.error-input, textarea.error-input {
 :host-context(html.dark) .brand {
   box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset;
 }
+
+/* -------- Address autocomplete ------------ */
+.address-search-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 1rem;
+}
+
+.address-search-wrapper label {
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.address-search-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  color: var(--text-muted);
+  pointer-events: none;
+  display: flex;
+}
+
+.address-search-input {
+  width: 100%;
+  padding: 0.65rem 2.2rem 0.65rem 2.2rem;
+  border: 1.5px solid #2563eb;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  background: var(--bg);
+  color: var(--text);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.address-search-input:focus {
+  outline: none;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+}
+
+.search-clear {
+  position: absolute;
+  right: 0.6rem;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0.2rem;
+  border-radius: 4px;
+}
+.search-clear:hover { color: var(--text); }
+
+.predictions-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 600;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.13);
+  list-style: none;
+  padding: 0.25rem 0;
+  margin: 0;
+  max-height: 230px;
+  overflow-y: auto;
+}
+
+.prediction-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.86rem;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.1s;
+  line-height: 1.4;
+}
+.prediction-item:hover { background: var(--border-2); }
+
+.prediction-item app-icon { flex-shrink: 0; margin-top: 2px; color: #2563eb; }
+
+.search-hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.address-confirmed {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  color: #16a34a;
+  margin-top: 6px;
+}
+.address-confirmed span {
+  flex: 1;
+}
+.btn-change-address {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-size: 0.78rem;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+:host-context(html.dark) .address-confirmed {
+  background: rgba(34, 197, 94, 0.08);
+  border-color: rgba(34, 197, 94, 0.25);
+  color: #4ade80;
+}
+:host-context(html.dark) .btn-change-address { color: #60a5fa; }
+
+:host-context(html.dark) .address-search-input {
+  background: #0f1620;
+  border-color: #3b82f6;
+  color: #e6edf3;
+}
+:host-context(html.dark) .address-search-input:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96,165,250,0.12);
+}
+:host-context(html.dark) .predictions-dropdown {
+  background: #161b22;
+  border-color: #30363d;
+}
+:host-context(html.dark) .prediction-item:hover { background: #1f2937; }
+:host-context(html.dark) .prediction-item app-icon { color: #60a5fa; }

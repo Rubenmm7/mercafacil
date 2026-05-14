@@ -63,7 +63,8 @@ public class RepartidorService {
 
     @Transactional(readOnly = true)
     public List<OrderResponse> getAvailableOrders() {
-        return orderRepository.findByDelivererIsNullAndStatusOrderByIdDesc(OrderStatus.PREPARACION)
+        return orderRepository.findByDelivererIsNullAndStatusInOrderByIdDesc(
+                Set.of(OrderStatus.PENDIENTE, OrderStatus.PREPARACION))
                 .stream().map(this::toOrderResponse).toList();
     }
 
@@ -74,8 +75,8 @@ public class RepartidorService {
 
         if (order.getDeliverer() != null)
             throw new IllegalStateException("Este pedido ya tiene repartidor asignado");
-        if (order.getStatus() != OrderStatus.PREPARACION)
-            throw new IllegalStateException("Solo se pueden aceptar pedidos en PREPARACION");
+        if (order.getStatus() != OrderStatus.PENDIENTE && order.getStatus() != OrderStatus.PREPARACION)
+            throw new IllegalStateException("Solo se pueden aceptar pedidos en estado PENDIENTE o PREPARACION");
 
         order.setDeliverer(repartidor);
         return toOrderResponse(orderRepository.save(order));
@@ -95,6 +96,9 @@ public class RepartidorService {
             throw new IllegalArgumentException("Transición no permitida para repartidor: " + newStatus);
 
         order.setStatus(status);
+        if (status == OrderStatus.ENTREGADO) {
+            order.setDeliveredAt(LocalDateTime.now());
+        }
         return toOrderResponse(orderRepository.save(order));
     }
 
@@ -108,11 +112,14 @@ public class RepartidorService {
 
     private OrderResponse toOrderResponse(Order o) {
         var items = o.getItems().stream()
-                .map(i -> new OrderItemResponse(i.getProductId(), i.getStoreId(), i.getQuantity(), i.getUnitPrice()))
+                .map(i -> new OrderItemResponse(i.getProductId(), i.getStoreId(),
+                        i.getQuantity() != null ? i.getQuantity() : 0,
+                        i.getUnitPrice(), i.getProductName(), i.getProductImage()))
                 .toList();
         String clientEmail = o.getClient() != null ? o.getClient().getEmail() : null;
         String createdAt = o.getCreatedAt() != null ? o.getCreatedAt().toString() : null;
+        String deliveredAt = o.getDeliveredAt() != null ? o.getDeliveredAt().toString() : null;
         return new OrderResponse(o.getId(), clientEmail, o.getStatus().name(), o.getTotal(), items, createdAt,
-                o.getShippingAddress(), o.getDeliveryNotes());
+                o.getShippingAddress(), o.getDeliveryNotes(), deliveredAt, o.getDeliveryLat(), o.getDeliveryLng());
     }
 }

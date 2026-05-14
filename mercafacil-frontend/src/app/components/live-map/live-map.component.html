@@ -1,6 +1,6 @@
 @if (mapsReady()) {
 <google-map height="100%" width="100%" [center]="center()" [zoom]="zoom()" [options]="options()">
-  <map-marker [position]="center()" [title]="label()" />
+  <map-advanced-marker [position]="center()" [title]="label()" />
 </google-map>
 } @else if (mapsError()) {
 <div class="map-fallback">

@@ -7,6 +7,7 @@ import { AuthService } from '../../services/auth.service';
 import { TrackingService } from '../../services/tracking.service';
 import { Order, OrderStatus, TrackingPosition } from '../../models/models';
 import { LiveMapComponent } from '../live-map/live-map.component';
+import { IconComponent } from '../icon/icon.component';
 
 interface TimelineStep {
   key: OrderStatus;
@@ -17,7 +18,7 @@ interface TimelineStep {
 @Component({
   selector: 'app-order-detail',
   standalone: true,
-  imports: [CommonModule, DecimalPipe, LiveMapComponent],
+  imports: [CommonModule, DecimalPipe, LiveMapComponent, IconComponent],
   templateUrl: './order-detail.component.html',
   styleUrl: './order-detail.component.css'
 })
@@ -68,7 +69,9 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
       next: order => {
         this.order.set(order);
         this.loading.set(false);
-        this.connectTracking(order.id);
+        if (order.status !== 'ENTREGADO') {
+          this.connectTracking(order.id);
+        }
       },
       error: () => {
         this.error.set('No pudimos cargar el pedido o no tienes permiso para verlo.');
@@ -106,7 +109,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
       PENDIENTE: 'Pendiente',
       PREPARACION: 'En preparación',
       EN_RUTA: 'En ruta',
-      ENTREGADO: 'Entregado'
+      ENTREGADO: 'Entregado',
+      CANCELADO: 'Cancelado'
     };
     return map[status] ?? status;
   }
@@ -114,6 +118,20 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   formatDate(value?: string): string {
     if (!value) return '—';
     return new Date(value).toLocaleString('es-ES', {
+      day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+  }
+
+  isUrl(value: string): boolean {
+    return value.startsWith('http') || value.startsWith('/') || value.startsWith('data:');
+  }
+
+  estimatedDelivery(): string {
+    const createdAt = this.order()?.createdAt;
+    if (!createdAt) return '—';
+    const est = new Date(createdAt);
+    est.setHours(est.getHours() + 2);
+    return est.toLocaleString('es-ES', {
       day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
     });
   }

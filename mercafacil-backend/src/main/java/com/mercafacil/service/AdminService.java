@@ -9,10 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mercafacil.dto.AdminStatsDto;
+import com.mercafacil.dto.AssignVendedorRequest;
 import com.mercafacil.dto.CreateUserRequest;
+import com.mercafacil.dto.StoreAdminDto;
 import com.mercafacil.dto.UpdateUserRequest;
 import com.mercafacil.dto.UserDto;
 import com.mercafacil.model.Role;
+import com.mercafacil.model.Store;
 import com.mercafacil.model.User;
 import com.mercafacil.repository.OrderRepository;
 import com.mercafacil.repository.StoreRepository;
@@ -35,6 +38,36 @@ public class AdminService {
         this.storeRepository = storeRepository;
         this.orderRepository = orderRepository;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    public List<StoreAdminDto> getStores() {
+        return storeRepository.findAll().stream()
+                .map(this::toStoreAdminDto)
+                .toList();
+    }
+
+    @Transactional
+    public StoreAdminDto assignVendedor(Long storeId, AssignVendedorRequest req) {
+        Long safeStoreId = requireId(storeId, "storeId");
+        Store store = storeRepository.findById(safeStoreId)
+                .orElseThrow(() -> new IllegalArgumentException("Tienda no encontrada: " + storeId));
+
+        if (req.vendedorId() == null) {
+            store.setVendedor(null);
+        } else {
+            Long vendedorId = Objects.requireNonNull(req.vendedorId(), "vendedorId");
+            User vendedor = userRepository.findById(vendedorId)
+                    .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado: " + vendedorId));
+            if (vendedor.getRol() != Role.VENDEDOR) {
+                throw new IllegalArgumentException("El usuario no tiene rol VENDEDOR");
+            }
+            storeRepository.findByVendedor_Id(vendedorId).forEach(s -> {
+                s.setVendedor(null);
+                storeRepository.save(s);
+            });
+            store.setVendedor(vendedor);
+        }
+        return toStoreAdminDto(storeRepository.save(store));
     }
 
     public AdminStatsDto getStats() {
@@ -104,6 +137,14 @@ public class AdminService {
 
     private UserDto toDto(User u) {
         return new UserDto(u.getId(), u.getNombre(), u.getApellidos(), u.getEmail(), u.getRol());
+    }
+
+    private StoreAdminDto toStoreAdminDto(Store s) {
+        Long vendedorId = s.getVendedor() != null ? s.getVendedor().getId() : null;
+        String vendedorNombre = s.getVendedor() != null
+                ? s.getVendedor().getNombre() + " " + s.getVendedor().getApellidos()
+                : null;
+        return new StoreAdminDto(s.getId(), s.getName(), s.getAddress(), s.getCity(), vendedorId, vendedorNombre);
     }
 
     private long countByRole(List<User> users, Role role) {

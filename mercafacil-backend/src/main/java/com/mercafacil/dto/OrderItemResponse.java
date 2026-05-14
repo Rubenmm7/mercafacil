@@ -4,5 +4,7 @@ public record OrderItemResponse(
         Long productId,
         Long storeId,
         int quantity,
-        Double unitPrice
+        Double unitPrice,
+        String productName,
+        String productImage
 ) {}

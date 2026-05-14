@@ -2,6 +2,12 @@
 
   <!-- Header -->
   <div class="chat-header">
+    <button type="button" class="back-btn" (click)="goBack()" aria-label="Volver a la lista de chats">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6" />
+      </svg>
+    </button>
     <div class="chat-header-info">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -15,7 +21,7 @@
 
   <!-- Messages area -->
   <div class="messages-wrapper">
-    <div class="messages-area" #messagesArea (scroll)="onScroll()">
+    <div class="messages-area" #messagesArea>
 
       @if (loading()) {
       <div class="state-center">
@@ -45,54 +51,18 @@
           @if (!isOwnMessage(msg)) {
           <span class="sender-name">{{ msg.senderName }}</span>
           }
-          @if (msg.replyToMessageId) {
-          <div class="reply-ref">
-            <span>{{ msg.replyToSenderName }}</span>
-            <p>{{ replyPreview(msg.replyToMensaje) }}</p>
-          </div>
-          }
           <p class="bubble-text">{{ msg.mensaje }}</p>
           <span class="bubble-time">{{ formatTime(msg.fecha) }}</span>
-          <button type="button" class="reply-btn" (click)="setReplyTarget(msg)">Responder</button>
         </div>
       </div>
       }
       }
 
     </div>
-
-    @if (!isAtBottom() && !loading() && !error()) {
-    <button type="button" class="jump-bottom-btn" (click)="jumpToBottom()" title="Ir al último mensaje">
-      @if (unreadCount() > 0) {
-      <span class="jump-badge">{{ unreadCount() }}</span>
-      }
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-        stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="6 9 12 15 18 9" />
-      </svg>
-    </button>
-    }
   </div>
-
-  <!-- Input area -->
-  @if (replyingTo(); as ref) {
-  <div class="replying-strip">
-    <div>
-      <span>Respondiendo a {{ ref.senderName }}</span>
-      <p>{{ replyPreview(ref.mensaje) }}</p>
-    </div>
-    <button type="button" class="reply-cancel" (click)="clearReplyTarget()" aria-label="Cancelar respuesta">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-        stroke-linecap="round" stroke-linejoin="round">
-        <path d="M18 6 6 18" />
-        <path d="m6 6 12 12" />
-      </svg>
-    </button>
-  </div>
-  }
 
   <div class="input-area">
-    <textarea #messageInput class="message-input" placeholder="Escribe un mensaje..." [value]="newMessage()"
+    <textarea class="message-input" placeholder="Escribe un mensaje..." [value]="newMessage()"
       (input)="newMessage.set($any($event.target).value)" (keydown)="onKeyDown($event)" rows="1">
     </textarea>
     <button class="send-btn" (click)="send()" [disabled]="!newMessage().trim()">

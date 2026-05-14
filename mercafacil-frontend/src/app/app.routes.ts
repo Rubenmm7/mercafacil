@@ -24,6 +24,7 @@ import { TiendasProveedorComponent } from './components/proveedor/tiendas/tienda
 import { AdminComponent } from './components/admin/admin.component';
 import { ResumenAdminComponent } from './components/admin/resumen/resumen.component';
 import { UsuariosAdminComponent } from './components/admin/usuarios/usuarios.component';
+import { TiendasAdminComponent } from './components/admin/tiendas/tiendas.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { InfoPageComponent } from './components/info-page/info-page.component';
 import { authGuard } from './guards/auth.guard';
@@ -95,7 +96,8 @@ export const routes: Routes = [
     children: [
       { path: '',         redirectTo: 'resumen', pathMatch: 'full' },
       { path: 'resumen',  component: ResumenAdminComponent },
-      { path: 'usuarios', component: UsuariosAdminComponent }
+      { path: 'usuarios', component: UsuariosAdminComponent },
+      { path: 'tiendas',  component: TiendasAdminComponent }
     ]
   },
 

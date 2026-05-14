@@ -66,8 +66,13 @@ export class ProductosComponent implements OnInit {
     if (this.form.invalid) return;
     this.saving.set(true);
     const { name, category, description, unit, image, storeId } = this.form.value;
-    const data = { name: name!, category: category!, description: description ?? '', unit: unit!, image: image ?? '' };
     const current = this.editing();
+    if (!current && !storeId) {
+      this.error.set('Selecciona una tienda');
+      this.saving.set(false);
+      return;
+    }
+    const data = { name: name!, category: category!, description: description ?? '', unit: unit!, image: image ?? '' };
 
     const req = current
       ? this.vendedorService.updateProduct(current.id, data)

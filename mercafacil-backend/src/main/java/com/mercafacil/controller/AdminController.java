@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mercafacil.dto.AdminStatsDto;
+import com.mercafacil.dto.AssignVendedorRequest;
 import com.mercafacil.dto.CreateUserRequest;
+import com.mercafacil.dto.StoreAdminDto;
 import com.mercafacil.dto.UpdateUserRequest;
 import com.mercafacil.dto.UserDto;
 import com.mercafacil.model.Role;
@@ -70,5 +72,16 @@ public class AdminController {
         }
         adminService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/stores")
+    public ResponseEntity<List<StoreAdminDto>> getStores() {
+        return ResponseEntity.ok(adminService.getStores());
+    }
+
+    @PutMapping("/stores/{storeId}/vendedor")
+    public ResponseEntity<StoreAdminDto> assignVendedor(@PathVariable Long storeId,
+            @RequestBody AssignVendedorRequest req) {
+        return ResponseEntity.ok(adminService.assignVendedor(storeId, req));
     }
 }

@@ -1,0 +1,47 @@
+<h1 class="page-title">Gestión de Tiendas</h1>
+
+@if (error()) {
+  <div class="error-msg">{{ error() }}</div>
+}
+
+@if (loading()) {
+  <p class="loading">Cargando tiendas...</p>
+} @else {
+  <p class="subtitle">Asigna un vendedor responsable a cada tienda. El vendedor podrá gestionar sus productos, ofertas y pedidos desde su panel.</p>
+
+  <div class="stores-list">
+    @for (store of stores(); track store.id) {
+      <div class="store-card">
+        <div class="store-info">
+          <div class="store-name">{{ store.name }}</div>
+          <div class="store-address">{{ store.address }}, {{ store.city }}</div>
+        </div>
+
+        <div class="assign-section">
+          <label class="assign-label" [for]="'sel-' + store.id">Vendedor asignado</label>
+          <div class="select-wrapper">
+            <select
+              [id]="'sel-' + store.id"
+              class="vendor-select"
+              [disabled]="saving() === store.id"
+              (change)="onVendedorChange(store, $event)">
+              <option value="">Sin asignar</option>
+              @for (v of vendedores(); track v.id) {
+                <option [value]="v.id" [selected]="v.id === store.vendedorId">
+                  {{ v.nombre }} {{ v.apellidos }}
+                </option>
+              }
+            </select>
+            @if (saving() === store.id) {
+              <span class="saving-indicator">Guardando...</span>
+            } @else if (store.vendedorId) {
+              <span class="badge-assigned">Asignado</span>
+            } @else {
+              <span class="badge-unassigned">Sin asignar</span>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}

@@ -22,7 +22,8 @@ export class PedidosComponent implements OnInit {
     PENDIENTE: 'Pendiente',
     PREPARACION: 'En preparación',
     EN_RUTA: 'En ruta',
-    ENTREGADO: 'Entregado'
+    ENTREGADO: 'Entregado',
+    CANCELADO: 'Cancelado'
   };
 
   readonly nextStatus: Partial<Record<OrderStatus, OrderStatus>> = {

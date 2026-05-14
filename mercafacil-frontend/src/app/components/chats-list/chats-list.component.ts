@@ -1,9 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ChatThread, ChatType } from '../../models/models';
 import { environment } from '../../../environments/environment';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-chats-list',
@@ -16,6 +17,8 @@ export class ChatsListComponent implements OnInit {
   threads = signal<ChatThread[]>([]);
   loading = signal(true);
   error = signal('');
+
+  readonly notificationService = inject(NotificationService);
 
   private readonly chatTypeLabels: Record<ChatType, string> = {
     CLIENTE_REPARTIDOR: 'Cliente · Repartidor',
@@ -49,6 +52,16 @@ export class ChatsListComponent implements OnInit {
       hour: '2-digit', minute: '2-digit',
       timeZone: 'Europe/Madrid'
     });
+  }
+
+  chatKey(t: ChatThread): string {
+    return t.orderId != null
+      ? `order-${t.orderId}-${t.chatType}`
+      : `shop-${t.shopId}-${t.chatType}`;
+  }
+
+  unreadFor(t: ChatThread): number {
+    return this.notificationService.unreadCounts().get(this.chatKey(t)) ?? 0;
   }
 
   open(thread: ChatThread): void {

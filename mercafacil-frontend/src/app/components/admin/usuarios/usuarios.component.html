@@ -92,13 +92,80 @@
         </div>
         <div class="form-field">
           <label>Rol <span class="required">*</span></label>
-          <select formControlName="rol" [class.input-error]="fieldError('rol')">
+          <select formControlName="rol" [class.input-error]="fieldError('rol')" (change)="onRolChange($event)">
             @for (r of roles; track r) {
             <option [value]="r">{{ rolLabel(r) }}</option>
             }
           </select>
         </div>
       </div>
+
+      @if (modalRol() === 'VENDEDOR') {
+      <div class="form-divider"><span>Tienda asignada</span></div>
+
+      @if (modalMode() === 'create') {
+        <p class="stores-hint">Crea primero el usuario y luego edítalo para asignarle una tienda.</p>
+      } @else {
+        <div class="store-summary-row">
+          @if (currentVendorStore()) {
+            <div class="store-current-badge">
+              <span class="store-current-check">✓</span>
+              <span class="store-current-name">{{ currentVendorStore()!.name }}</span>
+              <span class="store-current-city">{{ currentVendorStore()!.city }}</span>
+            </div>
+          } @else {
+            <span class="store-none">Sin tienda asignada</span>
+          }
+          <button type="button" class="btn-assign-store" (click)="openStoreModal()">
+            {{ currentVendorStore() ? 'Cambiar tienda' : 'Asignar tienda' }}
+          </button>
+        </div>
+      }
+      }
+
+      @if (showStoreModal()) {
+      <div class="store-picker-overlay" (click)="closeStoreModal()">
+        <div class="store-picker-card" (click)="$event.stopPropagation()">
+          <div class="store-picker-header">
+            <h3 class="store-picker-title">Seleccionar tienda</h3>
+            <button type="button" class="modal-close" (click)="closeStoreModal()"><app-icon name="x" [size]="16" /></button>
+          </div>
+          <div class="store-picker-search">
+            <input type="text" placeholder="Buscar por nombre o ciudad…"
+              [value]="storeSearch()"
+              (input)="storeSearch.set($any($event.target).value)" />
+          </div>
+          <div class="store-picker-list">
+            @if (storesLoading()) {
+              <p class="stores-hint">Cargando tiendas…</p>
+            } @else if (filteredStores().length === 0) {
+              <p class="stores-hint">No hay resultados.</p>
+            } @else {
+              @for (store of filteredStores(); track store.id) {
+                <button type="button"
+                  class="store-assign-row"
+                  [class.state-mine]="storeState(store) === 'mine'"
+                  [class.state-other]="storeState(store) === 'other'"
+                  [disabled]="savingStore() !== null"
+                  (click)="selectStore(store)">
+                  <span class="store-assign-icon">
+                    @if (savingStore() === store.id) { ⋯ }
+                    @else if (storeState(store) === 'mine') { ✓ }
+                    @else { + }
+                  </span>
+                  <span class="store-assign-name">{{ store.name }}</span>
+                  <span class="store-assign-meta">
+                    @if (storeState(store) === 'mine') { Asignado }
+                    @else if (storeState(store) === 'other') { {{ store.vendedorNombre }} }
+                    @else { Sin asignar }
+                  </span>
+                </button>
+              }
+            }
+          </div>
+        </div>
+      </div>
+      }
 
       <div class="form-divider">
         <span>{{ modalMode() === 'create' ? 'Contraseña' : 'Cambiar contraseña (opcional)' }}</span>

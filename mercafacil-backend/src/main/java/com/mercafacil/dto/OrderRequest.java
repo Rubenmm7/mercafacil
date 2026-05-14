@@ -7,5 +7,7 @@ import java.util.List;
 public record OrderRequest(
         @NotEmpty List<OrderItemRequest> items,
         @NotBlank String shippingAddress,
-        String deliveryNotes
+        String deliveryNotes,
+        Double deliveryLat,
+        Double deliveryLng
 ) {}

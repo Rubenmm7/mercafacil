@@ -1,0 +1,66 @@
+.page-title { font-size: 1.5rem; font-weight: 700; color: var(--text); margin: 0 0 0.5rem; }
+.subtitle    { font-size: 0.88rem; color: var(--text-muted); margin: 0 0 1.5rem; }
+.loading     { color: var(--text-muted); padding: 2rem; text-align: center; }
+.error-msg   { background: #fee2e2; color: #dc2626; padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem; }
+
+:host-context(html.dark) .error-msg {
+  background: rgba(220, 38, 38, 0.12);
+  color: #f87171;
+}
+
+.stores-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.store-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.store-info  { flex: 1; min-width: 180px; }
+.store-name  { font-weight: 700; color: var(--text); font-size: 0.95rem; }
+.store-address { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.15rem; }
+
+.assign-section { display: flex; flex-direction: column; gap: 0.3rem; min-width: 260px; }
+.assign-label   { font-size: 0.78rem; font-weight: 600; color: var(--text-2); }
+
+.select-wrapper { display: flex; align-items: center; gap: 0.65rem; }
+
+.vendor-select {
+  flex: 1;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  font-size: 0.88rem;
+  color: var(--text);
+  background: var(--bg-input);
+  cursor: pointer;
+}
+.vendor-select:focus   { outline: none; border-color: #2563eb; }
+.vendor-select:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.badge-assigned {
+  font-size: 0.75rem; font-weight: 600;
+  padding: 0.2rem 0.6rem; border-radius: 999px;
+  background: #dcfce7; color: #15803d;
+  white-space: nowrap;
+}
+.badge-unassigned {
+  font-size: 0.75rem; font-weight: 600;
+  padding: 0.2rem 0.6rem; border-radius: 999px;
+  background: var(--border-2); color: var(--text-muted);
+  white-space: nowrap;
+}
+.saving-indicator {
+  font-size: 0.75rem; color: var(--text-muted);
+  white-space: nowrap;
+}
+
+:host-context(html.dark) .badge-assigned {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}

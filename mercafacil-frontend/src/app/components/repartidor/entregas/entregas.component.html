@@ -50,9 +50,15 @@
         @if (updating() === order.id) { Actualizando... } @else { {{ nextStatusLabel[order.status] }} }
       </button>
       }
+      @if (order.status === 'EN_RUTA' || order.status === 'ENTREGADO') {
+      <button class="btn-chat" (click)="openClienteChat(order.id)" title="Chat con cliente">
+        <app-icon name="message-circle" [size]="14" /> Enviar mensaje a cliente
+      </button>
+      } @else {
       <button class="btn-chat" (click)="openVendedorChat(order.id)" title="Chat con vendedor">
         <app-icon name="message-circle" [size]="14" /> Enviar mensaje a vendedor
       </button>
+      }
       @if (simulatingOrderId() === order.id) {
       <span class="gps-active" title="Enviando ubicación GPS en tiempo real">
         <app-icon name="radio" [size]="14" /> GPS activo
@@ -82,6 +88,12 @@
     </div>
     }
 
+    @if (order.shippingAddress && ((activeTab() === 'mis' && order.status === 'PREPARACION') || activeTab() === 'disponibles')) {
+    <button class="btn-see-route" (click)="openRouteModal(order.id)">
+      <app-icon name="map" [size]="14" /> Ver ruta de entrega
+    </button>
+    }
+
     @if (simulatingOrderId() === order.id && simPosition(); as pos) {
     <div class="repartidor-map-wrapper">
       <app-live-map [lat]="pos.lat" [lng]="pos.lng" [label]="'Mi posición — Pedido #' + order.id" />
@@ -90,5 +102,62 @@
 
   </div>
   }
+</div>
+}
+
+@if (openRouteOrder(); as order) {
+<div class="route-modal-overlay" (click)="closeRouteModal()">
+  <div class="route-modal" (click)="$event.stopPropagation()">
+
+    <div class="route-modal-header">
+      <span><app-icon name="map" [size]="16" /> Ruta — Pedido #{{ order.id }}</span>
+      <button class="route-modal-close" (click)="closeRouteModal()">
+        <app-icon name="x" [size]="18" />
+      </button>
+    </div>
+
+    <div class="route-modal-body">
+      <div class="route-steps">
+        <div class="route-step">
+          <div class="route-point">
+            <span class="route-dot origin-dot"></span>
+            <span class="route-connector"></span>
+          </div>
+          <div class="route-info">
+            <span class="route-step-label">Salida</span>
+            <span class="route-step-addr">Jaén Plaza · Paraje de las Lagunillas, 23009 Jaén</span>
+          </div>
+        </div>
+        <div class="route-step">
+          <div class="route-point">
+            <span class="route-dot dest-dot"></span>
+          </div>
+          <div class="route-info">
+            <span class="route-step-label">Destino</span>
+            <span class="route-step-addr">{{ order.shippingAddress }}</span>
+            @if (order.deliveryNotes) {
+            <span class="route-notes"><app-icon name="message-circle" [size]="12" /> {{ order.deliveryNotes }}</span>
+            }
+          </div>
+        </div>
+      </div>
+
+      @if (geocodedDestinations()[order.id]; as dest) {
+      <div class="route-map-wrapper">
+        <app-live-map [lat]="dest.lat" [lng]="dest.lng" [zoom]="13" [label]="'Destino pedido #' + order.id" />
+      </div>
+      } @else {
+      <div class="route-map-loading">
+        <div class="map-spinner-sm"></div>
+        @if (mapsLoaded()) { Geocodificando dirección… } @else { Google Maps no disponible }
+      </div>
+      }
+
+      <a [href]="routeUrl(order)" target="_blank" rel="noopener" class="btn-route">
+        <app-icon name="map-pin" [size]="14" /> Ver ruta completa en Google Maps
+      </a>
+    </div>
+
+  </div>
 </div>
 }

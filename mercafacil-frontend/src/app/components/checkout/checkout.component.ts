@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, computed, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   FormBuilder, FormGroup, Validators,
@@ -7,7 +7,10 @@ import {
 import { DecimalPipe } from '@angular/common';
 import { CartService } from '../../services/cart.service';
 import { ApiService } from '../../services/api.service';
+import { MapsLoaderService } from '../../services/maps-loader.service';
 import { IconComponent } from '../icon/icon.component';
+
+type Prediction = { description: string; placeId: string };
 
 function luhnCheck(control: AbstractControl): ValidationErrors | null {
   const val: string = (control.value ?? '').replace(/\s/g, '');
@@ -39,7 +42,7 @@ function expiryNotPast(control: AbstractControl): ValidationErrors | null {
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
 })
-export class CheckoutComponent {
+export class CheckoutComponent implements OnInit, OnDestroy {
   readonly cartItems = computed(() => this.cartService.items());
   readonly subtotal = computed(() =>
     this.cartItems().reduce((sum, i) => sum + i.price * i.quantity, 0)
@@ -49,13 +52,24 @@ export class CheckoutComponent {
   readonly submitting = signal(false);
   readonly submitError = signal<string | null>(null);
 
+  readonly mapsReady = signal(false);
+  readonly predictions = signal<Prediction[]>([]);
+  readonly searchQuery = signal('');
+  readonly showDropdown = signal(false);
+  readonly confirmedAddress = signal<string | null>(null);
+  readonly selectedLat = signal<number | null>(null);
+  readonly selectedLng = signal<number | null>(null);
+
+  private searchTimeout: ReturnType<typeof setTimeout> | null = null;
+
   readonly form: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private cartService: CartService,
     private api: ApiService,
-    private router: Router
+    private router: Router,
+    private mapsLoader: MapsLoaderService
   ) {
     this.form = this.fb.group({
       calle: ['', [Validators.required, Validators.minLength(3)]],
@@ -70,6 +84,80 @@ export class CheckoutComponent {
       expiry: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/), expiryNotPast]],
       cvv: ['', [Validators.required, Validators.pattern(/^\d{3,4}$/)]]
     });
+  }
+
+  ngOnInit(): void {
+    this.mapsLoader.load().then(ok => this.mapsReady.set(ok));
+  }
+
+  ngOnDestroy(): void {
+    if (this.searchTimeout !== null) clearTimeout(this.searchTimeout);
+  }
+
+  onSearchInput(value: string): void {
+    this.searchQuery.set(value);
+    if (!value.trim()) { this.predictions.set([]); this.showDropdown.set(false); return; }
+    if (this.searchTimeout !== null) clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      if (typeof google === 'undefined' || !google?.maps?.places?.AutocompleteService) return;
+      new google.maps.places.AutocompleteService().getPlacePredictions(
+        { input: value, componentRestrictions: { country: 'ES' }, types: ['address'] },
+        (results: any, status: any) => {
+          if (status === 'OK' && results?.length) {
+            this.predictions.set(results.map((r: any) => ({ description: r.description, placeId: r.place_id })));
+            this.showDropdown.set(true);
+          } else {
+            this.predictions.set([]);
+            this.showDropdown.set(false);
+          }
+        }
+      );
+    }, 300);
+  }
+
+  selectPrediction(p: Prediction): void {
+    this.searchQuery.set(p.description);
+    this.showDropdown.set(false);
+    if (typeof google === 'undefined' || !google?.maps?.Geocoder) return;
+    new google.maps.Geocoder().geocode({ placeId: p.placeId }, (results: any, status: any) => {
+      if (status !== 'OK' || !results?.[0]) return;
+      const result = results[0];
+      const comps: any[] = result.address_components ?? [];
+      const get = (type: string) => comps.find((c: any) => c.types.includes(type))?.long_name ?? '';
+
+      const calle = get('route');
+      const numero = get('street_number');
+      const cp = get('postal_code');
+      const ciudad = get('locality') || get('administrative_area_level_2');
+      const provincia = get('administrative_area_level_2') || get('administrative_area_level_1');
+      if (calle) this.form.get('calle')?.setValue(calle);
+      if (numero) this.form.get('numero')?.setValue(numero);
+      if (cp) this.form.get('cp')?.setValue(cp);
+      if (ciudad) this.form.get('ciudad')?.setValue(ciudad);
+      if (provincia) this.form.get('provincia')?.setValue(provincia);
+      ['calle', 'numero', 'cp', 'ciudad', 'provincia'].forEach(f => this.form.get(f)?.markAsDirty());
+
+      // Guardar dirección canónica de Google y coordenadas exactas
+      this.confirmedAddress.set(result.formatted_address ?? null);
+      const loc = result.geometry?.location;
+      if (loc) {
+        this.selectedLat.set(typeof loc.lat === 'function' ? loc.lat() : loc.lat);
+        this.selectedLng.set(typeof loc.lng === 'function' ? loc.lng() : loc.lng);
+      }
+    });
+  }
+
+  hideDropdown(): void {
+    setTimeout(() => this.showDropdown.set(false), 150);
+  }
+
+  clearSearch(): void {
+    this.searchQuery.set('');
+    this.predictions.set([]);
+    this.showDropdown.set(false);
+    this.confirmedAddress.set(null);
+    this.selectedLat.set(null);
+    this.selectedLng.set(null);
   }
 
   get last4(): string {
@@ -103,13 +191,18 @@ export class CheckoutComponent {
 
     const v = this.form.value;
     const piso = (v.piso as string)?.trim() ? ` - ${(v.piso as string).trim()}` : '';
-    const shippingAddress = `${v.calle}, ${v.numero}${piso}, ${v.cp} ${v.ciudad} (${v.provincia})`;
+    const confirmed = this.confirmedAddress();
+    const shippingAddress = confirmed
+      ? `${confirmed}${piso}`
+      : `${v.calle}, ${v.numero}${piso}, ${v.cp} ${v.ciudad}, ${v.provincia}`;
     const deliveryNotes: string | undefined = (v.notas as string)?.trim() || undefined;
+    const deliveryLat = this.selectedLat() ?? undefined;
+    const deliveryLng = this.selectedLng() ?? undefined;
 
     this.submitting.set(true);
     this.submitError.set(null);
 
-    this.api.createOrder(this.cartItems(), shippingAddress, deliveryNotes).subscribe({
+    this.api.createOrder(this.cartItems(), shippingAddress, deliveryNotes, deliveryLat, deliveryLng).subscribe({
       next: () => {
         this.submitting.set(false);
         this.cartService.clear();
@@ -120,6 +213,16 @@ export class CheckoutComponent {
         this.submitting.set(false);
       }
     });
+  }
+
+  fillTestData(): void {
+    this.form.patchValue({
+      cardName: 'Juan García López',
+      cardNumber: '4532015112830366',
+      expiry: '12/27',
+      cvv: '123'
+    });
+    ['cardName', 'cardNumber', 'expiry', 'cvv'].forEach(f => this.form.get(f)?.markAsDirty());
   }
 
   goBack(): void {

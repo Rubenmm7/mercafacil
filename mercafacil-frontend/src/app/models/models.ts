@@ -30,6 +30,15 @@ export interface StoreOffer {
 }
 
 // --- Admin dashboard ---
+export interface StoreAdmin {
+  id: number;
+  name: string;
+  address: string;
+  city: string;
+  vendedorId: number | null;
+  vendedorNombre: string | null;
+}
+
 export interface AdminStats {
   totalUsers: number;
   totalStores: number;
@@ -152,14 +161,13 @@ export interface CartItem {
 }
 
 export type Role = 'ADMIN' | 'CLIENTE' | 'VENDEDOR' | 'REPARTIDOR' | 'PROVEEDOR';
-export type OrderStatus = 'PENDIENTE' | 'PREPARACION' | 'EN_RUTA' | 'ENTREGADO';
+export type OrderStatus = 'PENDIENTE' | 'PREPARACION' | 'EN_RUTA' | 'ENTREGADO' | 'CANCELADO';
 export type ChatType = 'CLIENTE_REPARTIDOR' | 'VENDEDOR_REPARTIDOR' | 'PROVEEDOR_VENDEDOR';
 
 export interface MessageRequest {
   chatType: ChatType;
   orderId?: number;
   shopId?: number;
-  replyToMessageId?: number;
   mensaje: string;
 }
 
@@ -180,9 +188,6 @@ export interface MessageResponse {
   shopId?: number;
   senderId: number;
   senderName: string;
-  replyToMessageId?: number;
-  replyToSenderName?: string;
-  replyToMensaje?: string;
   mensaje: string;
   fecha: string;
 }
@@ -201,6 +206,8 @@ export interface OrderItemDto {
   storeId: number;
   quantity: number;
   unitPrice: number;
+  productName?: string;
+  productImage?: string;
 }
 
 export interface Order {
@@ -212,6 +219,9 @@ export interface Order {
   createdAt?: string;
   shippingAddress?: string;
   deliveryNotes?: string;
+  deliveredAt?: string;
+  deliveryLat?: number;
+  deliveryLng?: number;
 }
 
 export interface MarkReadRequest {

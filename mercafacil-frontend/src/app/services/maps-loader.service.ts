@@ -31,7 +31,7 @@ export class MapsLoaderService {
         resolve(true);
       };
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&callback=${cb}`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&callback=${cb}&loading=async&libraries=marker,places`;
       script.async = true;
       script.defer = true;
       script.onerror = () => { delete (window as any)[cb]; resolve(false); };

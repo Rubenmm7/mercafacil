@@ -1,8 +1,8 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, computed, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { AdminService } from '../../../services/admin.service';
 import { ToastService } from '../../../services/toast.service';
-import { CreateUserRequest, UpdateUserRequest, UserAdmin, Role } from '../../../models/models';
+import { CreateUserRequest, UpdateUserRequest, UserAdmin, Role, StoreAdmin } from '../../../models/models';
 import { IconComponent, IconName } from '../../icon/icon.component';
 
 function passwordsMatch(group: AbstractControl): ValidationErrors | null {
@@ -28,6 +28,24 @@ export class UsuariosAdminComponent implements OnInit {
   showModal = signal(false);
   modalMode = signal<'create' | 'edit'>('create');
   editUserId = signal<number | null>(null);
+  modalRol = signal<string>('CLIENTE');
+
+  allStores = signal<StoreAdmin[]>([]);
+  storesLoading = signal(false);
+  savingStore = signal<number | null>(null);
+  showStoreModal = signal(false);
+  storeSearch = signal('');
+
+  currentVendorStore = computed(() =>
+    this.allStores().find(s => s.vendedorId === this.editUserId()) ?? null
+  );
+  filteredStores = computed(() => {
+    const q = this.storeSearch().toLowerCase();
+    if (!q) return this.allStores();
+    return this.allStores().filter(s =>
+      s.name.toLowerCase().includes(q) || s.city.toLowerCase().includes(q)
+    );
+  });
 
   readonly roles: Role[] = ['ADMIN', 'CLIENTE', 'VENDEDOR', 'REPARTIDOR', 'PROVEEDOR'];
 
@@ -63,6 +81,7 @@ export class UsuariosAdminComponent implements OnInit {
   openCreateModal(): void {
     this.modalMode.set('create');
     this.editUserId.set(null);
+    this.modalRol.set('CLIENTE');
     this.form.reset({ rol: 'CLIENTE' });
     this.form.get('password')!.setValidators(Validators.required);
     this.form.get('confirmPassword')!.setValidators(Validators.required);
@@ -74,6 +93,7 @@ export class UsuariosAdminComponent implements OnInit {
   openEditModal(user: UserAdmin): void {
     this.modalMode.set('edit');
     this.editUserId.set(user.id);
+    this.modalRol.set(user.rol);
     this.form.reset({
       nombre: user.nombre,
       apellidos: user.apellidos,
@@ -86,11 +106,73 @@ export class UsuariosAdminComponent implements OnInit {
     this.form.get('confirmPassword')!.clearValidators();
     this.form.get('password')!.updateValueAndValidity();
     this.form.get('confirmPassword')!.updateValueAndValidity();
+    if (user.rol === 'VENDEDOR') {
+      this.loadStores();
+    }
     this.showModal.set(true);
   }
 
   closeModal(): void {
     this.showModal.set(false);
+    this.showStoreModal.set(false);
+  }
+
+  openStoreModal(): void {
+    this.storeSearch.set('');
+    if (this.allStores().length === 0) this.loadStores();
+    this.showStoreModal.set(true);
+  }
+
+  closeStoreModal(): void {
+    this.showStoreModal.set(false);
+  }
+
+  onRolChange(event: Event): void {
+    const rol = (event.target as HTMLSelectElement).value;
+    this.modalRol.set(rol);
+    if (rol === 'VENDEDOR' && this.allStores().length === 0) {
+      this.loadStores();
+    }
+  }
+
+  loadStores(): void {
+    this.storesLoading.set(true);
+    this.adminService.getStores().subscribe({
+      next: s => { this.allStores.set(s); this.storesLoading.set(false); },
+      error: () => this.storesLoading.set(false)
+    });
+  }
+
+  selectStore(store: StoreAdmin): void {
+    const userId = this.editUserId();
+    if (!userId || this.savingStore() !== null) return;
+    const isAssigned = store.vendedorId === userId;
+    const newVendedorId = isAssigned ? null : userId;
+    this.savingStore.set(store.id);
+    this.adminService.assignVendedor(store.id, newVendedorId).subscribe({
+      next: () => {
+        this.savingStore.set(null);
+        if (!isAssigned) this.closeStoreModal();
+        this.reloadStores();
+      },
+      error: () => {
+        this.savingStore.set(null);
+        this.toastService.showError('No se pudo actualizar la asignación');
+      }
+    });
+  }
+
+  private reloadStores(): void {
+    this.adminService.getStores().subscribe({
+      next: s => this.allStores.set(s),
+      error: () => {}
+    });
+  }
+
+  storeState(store: StoreAdmin): 'mine' | 'other' | 'free' {
+    if (store.vendedorId === this.editUserId()) return 'mine';
+    if (store.vendedorId !== null) return 'other';
+    return 'free';
   }
 
   submitModal(): void {

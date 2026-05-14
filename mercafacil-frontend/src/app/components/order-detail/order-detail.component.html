@@ -26,6 +26,50 @@
   </div>
 
   <section class="panel">
+    <h2>Productos del pedido</h2>
+    <div class="items-list">
+      @for (item of o.items; track item.productId) {
+      <div class="item-row">
+        <div class="item-thumb">
+          @if (item.productImage && isUrl(item.productImage)) {
+            <img [src]="item.productImage" [alt]="item.productName ?? ''" />
+          } @else if (item.productImage) {
+            <span class="item-emoji">{{ item.productImage }}</span>
+          } @else {
+            <app-icon name="package" [size]="26" />
+          }
+        </div>
+        <div class="item-info">
+          <span class="item-name-text">{{ item.productName ?? 'Producto #' + item.productId }}</span>
+          <span class="item-unit-price">{{ item.unitPrice | number:'1.2-2' }}€/ud · ×{{ item.quantity }}</span>
+        </div>
+        <span class="item-price">{{ (item.unitPrice * item.quantity) | number:'1.2-2' }}€</span>
+      </div>
+      }
+    </div>
+    <div class="items-total">
+      <span>Total</span>
+      <strong>{{ o.total | number:'1.2-2' }}€</strong>
+    </div>
+
+    @if (o.status !== 'ENTREGADO') {
+    <div class="estimated-delivery">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+      </svg>
+      Entrega estimada: <strong>{{ estimatedDelivery() }}</strong>
+    </div>
+    } @else if (o.deliveredAt) {
+    <div class="delivered-info">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      Entregado el <strong>{{ formatDate(o.deliveredAt) }}</strong>
+    </div>
+    }
+  </section>
+
+  <section class="panel">
     <h2>Timeline del pedido</h2>
     <div class="timeline">
       @for (step of timelineSteps(); track step.key) {
@@ -40,6 +84,7 @@
     </div>
   </section>
 
+  @if (o.status !== 'ENTREGADO') {
   <section class="panel">
     <h2>Seguimiento en tiempo real</h2>
     @if (trackingLoading() && !tracking()) {
@@ -66,5 +111,6 @@
     </div>
     }
   </section>
+  }
   }
 </div>

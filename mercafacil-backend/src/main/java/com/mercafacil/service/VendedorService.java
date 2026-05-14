@@ -234,12 +234,15 @@ public class VendedorService {
 
     private OrderResponse toOrderResponse(Order o) {
         var items = o.getItems().stream()
-                .map(i -> new OrderItemResponse(i.getProductId(), i.getStoreId(), i.getQuantity(), i.getUnitPrice()))
+                .map(i -> new OrderItemResponse(i.getProductId(), i.getStoreId(),
+                        i.getQuantity() != null ? i.getQuantity() : 0,
+                        i.getUnitPrice(), i.getProductName(), i.getProductImage()))
                 .toList();
         String clientEmail = o.getClient() != null ? o.getClient().getEmail() : null;
         String createdAt = o.getCreatedAt() != null ? o.getCreatedAt().toString() : null;
+        String deliveredAt = o.getDeliveredAt() != null ? o.getDeliveredAt().toString() : null;
         return new OrderResponse(o.getId(), clientEmail, o.getStatus().name(), o.getTotal(), items, createdAt,
-                o.getShippingAddress(), o.getDeliveryNotes());
+                o.getShippingAddress(), o.getDeliveryNotes(), deliveredAt, o.getDeliveryLat(), o.getDeliveryLng());
     }
 
     private ProductDto toProductDto(Product p, List<Long> storeIds) {

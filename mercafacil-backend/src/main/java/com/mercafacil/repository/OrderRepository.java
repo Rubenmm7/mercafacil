@@ -20,5 +20,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findByDelivererIsNullAndStatusOrderByIdDesc(com.mercafacil.model.OrderStatus status);
 
+    List<Order> findByDelivererIsNullAndStatusInOrderByIdDesc(Collection<com.mercafacil.model.OrderStatus> statuses);
+
     long countByDelivererIsNullAndStatusIn(Collection<com.mercafacil.model.OrderStatus> statuses);
 }

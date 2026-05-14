@@ -1,8 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
+import { NotificationService } from '../../services/notification.service';
+import { ToastService } from '../../services/toast.service';
 import { Order, OrderStatus } from '../../models/models';
 import { IconComponent } from '../icon/icon.component';
 
@@ -17,17 +19,29 @@ export class OrdersComponent implements OnInit {
   readonly orders = signal<Order[]>([]);
   readonly loading = signal(true);
   readonly errorMsg = signal<string | null>(null);
+  readonly showHistory = signal(false);
+
+  private readonly notificationService = inject(NotificationService);
+
+  readonly activeOrders = computed(() =>
+    this.orders().filter(o => o.status !== 'ENTREGADO' && o.status !== 'CANCELADO')
+  );
+  readonly historyOrders = computed(() =>
+    this.orders().filter(o => o.status === 'ENTREGADO' || o.status === 'CANCELADO')
+  );
 
   private readonly statusLabels: Record<OrderStatus, string> = {
     PENDIENTE: 'Pendiente',
     PREPARACION: 'En preparación',
     EN_RUTA: 'En ruta',
-    ENTREGADO: 'Entregado'
+    ENTREGADO: 'Entregado',
+    CANCELADO: 'Cancelado'
   };
 
   constructor(
     private api: ApiService,
-    private router: Router
+    private router: Router,
+    private toast: ToastService
   ) { }
 
   ngOnInit(): void {
@@ -58,8 +72,33 @@ export class OrdersComponent implements OnInit {
     });
   }
 
+  unreadForOrder(orderId: number): number {
+    return this.notificationService.unreadCounts().get(`order-${orderId}-CLIENTE_REPARTIDOR`) ?? 0;
+  }
+
   openChat(orderId: number): void {
     this.router.navigate(['/chat/order', orderId, 'CLIENTE_REPARTIDOR']);
+  }
+
+  toggleHistory(): void {
+    this.showHistory.update(v => !v);
+  }
+
+  async cancelOrder(order: Order): Promise<void> {
+    const ok = await this.toast.confirm(
+      `¿Cancelar el pedido #${order.id}? Esta acción no se puede deshacer.`,
+      'Cancelar pedido'
+    );
+    if (!ok) return;
+
+    this.api.cancelOrder(order.id).subscribe({
+      next: () => {
+        this.orders.update(list =>
+          list.map(o => o.id === order.id ? { ...o, status: 'CANCELADO' as OrderStatus } : o)
+        );
+      },
+      error: () => this.toast.showError('No se pudo cancelar el pedido. Inténtalo de nuevo.')
+    });
   }
 
   goToSearch(): void {

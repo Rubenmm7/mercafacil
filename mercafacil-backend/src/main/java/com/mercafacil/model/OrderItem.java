@@ -34,6 +34,12 @@ public class OrderItem {
     @Column(name = "unit_price", nullable = false)
     private Double unitPrice;
 
+    @Column(name = "product_name", length = 255)
+    private String productName;
+
+    @Column(name = "product_image", length = 512)
+    private String productImage;
+
     // Getters & Setters
 
     public Long getId() {
@@ -78,5 +84,21 @@ public class OrderItem {
 
     public void setUnitPrice(Double unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
     }
 }

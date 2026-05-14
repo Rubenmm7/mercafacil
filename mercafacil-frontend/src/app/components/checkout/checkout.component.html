@@ -20,6 +20,49 @@
             <h2><app-icon name="map-pin" [size]="22" /> Dirección de entrega</h2>
           </div>
 
+          @if (mapsReady()) {
+          <div class="address-search-wrapper">
+            <label>Buscar dirección</label>
+            <div class="address-search-field">
+              <app-icon name="search" [size]="16" class="search-icon" />
+              <input
+                type="text"
+                class="address-search-input"
+                [value]="searchQuery()"
+                (input)="onSearchInput($any($event.target).value)"
+                (blur)="hideDropdown()"
+                placeholder="Ej: Camino de la Noria 17, Jaén…"
+                autocomplete="off"
+              >
+              @if (searchQuery()) {
+              <button type="button" class="search-clear" (click)="clearSearch()">
+                <app-icon name="x" [size]="14" />
+              </button>
+              }
+            </div>
+            @if (showDropdown() && predictions().length > 0) {
+            <ul class="predictions-dropdown">
+              @for (p of predictions(); track p.placeId) {
+              <li class="prediction-item" (mousedown)="selectPrediction(p)">
+                <app-icon name="map-pin" [size]="13" />
+                <span>{{ p.description }}</span>
+              </li>
+              }
+            </ul>
+            }
+            @if (!confirmedAddress()) {
+            <p class="search-hint">Selecciona una sugerencia para rellenar los campos automáticamente</p>
+            }
+          </div>
+          @if (confirmedAddress()) {
+          <div class="address-confirmed">
+            <app-icon name="check-circle" [size]="15" />
+            <span>{{ confirmedAddress() }}</span>
+            <button type="button" class="btn-change-address" (click)="clearSearch()">Cambiar</button>
+          </div>
+          }
+          }
+
           <div class="form-grid">
             <div class="field full">
               <label>Calle / Avenida *</label>
@@ -88,6 +131,9 @@
               <span class="brand mc">MC</span>
               <span class="brand amex">AMEX</span>
             </div>
+            <button type="button" class="btn-autofill" (click)="fillTestData()" title="Rellenar con datos de prueba">
+              <app-icon name="check-circle" [size]="14" /> Demo
+            </button>
           </div>
 
           <!-- Visual card preview -->
