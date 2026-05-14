@@ -1,6 +1,5 @@
 package com.mercafacil.service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +27,7 @@ import com.mercafacil.repository.OrderRepository;
 import com.mercafacil.repository.ProductRepository;
 import com.mercafacil.repository.StoreOfferRepository;
 import com.mercafacil.repository.StoreRepository;
+import com.mercafacil.util.DateTimeUtils;
 
 @Service
 @Transactional
@@ -78,7 +78,7 @@ public class VendedorService {
         long lowStock = storeOfferRepository
                 .findByStoreIdInAndStockLessThan(storeIds, LOW_STOCK_THRESHOLD).size();
 
-        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+        LocalDateTime startOfDay = DateTimeUtils.startOfTodayMadrid();
         double todayRevenue = orders.stream()
                 .filter(o -> o.getCreatedAt() != null && o.getCreatedAt().isAfter(startOfDay))
                 .mapToDouble(Order::getTotal)
@@ -235,12 +235,12 @@ public class VendedorService {
     private OrderResponse toOrderResponse(Order o) {
         var items = o.getItems().stream()
                 .map(i -> new OrderItemResponse(i.getProductId(), i.getStoreId(),
-                        i.getQuantity() != null ? i.getQuantity() : 0,
+                        i.getQuantity(),
                         i.getUnitPrice(), i.getProductName(), i.getProductImage()))
                 .toList();
         String clientEmail = o.getClient() != null ? o.getClient().getEmail() : null;
-        String createdAt = o.getCreatedAt() != null ? o.getCreatedAt().toString() : null;
-        String deliveredAt = o.getDeliveredAt() != null ? o.getDeliveredAt().toString() : null;
+        String createdAt = DateTimeUtils.toApiString(o.getCreatedAt());
+        String deliveredAt = DateTimeUtils.toApiString(o.getDeliveredAt());
         return new OrderResponse(o.getId(), clientEmail, o.getStatus().name(), o.getTotal(), items, createdAt,
                 o.getShippingAddress(), o.getDeliveryNotes(), deliveredAt, o.getDeliveryLat(), o.getDeliveryLng());
     }

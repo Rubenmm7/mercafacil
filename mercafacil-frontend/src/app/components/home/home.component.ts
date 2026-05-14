@@ -15,6 +15,18 @@ interface CategoryGroup {
   storeNames: string;
 }
 
+interface FeaturedProductCard {
+  product: Product;
+  firstStoreName: string;
+  minPrice: number;
+  maxPrice: number;
+}
+
+type PopularTerm = Readonly<{
+  label: string;
+  query: string;
+}>;
+
 const SVG_ATTRS = `width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"`;
 
 const CATEGORY_META: Record<string, { bgColor: string; svg: string }> = {
@@ -92,13 +104,30 @@ export class HomeComponent implements OnInit {
     }));
   });
 
+  readonly featuredProductCards = computed<FeaturedProductCard[]>(() =>
+    this.featuredProducts().map(product => {
+      const prices = product.storeOffers.filter(o => o.inStock).map(o => o.price);
+      return {
+        product,
+        firstStoreName: product.storeOffers.find(o => o.inStock)?.storeName ?? '',
+        minPrice: prices.length ? Math.min(...prices) : 0,
+        maxPrice: prices.length ? Math.max(...prices) : 0
+      };
+    })
+  );
+
   searchQuery = '';
   readonly categories = signal<Category[]>([]);
   readonly stores = signal<Store[]>([]);
   readonly featuredProducts = signal<Product[]>([]);
   readonly loading = signal(true);
 
-  popularTerms = ['iPhone 17', 'Big Mac', 'Aceite Oliva', 'Rockrider'];
+  readonly popularTerms = [
+    { label: 'iPhone 17', query: 'iPhone 17' },
+    { label: 'Big Mac', query: 'Big Mac' },
+    { label: 'Collar Seresto', query: 'Collar Antiparasitario Seresto' },
+    { label: 'Rockrider', query: 'Rockrider' },
+  ] satisfies ReadonlyArray<PopularTerm>;
 
   stats: { icon: IconName; value: string; label: string }[] = [
     { icon: 'map-pin', value: '25+', label: 'Establecimientos en Jaén' },
@@ -127,34 +156,20 @@ export class HomeComponent implements OnInit {
 
   handleSearch(): void {
     if (this.searchQuery.trim()) {
-      this.router.navigate(['/buscar'], { state: { q: this.searchQuery.trim() } });
+      this.router.navigate(['/buscar'], { queryParams: { q: this.searchQuery.trim() } });
     }
   }
 
-  searchTerm(term: string): void {
-    this.router.navigate(['/buscar'], { state: { q: term } });
+  searchTerm(term: PopularTerm): void {
+    this.router.navigate(['/buscar'], { queryParams: { q: term.query } });
   }
 
   searchCategory(name: string): void {
-    this.router.navigate(['/buscar'], { state: { categoria: name } });
+    this.router.navigate(['/buscar'], { queryParams: { categoria: name } });
   }
 
-  getFirstStoreName(product: Product): string {
-    return product.storeOffers.find(o => o.inStock)?.storeName ?? '';
-  }
-
-  getMinPrice(product: Product): number {
-    const prices = product.storeOffers.filter(o => o.inStock).map(o => o.price);
-    return prices.length ? Math.min(...prices) : 0;
-  }
-
-  getMaxPrice(product: Product): number {
-    const prices = product.storeOffers.filter(o => o.inStock).map(o => o.price);
-    return prices.length ? Math.max(...prices) : 0;
-  }
-
-  getAvailableCount(product: Product): number {
-    return product.storeOffers.filter(o => o.inStock).length;
+  searchCategories(names: string[]): void {
+    this.router.navigate(['/buscar'], { queryParams: { categoria: names.join('|') } });
   }
 
   selectMallStore(id: number): void {
@@ -162,7 +177,7 @@ export class HomeComponent implements OnInit {
   }
 
   viewProducts(store: Store): void {
-    this.router.navigate(['/buscar'], { state: { storeId: store.id } });
+    this.router.navigate(['/buscar'], { queryParams: { storeId: store.id } });
   }
 
   goToSearch(): void {

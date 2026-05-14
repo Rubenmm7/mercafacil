@@ -1,11 +1,26 @@
 import { Component, OnInit, computed, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { CartService } from '../../services/cart.service';
 import { Product, Store, Category, StoreOffer } from '../../models/models';
 import { IconComponent } from '../icon/icon.component';
+
+interface OfferView {
+  offer: StoreOffer;
+  store?: Store;
+  isBest: boolean;
+  isUniqueBest: boolean;
+}
+
+interface ProductView {
+  product: Product;
+  minPrice: number;
+  availableCount: number;
+  hasDiscount: boolean;
+  offers: OfferView[];
+}
 
 @Component({
   selector: 'app-search',
@@ -23,9 +38,15 @@ export class SearchComponent implements OnInit {
   readonly query = signal('');
   localQuery = '';
   readonly selectedCategory = signal('');
+  readonly categoryDisplay = computed(() => this.selectedCategory().replace(/\|/g, ' y '));
   readonly selectedStores = signal<number[]>([]);
+  readonly storeById = computed(() => new Map(this.stores().map(store => [store.id, store] as const)));
+  readonly selectedStoreViews = computed(() =>
+    this.selectedStores().map(id => ({ id, store: this.storeById().get(id) }))
+  );
   sortBy: 'relevance' | 'price_asc' | 'price_desc' | 'stores' = 'relevance';
   readonly addedItems = signal<Set<string>>(new Set());
+  private lastLoadedQuery: string | null = null;
 
   readonly filteredProducts = computed(() => {
     let result = this.allProducts();
@@ -33,42 +54,89 @@ export class SearchComponent implements OnInit {
     const stores = this.selectedStores();
 
     if (cat) {
-      result = result.filter(p => p.category === cat);
+      const cats = cat.split('|');
+      result = result.filter(p => cats.includes(p.category));
     }
     if (stores.length > 0) {
       result = result.filter(p => p.storeOffers.some(o => stores.includes(o.storeId) && o.inStock));
     }
     if (this.sortBy === 'price_asc') {
-      result = [...result].sort((a, b) => this.getMinPrice(a) - this.getMinPrice(b));
+      result = [...result].sort((a, b) => this.minPriceOf(a) - this.minPriceOf(b));
     } else if (this.sortBy === 'price_desc') {
-      result = [...result].sort((a, b) => this.getMinPrice(b) - this.getMinPrice(a));
+      result = [...result].sort((a, b) => this.minPriceOf(b) - this.minPriceOf(a));
     } else if (this.sortBy === 'stores') {
       result = [...result].sort((a, b) => b.storeOffers.length - a.storeOffers.length);
     }
     return result;
   });
 
+  readonly productViews = computed<ProductView[]>(() =>
+    this.filteredProducts().map(product => {
+      const availableOffers = product.storeOffers.filter(offer => offer.inStock);
+      const prices = availableOffers.map(offer => offer.price);
+      const minPrice = prices.length ? Math.min(...prices) : 0;
+
+      return {
+        product,
+        minPrice,
+        availableCount: availableOffers.length,
+        hasDiscount: product.storeOffers.some(offer => offer.originalPrice),
+        offers: product.storeOffers.map(offer => ({
+          offer,
+          store: this.storeById().get(offer.storeId),
+          isBest: offer.inStock && offer.price === minPrice,
+          isUniqueBest: offer.inStock && offer.price === minPrice && availableOffers.filter(item => item.price === offer.price).length === 1
+        }))
+      };
+    })
+  );
+
   constructor(
     private api: ApiService,
     public cartService: CartService,
-    private route: ActivatedRoute
-  ) {
-    const state = history.state as Record<string, unknown>;
-    if (state['q']) { this.query.set(state['q'] as string); this.localQuery = state['q'] as string; }
-    if (state['categoria']) this.selectedCategory.set(state['categoria'] as string);
-    if (state['storeId']) this.selectedStores.set([state['storeId'] as number]);
-  }
+    private route: ActivatedRoute,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.api.getStores().subscribe(s => this.stores.set(s));
     this.api.getCategories().subscribe(c => this.categories.set(c));
 
     this.route.queryParamMap.subscribe(params => {
-      const storeId = params.get('storeId');
-      if (storeId) this.selectedStores.set([+storeId]);
+      const query = this.applyRouteState(params);
+      if (query !== this.lastLoadedQuery) {
+        this.lastLoadedQuery = query;
+        this.loadProducts();
+      }
     });
+  }
 
-    this.loadProducts();
+  private applyRouteState(params: ParamMap): string {
+    const query = params.get('q') ?? '';
+    const category = params.get('categoria') ?? '';
+    const storeIds = params.get('storeId');
+
+    this.query.set(query);
+    this.localQuery = query;
+    this.selectedCategory.set(category);
+    this.selectedStores.set(
+      storeIds
+        ? storeIds.split(',').map(id => +id).filter(id => Number.isFinite(id))
+        : []
+    );
+    return query;
+  }
+
+  private syncRoute(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        q: this.query() || null,
+        categoria: this.selectedCategory() || null,
+        storeId: this.selectedStores().length ? this.selectedStores().join(',') : null
+      },
+      queryParamsHandling: 'merge'
+    });
   }
 
   loadProducts(): void {
@@ -82,7 +150,7 @@ export class SearchComponent implements OnInit {
 
   handleSearch(): void {
     this.query.set(this.localQuery);
-    this.loadProducts();
+    this.syncRoute();
   }
 
   onSortChange(value: string): void {
@@ -90,11 +158,15 @@ export class SearchComponent implements OnInit {
     this.allProducts.update(p => [...p]);
   }
 
+  private minPriceOf(product: Product): number {
+    const prices = product.storeOffers.filter(o => o.inStock).map(o => o.price);
+    return prices.length ? Math.min(...prices) : 0;
+  }
+
   toggleStore(storeId: number): void {
     const current = this.selectedStores();
-    this.selectedStores.set(
-      current.includes(storeId) ? current.filter(id => id !== storeId) : [...current, storeId]
-    );
+    this.selectedStores.set(current.includes(storeId) ? current.filter(id => id !== storeId) : [...current, storeId]);
+    this.syncRoute();
   }
 
   isStoreSelected(storeId: number): boolean {
@@ -102,38 +174,28 @@ export class SearchComponent implements OnInit {
   }
 
   selectCategory(name: string): void {
-    this.selectedCategory.set(this.selectedCategory() === name ? '' : name);
+    if (!name) {
+      this.selectedCategory.set('');
+      this.syncRoute();
+      return;
+    }
+
+    const selected = this.selectedCategory()
+      .split('|')
+      .filter(Boolean);
+
+    const next = selected.includes(name)
+      ? selected.filter(item => item !== name)
+      : [...selected, name];
+
+    this.selectedCategory.set(next.join('|'));
+    this.syncRoute();
   }
 
   clearFilters(): void {
     this.selectedStores.set([]);
     this.selectedCategory.set('');
-  }
-
-  getMinPrice(product: Product): number {
-    const prices = product.storeOffers.filter(o => o.inStock).map(o => o.price);
-    return prices.length ? Math.min(...prices) : 0;
-  }
-
-  getAvailableCount(product: Product): number {
-    return product.storeOffers.filter(o => o.inStock).length;
-  }
-
-  hasDiscount(product: Product): boolean {
-    return product.storeOffers.some(o => o.originalPrice);
-  }
-
-  getStore(storeId: number): Store | undefined {
-    return this.stores().find(s => s.id === storeId);
-  }
-
-  isLowest(product: Product, price: number, inStock: boolean): boolean {
-    return inStock && price === this.getMinPrice(product);
-  }
-
-  isUniqueBest(product: Product, price: number, inStock: boolean): boolean {
-    if (!inStock || price !== this.getMinPrice(product)) return false;
-    return product.storeOffers.filter(o => o.inStock && o.price === price).length === 1;
+    this.syncRoute();
   }
 
   isAdded(productId: number, storeId: number): boolean {
@@ -166,6 +228,6 @@ export class SearchComponent implements OnInit {
     this.query.set('');
     this.selectedCategory.set('');
     this.selectedStores.set([]);
-    this.loadProducts();
+    this.syncRoute();
   }
 }

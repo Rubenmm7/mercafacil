@@ -21,6 +21,7 @@ import com.mercafacil.repository.MessageRepository;
 import com.mercafacil.repository.OrderRepository;
 import com.mercafacil.repository.StoreRepository;
 import com.mercafacil.repository.UserRepository;
+import com.mercafacil.util.DateTimeUtils;
 
 @Service
 @Transactional
@@ -160,7 +161,7 @@ public class MessageService {
                 title,
                 preview,
                 m.getSender().getNombre() + " " + m.getSender().getApellidos(),
-                m.getFecha());
+                DateTimeUtils.toApiString(m.getFecha()));
     }
 
     private MessageResponse toResponse(Message m) {
@@ -172,6 +173,6 @@ public class MessageService {
                 m.getSender().getId(),
                 m.getSender().getNombre() + " " + m.getSender().getApellidos(),
                 m.getMensaje(),
-                m.getFecha());
+                DateTimeUtils.toApiString(m.getFecha()));
     }
 }

@@ -10,6 +10,7 @@ import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
 import { ChatType, MarkReadRequest, MessageRequest, MessageResponse } from '../../models/models';
 import { environment } from '../../../environments/environment';
+import { formatMadridTime } from '../../utils/date-time';
 
 @Component({
   selector: 'app-chat',
@@ -120,12 +121,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   formatTime(fecha: string): string {
-    const iso = fecha.endsWith('Z') || /[+-]\d{2}:?\d{2}$/.test(fecha) ? fecha : `${fecha}Z`;
-    return new Date(iso).toLocaleTimeString('es-ES', {
-      hour: '2-digit',
-      minute: '2-digit',
-      timeZone: 'Europe/Madrid'
-    });
+    return formatMadridTime(fecha);
   }
 
   private loadHistory(): void {

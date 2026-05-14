@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { ChatThread, ChatType } from '../../models/models';
 import { environment } from '../../../environments/environment';
 import { NotificationService } from '../../services/notification.service';
+import { formatMadridDateTime } from '../../utils/date-time';
 
 @Component({
   selector: 'app-chats-list',
@@ -46,12 +47,7 @@ export class ChatsListComponent implements OnInit {
   }
 
   formatDate(date: string): string {
-    const iso = date.endsWith('Z') || /[+-]\d{2}:?\d{2}$/.test(date) ? date : `${date}Z`;
-    return new Date(iso).toLocaleString('es-ES', {
-      day: '2-digit', month: 'short',
-      hour: '2-digit', minute: '2-digit',
-      timeZone: 'Europe/Madrid'
-    });
+    return formatMadridDateTime(date);
   }
 
   chatKey(t: ChatThread): string {

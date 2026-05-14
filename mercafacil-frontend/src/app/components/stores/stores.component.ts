@@ -53,7 +53,7 @@ export class StoresComponent implements OnInit {
   }
 
   viewProducts(store: Store): void {
-    this.router.navigate(['/buscar'], { state: { storeId: store.id } });
+    this.router.navigate(['/buscar'], { queryParams: { storeId: store.id } });
   }
 
   getStars(rating: number): boolean[] {

@@ -45,4 +45,8 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
         void markShopThreadRead(@Param("shopId") Long shopId,
                         @Param("chatType") ChatType chatType,
                         @Param("userId") Long userId);
+
+        @Modifying
+        @Query("DELETE FROM Message m WHERE m.order.id = :orderId")
+        void deleteByOrderId(@Param("orderId") Long orderId);
 }

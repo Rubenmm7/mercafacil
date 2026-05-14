@@ -1,123 +1,124 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
-import { SearchComponent } from './components/search/search.component';
-import { StoresComponent } from './components/stores/stores.component';
-import { ShippingComponent } from './components/shipping/shipping.component';
-import { CartComponent } from './components/cart/cart.component';
-import { LoginComponent } from './components/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
-import { ChatComponent } from './components/chat/chat.component';
-import { ChatsListComponent } from './components/chats-list/chats-list.component';
-import { OrdersComponent } from './components/orders/orders.component';
-import { OrderDetailComponent } from './components/order-detail/order-detail.component';
-import { VendedorComponent } from './components/vendedor/vendedor.component';
-import { ResumenComponent } from './components/vendedor/resumen/resumen.component';
-import { PedidosComponent } from './components/vendedor/pedidos/pedidos.component';
-import { ProductosComponent } from './components/vendedor/productos/productos.component';
-import { OfertasComponent } from './components/vendedor/ofertas/ofertas.component';
-import { RepartidorComponent } from './components/repartidor/repartidor.component';
-import { ResumenRepartidorComponent } from './components/repartidor/resumen/resumen.component';
-import { EntregasComponent } from './components/repartidor/entregas/entregas.component';
-import { ProveedorComponent } from './components/proveedor/proveedor.component';
-import { ResumenProveedorComponent } from './components/proveedor/resumen/resumen.component';
-import { TiendasProveedorComponent } from './components/proveedor/tiendas/tiendas.component';
-import { AdminComponent } from './components/admin/admin.component';
-import { ResumenAdminComponent } from './components/admin/resumen/resumen.component';
-import { UsuariosAdminComponent } from './components/admin/usuarios/usuarios.component';
-import { TiendasAdminComponent } from './components/admin/tiendas/tiendas.component';
-import { CheckoutComponent } from './components/checkout/checkout.component';
-import { InfoPageComponent } from './components/info-page/info-page.component';
 import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
 
+const loadHome = () => import('./components/home/home.component').then(m => m.HomeComponent);
+const loadSearch = () => import('./components/search/search.component').then(m => m.SearchComponent);
+const loadStores = () => import('./components/stores/stores.component').then(m => m.StoresComponent);
+const loadShipping = () => import('./components/shipping/shipping.component').then(m => m.ShippingComponent);
+const loadCart = () => import('./components/cart/cart.component').then(m => m.CartComponent);
+const loadLogin = () => import('./components/login/login.component').then(m => m.LoginComponent);
+const loadRegister = () => import('./components/register/register.component').then(m => m.RegisterComponent);
+const loadChat = () => import('./components/chat/chat.component').then(m => m.ChatComponent);
+const loadChatsList = () => import('./components/chats-list/chats-list.component').then(m => m.ChatsListComponent);
+const loadOrders = () => import('./components/orders/orders.component').then(m => m.OrdersComponent);
+const loadOrderDetail = () => import('./components/order-detail/order-detail.component').then(m => m.OrderDetailComponent);
+const loadVendedor = () => import('./components/vendedor/vendedor.component').then(m => m.VendedorComponent);
+const loadVendedorResumen = () => import('./components/vendedor/resumen/resumen.component').then(m => m.ResumenComponent);
+const loadVendedorPedidos = () => import('./components/vendedor/pedidos/pedidos.component').then(m => m.PedidosComponent);
+const loadVendedorProductos = () => import('./components/vendedor/productos/productos.component').then(m => m.ProductosComponent);
+const loadVendedorOfertas = () => import('./components/vendedor/ofertas/ofertas.component').then(m => m.OfertasComponent);
+const loadRepartidor = () => import('./components/repartidor/repartidor.component').then(m => m.RepartidorComponent);
+const loadRepartidorResumen = () => import('./components/repartidor/resumen/resumen.component').then(m => m.ResumenRepartidorComponent);
+const loadEntregas = () => import('./components/repartidor/entregas/entregas.component').then(m => m.EntregasComponent);
+const loadProveedor = () => import('./components/proveedor/proveedor.component').then(m => m.ProveedorComponent);
+const loadProveedorResumen = () => import('./components/proveedor/resumen/resumen.component').then(m => m.ResumenProveedorComponent);
+const loadProveedorTiendas = () => import('./components/proveedor/tiendas/tiendas.component').then(m => m.TiendasProveedorComponent);
+const loadAdmin = () => import('./components/admin/admin.component').then(m => m.AdminComponent);
+const loadAdminResumen = () => import('./components/admin/resumen/resumen.component').then(m => m.ResumenAdminComponent);
+const loadAdminUsuarios = () => import('./components/admin/usuarios/usuarios.component').then(m => m.UsuariosAdminComponent);
+const loadAdminTiendas = () => import('./components/admin/tiendas/tiendas.component').then(m => m.TiendasAdminComponent);
+const loadCheckout = () => import('./components/checkout/checkout.component').then(m => m.CheckoutComponent);
+const loadInfoPage = () => import('./components/info-page/info-page.component').then(m => m.InfoPageComponent);
+
 export const routes: Routes = [
-  { path: '',        component: HomeComponent },
-  { path: 'buscar',  component: SearchComponent },
-  { path: 'tiendas', component: StoresComponent },
-  { path: 'envio',   component: ShippingComponent },
-  { path: 'carrito',  component: CartComponent,     canActivate: [authGuard] },
-  { path: 'pago', component: CheckoutComponent, canActivate: [roleGuard('CLIENTE')] },
-  { path: 'pedidos', component: OrdersComponent, canActivate: [roleGuard('CLIENTE')] },
-  { path: 'pedidos/:id', component: OrderDetailComponent, canActivate: [roleGuard('CLIENTE')] },
-  { path: 'login',   component: LoginComponent },
-  { path: 'registro', component: RegisterComponent },
+  { path: '', loadComponent: loadHome },
+  { path: 'buscar', loadComponent: loadSearch },
+  { path: 'tiendas', loadComponent: loadStores },
+  { path: 'envio', loadComponent: loadShipping },
+  { path: 'carrito', loadComponent: loadCart, canActivate: [authGuard] },
+  { path: 'pago', loadComponent: loadCheckout, canActivate: [roleGuard('CLIENTE')] },
+  { path: 'pedidos', loadComponent: loadOrders, canActivate: [roleGuard('CLIENTE')] },
+  { path: 'pedidos/:id', loadComponent: loadOrderDetail, canActivate: [roleGuard('CLIENTE')] },
+  { path: 'login', loadComponent: loadLogin },
+  { path: 'registro', loadComponent: loadRegister },
 
   // Páginas de información / soporte
-  { path: 'ayuda',        component: InfoPageComponent, data: { pageId: 'ayuda' } },
-  { path: 'devoluciones', component: InfoPageComponent, data: { pageId: 'devoluciones' } },
-  { path: 'contacto',     component: InfoPageComponent, data: { pageId: 'contacto' } },
-  { path: 'terminos',     component: InfoPageComponent, data: { pageId: 'terminos' } },
-  { path: 'privacidad',        component: InfoPageComponent, data: { pageId: 'privacidad' } },
-  { path: 'politicas-envio',  component: InfoPageComponent, data: { pageId: 'politicas-envio' } },
+  { path: 'ayuda', loadComponent: loadInfoPage, data: { pageId: 'ayuda' } },
+  { path: 'devoluciones', loadComponent: loadInfoPage, data: { pageId: 'devoluciones' } },
+  { path: 'contacto', loadComponent: loadInfoPage, data: { pageId: 'contacto' } },
+  { path: 'terminos', loadComponent: loadInfoPage, data: { pageId: 'terminos' } },
+  { path: 'privacidad', loadComponent: loadInfoPage, data: { pageId: 'privacidad' } },
+  { path: 'politicas-envio', loadComponent: loadInfoPage, data: { pageId: 'politicas-envio' } },
 
   // Dashboard Vendedor
   {
     path: 'vendedor',
-    component: VendedorComponent,
+    loadComponent: loadVendedor,
     canActivate: [roleGuard('VENDEDOR')],
     children: [
-      { path: '',        redirectTo: 'resumen', pathMatch: 'full' },
-      { path: 'resumen',   component: ResumenComponent },
-      { path: 'pedidos',   component: PedidosComponent },
-      { path: 'productos', component: ProductosComponent },
-      { path: 'ofertas',   component: OfertasComponent }
+      { path: '', redirectTo: 'resumen', pathMatch: 'full' },
+      { path: 'resumen', loadComponent: loadVendedorResumen },
+      { path: 'pedidos', loadComponent: loadVendedorPedidos },
+      { path: 'productos', loadComponent: loadVendedorProductos },
+      { path: 'ofertas', loadComponent: loadVendedorOfertas }
     ]
   },
 
   // Dashboard Repartidor
   {
     path: 'repartidor',
-    component: RepartidorComponent,
+    loadComponent: loadRepartidor,
     canActivate: [roleGuard('REPARTIDOR')],
     children: [
-      { path: '',         redirectTo: 'resumen', pathMatch: 'full' },
-      { path: 'resumen',  component: ResumenRepartidorComponent },
-      { path: 'entregas', component: EntregasComponent }
+      { path: '', redirectTo: 'resumen', pathMatch: 'full' },
+      { path: 'resumen', loadComponent: loadRepartidorResumen },
+      { path: 'entregas', loadComponent: loadEntregas }
     ]
   },
 
   // Dashboard Proveedor
   {
     path: 'proveedor',
-    component: ProveedorComponent,
+    loadComponent: loadProveedor,
     canActivate: [roleGuard('PROVEEDOR')],
     children: [
-      { path: '',        redirectTo: 'resumen', pathMatch: 'full' },
-      { path: 'resumen', component: ResumenProveedorComponent },
-      { path: 'tiendas', component: TiendasProveedorComponent }
+      { path: '', redirectTo: 'resumen', pathMatch: 'full' },
+      { path: 'resumen', loadComponent: loadProveedorResumen },
+      { path: 'tiendas', loadComponent: loadProveedorTiendas }
     ]
   },
 
   // Dashboard Admin
   {
     path: 'admin',
-    component: AdminComponent,
+    loadComponent: loadAdmin,
     canActivate: [roleGuard('ADMIN')],
     children: [
-      { path: '',         redirectTo: 'resumen', pathMatch: 'full' },
-      { path: 'resumen',  component: ResumenAdminComponent },
-      { path: 'usuarios', component: UsuariosAdminComponent },
-      { path: 'tiendas',  component: TiendasAdminComponent }
+      { path: '', redirectTo: 'resumen', pathMatch: 'full' },
+      { path: 'resumen', loadComponent: loadAdminResumen },
+      { path: 'usuarios', loadComponent: loadAdminUsuarios },
+      { path: 'tiendas', loadComponent: loadAdminTiendas }
     ]
   },
 
   // Bandeja de chats
   {
     path: 'chats',
-    component: ChatsListComponent,
+    loadComponent: loadChatsList,
     canActivate: [roleGuard('CLIENTE', 'VENDEDOR', 'REPARTIDOR', 'PROVEEDOR')]
   },
 
   // Chat por pedido: /chat/order/:orderId/:chatType
   {
     path: 'chat/order/:orderId/:chatType',
-    component: ChatComponent,
+    loadComponent: loadChat,
     canActivate: [roleGuard('CLIENTE', 'VENDEDOR', 'REPARTIDOR')]
   },
   // Chat por tienda: /chat/shop/:shopId
   {
     path: 'chat/shop/:shopId',
-    component: ChatComponent,
+    loadComponent: loadChat,
     canActivate: [roleGuard('VENDEDOR', 'PROVEEDOR')]
   },
 

@@ -1,7 +1,6 @@
 package com.mercafacil.dto;
 
 import com.mercafacil.model.ChatType;
-import java.time.LocalDateTime;
 
 public record ChatThreadDto(
     ChatType chatType,
@@ -10,5 +9,5 @@ public record ChatThreadDto(
     String title,
     String lastMessage,
     String lastSenderName,
-    LocalDateTime lastMessageDate
+    String lastMessageDate
 ) {}

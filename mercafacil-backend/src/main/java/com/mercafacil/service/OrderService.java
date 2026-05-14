@@ -22,19 +22,23 @@ import com.mercafacil.model.OrderStatus;
 import com.mercafacil.model.Role;
 import com.mercafacil.model.User;
 import com.mercafacil.repository.OrderRepository;
+import com.mercafacil.repository.MessageRepository;
 import com.mercafacil.repository.ProductRepository;
 import com.mercafacil.repository.StoreRepository;
+import com.mercafacil.util.DateTimeUtils;
 
 @Service
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final MessageRepository messageRepository;
     private final StoreRepository storeRepository;
     private final ProductRepository productRepository;
 
-    public OrderService(OrderRepository orderRepository, StoreRepository storeRepository,
+    public OrderService(OrderRepository orderRepository, MessageRepository messageRepository, StoreRepository storeRepository,
             ProductRepository productRepository) {
         this.orderRepository = orderRepository;
+        this.messageRepository = messageRepository;
         this.storeRepository = storeRepository;
         this.productRepository = productRepository;
     }
@@ -55,17 +59,15 @@ public class OrderService {
         for (OrderItemRequest ir : req.items()) {
             OrderItem item = new OrderItem();
             item.setOrder(order);
-            Long productId = ir.productId();
+            Long productId = Objects.requireNonNull(ir.productId(), "productId no puede ser null");
             item.setProductId(productId);
             item.setStoreId(ir.storeId());
             item.setQuantity(ir.quantity());
             item.setUnitPrice(ir.unitPrice());
-            if (productId != null) {
-                productRepository.findById(productId).ifPresent(p -> {
-                    item.setProductName(p.getName());
-                    item.setProductImage(p.getImage());
-                });
-            }
+            productRepository.findById(productId).ifPresent(p -> {
+                item.setProductName(p.getName());
+                item.setProductImage(p.getImage());
+            });
             order.getItems().add(item);
         }
 
@@ -107,8 +109,26 @@ public class OrderService {
         if (order.getStatus() != OrderStatus.PENDIENTE) {
             throw new IllegalStateException("Solo se pueden cancelar pedidos en estado PENDIENTE");
         }
+
+        messageRepository.deleteByOrderId(safeId);
         order.setStatus(OrderStatus.CANCELADO);
         orderRepository.save(order);
+    }
+
+    @Transactional
+    public void deleteOrder(Long orderId, User user) {
+        Long safeId = requireId(orderId, "orderId");
+        Order order = Objects.requireNonNull(
+                orderRepository.findById(safeId)
+                        .orElseThrow(() -> new IllegalArgumentException("Pedido no encontrado: " + orderId)),
+                "Pedido no encontrado: " + orderId);
+
+        if (user.getRol() != Role.ADMIN) {
+            throw new AccessDeniedException("No tienes permiso para eliminar este pedido");
+        }
+
+        messageRepository.deleteByOrderId(safeId);
+        orderRepository.delete(order);
     }
 
     private boolean canAccessOrder(Order order, User user) {
@@ -157,14 +177,14 @@ public class OrderService {
                     }
                     return new OrderItemResponse(
                             i.getProductId(), i.getStoreId(),
-                            i.getQuantity() != null ? i.getQuantity() : 0,
+                            i.getQuantity(),
                             i.getUnitPrice(), name, image);
                 })
                 .toList();
 
         String clientEmail = o.getClient() != null ? o.getClient().getEmail() : null;
-        String createdAt = o.getCreatedAt() != null ? o.getCreatedAt().toString() : null;
-        String deliveredAt = o.getDeliveredAt() != null ? o.getDeliveredAt().toString() : null;
+        String createdAt = DateTimeUtils.toApiString(o.getCreatedAt());
+        String deliveredAt = DateTimeUtils.toApiString(o.getDeliveredAt());
         return new OrderResponse(o.getId(), clientEmail, o.getStatus().name(), o.getTotal(), items, createdAt,
                 o.getShippingAddress(), o.getDeliveryNotes(), deliveredAt, o.getDeliveryLat(), o.getDeliveryLng());
     }

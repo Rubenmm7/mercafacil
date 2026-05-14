@@ -1,6 +1,5 @@
 package com.mercafacil.service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +17,7 @@ import com.mercafacil.model.Order;
 import com.mercafacil.model.OrderStatus;
 import com.mercafacil.model.User;
 import com.mercafacil.repository.OrderRepository;
+import com.mercafacil.util.DateTimeUtils;
 
 @Service
 @Transactional
@@ -44,7 +44,7 @@ public class RepartidorService {
                 .filter(o -> o.getStatus() == OrderStatus.EN_RUTA)
                 .count();
 
-        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+        LocalDateTime startOfDay = DateTimeUtils.startOfTodayMadrid();
         long deliveredToday = orders.stream()
                 .filter(o -> o.getStatus() == OrderStatus.ENTREGADO
                         && o.getCreatedAt() != null
@@ -97,7 +97,7 @@ public class RepartidorService {
 
         order.setStatus(status);
         if (status == OrderStatus.ENTREGADO) {
-            order.setDeliveredAt(LocalDateTime.now());
+            order.setDeliveredAt(DateTimeUtils.nowMadrid());
         }
         return toOrderResponse(orderRepository.save(order));
     }
@@ -113,12 +113,12 @@ public class RepartidorService {
     private OrderResponse toOrderResponse(Order o) {
         var items = o.getItems().stream()
                 .map(i -> new OrderItemResponse(i.getProductId(), i.getStoreId(),
-                        i.getQuantity() != null ? i.getQuantity() : 0,
+                        i.getQuantity(),
                         i.getUnitPrice(), i.getProductName(), i.getProductImage()))
                 .toList();
         String clientEmail = o.getClient() != null ? o.getClient().getEmail() : null;
-        String createdAt = o.getCreatedAt() != null ? o.getCreatedAt().toString() : null;
-        String deliveredAt = o.getDeliveredAt() != null ? o.getDeliveredAt().toString() : null;
+        String createdAt = DateTimeUtils.toApiString(o.getCreatedAt());
+        String deliveredAt = DateTimeUtils.toApiString(o.getDeliveredAt());
         return new OrderResponse(o.getId(), clientEmail, o.getStatus().name(), o.getTotal(), items, createdAt,
                 o.getShippingAddress(), o.getDeliveryNotes(), deliveredAt, o.getDeliveryLat(), o.getDeliveryLng());
     }

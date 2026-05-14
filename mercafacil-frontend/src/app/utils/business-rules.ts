@@ -1,0 +1,2 @@
+export const FREE_DELIVERY_THRESHOLD_EUR = 40;
+export const FREE_DELIVERY_FEE_EUR = 2.99;

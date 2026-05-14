@@ -17,7 +17,7 @@
   <div class="cart-layout">
     <!-- Items by store -->
     <div class="cart-items">
-      @for (group of itemsByStore(); track group.storeId) {
+      @for (group of storeGroups(); track group.storeId) {
       <div class="store-group">
         <div class="store-group-header" [style.--store-bg]="group.store?.bgColor || '#f3f4f6'"
           [style.--store-color]="group.store?.color || '#999'">
@@ -34,10 +34,9 @@
             <span class="sg-count">· {{group.items.length}} {{group.items.length === 1 ? 'producto' :
               'productos'}}</span>
           </div>
-          <div class="sg-shipping" [class.free]="isFreeShipping(group.items)">
+          <div class="sg-shipping" [class.free]="group.freeShipping">
             <app-icon name="truck" [size]="16" />
-            {{isFreeShipping(group.items) ? 'Envío gratis' : 'Envío: ' + (group.store?.deliveryFee | number:'1.2-2') +
-            '€'}}
+            {{group.freeShipping ? 'Envío gratis' : 'Envío: ' + (group.store?.deliveryFee | number:'1.2-2') + '€'}}
           </div>
         </div>
 
@@ -62,15 +61,15 @@
 
         <div class="store-subtotal">
           <span>Subtotal {{group.storeName}}</span>
-          <strong>{{storeSubtotal(group.items) | number:'1.2-2'}}€</strong>
+          <strong>{{group.subtotal | number:'1.2-2'}}€</strong>
         </div>
 
-        @if (!isFreeShipping(group.items)) {
+        @if (!group.freeShipping) {
         <div class="free-shipping-progress">
-          Añade <strong>{{remainingForFree(group.items) | number:'1.2-2'}}€</strong> más para envío gratis en
+          Añade <strong>{{group.remainingForFree | number:'1.2-2'}}€</strong> más para envío gratis en
           {{group.storeName}}
           <div class="progress-bar">
-            <div class="progress-fill" [style.width.%]="freeProgress(group.items)"></div>
+            <div class="progress-fill" [style.width.%]="group.freeProgress"></div>
           </div>
         </div>
         }
@@ -85,7 +84,7 @@
         <div class="summary-rows">
           <div class="summary-row"><span>Subtotal ({{totalUnits()}} uds.)</span><span>{{subtotal() |
               number:'1.2-2'}}€</span></div>
-          <div class="summary-row"><span>Envío ({{itemsByStore().length}} tienda{{itemsByStore().length > 1 ? 's' :
+          <div class="summary-row"><span>Envío ({{storeGroups().length}} tienda{{storeGroups().length > 1 ? 's' :
               ''}})</span><span [class.free-text]="deliveryFees() === 0">{{deliveryFees() === 0 ? 'Gratis' :
               (deliveryFees() | number:'1.2-2') + '€'}}</span></div>
           <div class="summary-total"><span>Total</span><span class="total-value">{{total() | number:'1.2-2'}}€</span>

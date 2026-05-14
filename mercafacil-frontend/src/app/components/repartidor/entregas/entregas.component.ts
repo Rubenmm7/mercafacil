@@ -9,6 +9,7 @@ import { MapsLoaderService } from '../../../services/maps-loader.service';
 import { Order, OrderStatus } from '../../../models/models';
 import { LiveMapComponent } from '../../live-map/live-map.component';
 import { IconComponent } from '../../icon/icon.component';
+import { formatMadridDateTime } from '../../../utils/date-time';
 
 type Tab = 'mis' | 'disponibles';
 
@@ -165,11 +166,7 @@ export class EntregasComponent implements OnInit, OnDestroy {
   }
 
   formatDate(d?: string): string {
-    if (!d) return '—';
-    return new Date(d).toLocaleDateString('es-ES', {
-      day: '2-digit', month: 'short', year: 'numeric',
-      hour: '2-digit', minute: '2-digit'
-    });
+    return formatMadridDateTime(d);
   }
 
   private startSimulation(orderId: number, shippingAddress?: string, deliveryLat?: number, deliveryLng?: number): void {

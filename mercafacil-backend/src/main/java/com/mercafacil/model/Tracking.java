@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import com.mercafacil.util.DateTimeUtils;
 
 @Entity
 @Table(name = "tracking")
@@ -38,7 +39,7 @@ public class Tracking {
     @PrePersist
     @PreUpdate
     protected void touchTimestamp() {
-        ultimaActualizacion = LocalDateTime.now();
+        ultimaActualizacion = DateTimeUtils.nowMadrid();
     }
 
     public Long getId() {

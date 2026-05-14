@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, signal } from '@angular/core';
+import { Component, HostListener, OnInit, computed, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
@@ -8,6 +8,8 @@ import { Store } from '../../models/models';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IconComponent } from '../icon/icon.component';
+import { FREE_DELIVERY_THRESHOLD_EUR } from '../../utils/business-rules';
+import { FOOTER_NAV_LINKS, FOOTER_SUPPORT_LINKS, MAIN_NAV_LINKS, getRoleNavLinks } from '../../config/navigation';
 
 @Component({
   selector: 'app-layout',
@@ -19,6 +21,7 @@ import { IconComponent } from '../icon/icon.component';
 export class LayoutComponent implements OnInit {
   mobileMenuOpen = false;
   searchQuery = '';
+  readonly freeDeliveryThreshold = FREE_DELIVERY_THRESHOLD_EUR;
 
   readonly isDark = signal(
     localStorage.getItem('mf-dark') === '1' ||
@@ -39,32 +42,10 @@ export class LayoutComponent implements OnInit {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  navLinks = [
-    { path: '/', label: 'Inicio' },
-    { path: '/tiendas', label: 'Tiendas' },
-    { path: '/envio', label: 'Envío' }
-  ];
-
-  get showChatsLink(): boolean {
-    const rol = this.authService.user()?.rol;
-    return rol === 'VENDEDOR' || rol === 'REPARTIDOR' || rol === 'PROVEEDOR';
-  }
-
-  footerNavLinks = [
-    { path: '/', label: 'Inicio' },
-    { path: '/tiendas', label: 'Tiendas' },
-    { path: '/buscar', label: 'Buscar productos' },
-    { path: '/politicas-envio', label: 'Políticas de envío' }
-  ];
-
-  footerSupport = [
-    { label: 'Ayuda y FAQ', path: '/ayuda' },
-    { label: 'Políticas de envío', path: '/politicas-envio' },
-    { label: 'Devoluciones', path: '/devoluciones' },
-    { label: 'Contacto', path: '/contacto' },
-    { label: 'Términos de uso', path: '/terminos' },
-    { label: 'Privacidad', path: '/privacidad' },
-  ];
+  readonly navLinks = MAIN_NAV_LINKS;
+  readonly footerNavLinks = FOOTER_NAV_LINKS;
+  readonly footerSupport = FOOTER_SUPPORT_LINKS;
+  readonly roleNavLinks = computed(() => getRoleNavLinks(this.authService.user()?.rol));
 
   constructor(
     public cartService: CartService,
@@ -93,7 +74,7 @@ export class LayoutComponent implements OnInit {
 
   handleSearch(): void {
     if (this.searchQuery.trim()) {
-      this.router.navigate(['/buscar'], { state: { q: this.searchQuery.trim() } });
+      this.router.navigate(['/buscar'], { queryParams: { q: this.searchQuery.trim() } });
     }
   }
 

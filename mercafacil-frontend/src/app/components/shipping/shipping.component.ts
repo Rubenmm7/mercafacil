@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api.service';
 import { Store, DeliveryZone } from '../../models/models';
 import { IconComponent } from '../icon/icon.component';
+import { FREE_DELIVERY_THRESHOLD_EUR } from '../../utils/business-rules';
 
 @Component({
   selector: 'app-shipping',
@@ -12,6 +13,7 @@ import { IconComponent } from '../icon/icon.component';
   styleUrl: './shipping.component.css'
 })
 export class ShippingComponent implements OnInit {
+  readonly freeDeliveryThreshold = FREE_DELIVERY_THRESHOLD_EUR;
   readonly stores = signal<Store[]>([]);
   readonly deliveryZones = signal<DeliveryZone[]>([]);
   readonly loading = signal(true);

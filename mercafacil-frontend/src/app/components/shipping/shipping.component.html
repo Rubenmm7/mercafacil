@@ -76,7 +76,7 @@
           </div>
           <div class="result-pills">
             <span class="pill"><app-icon name="clock" [size]="14" /> 1–4h</span>
-            <span class="pill"><app-icon name="package" [size]="14" /> Gratis +40€</span>
+            <span class="pill"><app-icon name="package" [size]="14" /> Gratis +{{ freeDeliveryThreshold }}€</span>
             <span class="pill"><app-icon name="refresh-cw" [size]="14" /> Dev. 24h</span>
           </div>
         </div>
@@ -201,7 +201,7 @@
           </tbody>
         </table>
         <div class="table-note"><app-icon name="lightbulb" [size]="16" /> Envío gratuito en todos los pedidos superiores
-          a 40€</div>
+          a {{ freeDeliveryThreshold }}€</div>
       </div>
     </div>
 
@@ -232,7 +232,7 @@
           <div class="sd-row"><span>Coste de envío</span><strong class="green-text">{{store.deliveryFee |
               number:'1.2-2'}}€</strong></div>
           <div class="sd-row"><span>Horario tienda</span><strong>{{store.hours}}</strong></div>
-          <div class="sd-note">Envío gratis con pedidos > 40€</div>
+          <div class="sd-note">Envío gratis con pedidos > {{ freeDeliveryThreshold }}€</div>
         </div>
         }
         }

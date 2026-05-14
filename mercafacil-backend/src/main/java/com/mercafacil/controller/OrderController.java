@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mercafacil.dto.OrderRequest;
 import com.mercafacil.dto.OrderResponse;
+import com.mercafacil.model.Role;
 import com.mercafacil.model.User;
 import com.mercafacil.service.OrderService;
 import com.mercafacil.service.UserService;
@@ -63,7 +64,11 @@ public class OrderController {
     public ResponseEntity<Void> cancel(@PathVariable Long id,
             @AuthenticationPrincipal UserDetails principal) {
         User user = userService.findByEmail(principal.getUsername());
-        orderService.cancelOrder(id, user);
+        if (user.getRol() == Role.ADMIN) {
+            orderService.deleteOrder(id, user);
+        } else {
+            orderService.cancelOrder(id, user);
+        }
         return ResponseEntity.noContent().build();
     }
 }

@@ -5,12 +5,21 @@ import { CartService } from '../../services/cart.service';
 import { ApiService } from '../../services/api.service';
 import { CartItem, Store } from '../../models/models';
 import { IconComponent } from '../icon/icon.component';
+import { FREE_DELIVERY_THRESHOLD_EUR } from '../../utils/business-rules';
 
 interface StoreGroup {
   storeId: number;
   storeName: string;
   items: CartItem[];
   store: Store | undefined;
+}
+
+interface StoreGroupView extends StoreGroup {
+  subtotal: number;
+  freeShipping: boolean;
+  remainingForFree: number;
+  freeProgress: number;
+  deliveryFee: number;
 }
 
 @Component({
@@ -22,6 +31,7 @@ interface StoreGroup {
 })
 export class CartComponent implements OnInit {
   readonly stores = signal<Store[]>([]);
+  readonly storeById = computed(() => new Map(this.stores().map(store => [store.id, store] as const)));
 
   readonly cartItems = computed(() => this.cartService.items());
   readonly isEmpty = computed(() => this.cartItems().length === 0);
@@ -37,18 +47,32 @@ export class CartComponent implements OnInit {
       storeId: +id,
       storeName: g.storeName,
       items: g.items,
-      store: storeList.find(s => s.id === +id)
+      store: this.storeById().get(+id)
     }));
   });
+
+  readonly storeGroups = computed<StoreGroupView[]>(() =>
+    this.itemsByStore().map(group => {
+      const subtotal = group.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      const freeShipping = subtotal >= FREE_DELIVERY_THRESHOLD_EUR;
+      return {
+        ...group,
+        subtotal,
+        freeShipping,
+        remainingForFree: Math.max(0, FREE_DELIVERY_THRESHOLD_EUR - subtotal),
+        freeProgress: Math.min((subtotal / FREE_DELIVERY_THRESHOLD_EUR) * 100, 100),
+        deliveryFee: group.store ? group.store.deliveryFee : 0
+      };
+    })
+  );
 
   readonly subtotal = computed(() =>
     this.cartItems().reduce((sum, i) => sum + i.price * i.quantity, 0)
   );
 
   readonly deliveryFees = computed(() =>
-    this.itemsByStore().reduce((sum, g) => {
-      const storeSubtotal = g.items.reduce((s, i) => s + i.price * i.quantity, 0);
-      return sum + (g.store ? (storeSubtotal >= 40 ? 0 : g.store.deliveryFee) : 0);
+    this.storeGroups().reduce((sum, g) => {
+      return sum + (g.store ? (g.freeShipping ? 0 : g.store.deliveryFee) : 0);
     }, 0)
   );
 
@@ -69,22 +93,6 @@ export class CartComponent implements OnInit {
 
   checkout(): void {
     this.router.navigate(['/pago']);
-  }
-
-  storeSubtotal(items: CartItem[]): number {
-    return items.reduce((s, i) => s + i.price * i.quantity, 0);
-  }
-
-  isFreeShipping(items: CartItem[]): boolean {
-    return this.storeSubtotal(items) >= 40;
-  }
-
-  remainingForFree(items: CartItem[]): number {
-    return Math.max(0, 40 - this.storeSubtotal(items));
-  }
-
-  freeProgress(items: CartItem[]): number {
-    return Math.min((this.storeSubtotal(items) / 40) * 100, 100);
   }
 
   updateQty(productId: number, storeId: number, qty: number): void {

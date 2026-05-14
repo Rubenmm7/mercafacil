@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FREE_DELIVERY_FEE_EUR, FREE_DELIVERY_THRESHOLD_EUR } from '../../utils/business-rules';
 
 interface FaqItem { q: string; a: string; }
 interface Section { title: string; text?: string; items?: FaqItem[]; bullets?: string[]; }
@@ -177,8 +178,8 @@ const PAGES: Record<string, PageContent> = {
       {
         title: 'Coste del envío',
         bullets: [
-          'Envío gratuito en pedidos iguales o superiores a 40 €.',
-          'Pedidos de menos de 40 €: tarifa fija de 2,99 € por envío.',
+          `Envío gratuito en pedidos iguales o superiores a ${FREE_DELIVERY_THRESHOLD_EUR} €.`,
+          `Pedidos de menos de ${FREE_DELIVERY_THRESHOLD_EUR} €: tarifa fija de ${FREE_DELIVERY_FEE_EUR.toFixed(2)} € por envío.`,
           'El coste de envío se muestra antes de confirmar el pago.',
         ]
       },

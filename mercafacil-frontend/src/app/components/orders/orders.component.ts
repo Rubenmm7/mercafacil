@@ -7,6 +7,7 @@ import { NotificationService } from '../../services/notification.service';
 import { ToastService } from '../../services/toast.service';
 import { Order, OrderStatus } from '../../models/models';
 import { IconComponent } from '../icon/icon.component';
+import { formatMadridDateTime } from '../../utils/date-time';
 
 @Component({
   selector: 'app-orders',
@@ -65,11 +66,7 @@ export class OrdersComponent implements OnInit {
   }
 
   formatDate(createdAt: string | undefined): string {
-    if (!createdAt) return '—';
-    return new Date(createdAt).toLocaleDateString('es-ES', {
-      day: '2-digit', month: 'short', year: 'numeric',
-      hour: '2-digit', minute: '2-digit'
-    });
+    return formatMadridDateTime(createdAt);
   }
 
   unreadForOrder(orderId: number): number {

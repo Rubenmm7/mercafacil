@@ -16,6 +16,7 @@ import com.mercafacil.model.Tracking;
 import com.mercafacil.model.User;
 import com.mercafacil.repository.OrderRepository;
 import com.mercafacil.repository.TrackingRepository;
+import com.mercafacil.util.DateTimeUtils;
 
 @Service
 @Transactional
@@ -51,7 +52,8 @@ public class TrackingService {
 
         // Usa orderId local para evitar navegar el proxy LAZY tras el save.
         TrackingResponse response = new TrackingResponse(
-                saved.getId(), orderId, saved.getLatitud(), saved.getLongitud(), saved.getUltimaActualizacion());
+                saved.getId(), orderId, saved.getLatitud(), saved.getLongitud(),
+                DateTimeUtils.toApiString(saved.getUltimaActualizacion()));
 
         messaging.convertAndSend("/topic/tracking/order/" + orderId, Objects.requireNonNull(response));
         return response;
@@ -75,7 +77,7 @@ public class TrackingService {
                 t.getOrder().getId(),
                 t.getLatitud(),
                 t.getLongitud(),
-                t.getUltimaActualizacion());
+                DateTimeUtils.toApiString(t.getUltimaActualizacion()));
     }
 
     private @NonNull Long requireId(Long id, String fieldName) {

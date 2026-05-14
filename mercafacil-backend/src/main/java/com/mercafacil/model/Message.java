@@ -14,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import com.mercafacil.util.DateTimeUtils;
 
 @Entity
 @Table(name = "messages")
@@ -50,7 +51,7 @@ public class Message {
 
     @PrePersist
     protected void prePersist() {
-        fecha = LocalDateTime.now();
+        fecha = DateTimeUtils.nowMadrid();
     }
 
     public Long getId() {

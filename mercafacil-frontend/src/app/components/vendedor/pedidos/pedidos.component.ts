@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { VendedorService } from '../../../services/vendedor.service';
 import { Order, OrderStatus } from '../../../models/models';
 import { IconComponent } from '../../icon/icon.component';
+import { formatMadridDateTime } from '../../../utils/date-time';
 
 @Component({
   selector: 'app-vendedor-pedidos',
@@ -66,7 +67,6 @@ export class PedidosComponent implements OnInit {
   }
 
   formatDate(d?: string): string {
-    if (!d) return '—';
-    return new Date(d).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    return formatMadridDateTime(d);
   }
 }

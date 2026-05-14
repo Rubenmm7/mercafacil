@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, shareReplay } from 'rxjs/operators';
 import { Store, StoreWithLogo, Product, Category, DeliveryZone, Order, CartItem } from '../models/models';
 import { environment } from '../../environments/environment';
 import { attachStoreLogo } from './store-logo';
@@ -9,14 +9,19 @@ import { attachStoreLogo } from './store-logo';
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private readonly baseUrl = environment.apiUrl;
+  private storesCache?: Observable<StoreWithLogo[]>;
+  private categoriesCache?: Observable<Category[]>;
+  private deliveryZonesCache?: Observable<DeliveryZone[]>;
 
   constructor(private http: HttpClient) { }
 
   getStores(): Observable<StoreWithLogo[]> {
-    return this.http.get<Store[]>(`${this.baseUrl}/stores`).pipe(
+    this.storesCache ??= this.http.get<Store[]>(`${this.baseUrl}/stores`).pipe(
       map(stores => stores.map(attachStoreLogo)),
-      catchError(this.handleError<StoreWithLogo[]>([]))
+      catchError(this.handleError<StoreWithLogo[]>([])),
+      shareReplay({ bufferSize: 1, refCount: false })
     );
+    return this.storesCache;
   }
 
   getProducts(query?: string): Observable<Product[]> {
@@ -29,15 +34,19 @@ export class ApiService {
   }
 
   getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(`${this.baseUrl}/categories`).pipe(
-      catchError(this.handleError<Category[]>([]))
+    this.categoriesCache ??= this.http.get<Category[]>(`${this.baseUrl}/categories`).pipe(
+      catchError(this.handleError<Category[]>([])),
+      shareReplay({ bufferSize: 1, refCount: false })
     );
+    return this.categoriesCache;
   }
 
   getDeliveryZones(): Observable<DeliveryZone[]> {
-    return this.http.get<DeliveryZone[]>(`${this.baseUrl}/delivery-zones`).pipe(
-      catchError(this.handleError<DeliveryZone[]>([]))
+    this.deliveryZonesCache ??= this.http.get<DeliveryZone[]>(`${this.baseUrl}/delivery-zones`).pipe(
+      catchError(this.handleError<DeliveryZone[]>([])),
+      shareReplay({ bufferSize: 1, refCount: false })
     );
+    return this.deliveryZonesCache;
   }
 
   createOrder(items: CartItem[], shippingAddress: string, deliveryNotes?: string, deliveryLat?: number, deliveryLng?: number): Observable<Order> {
@@ -69,8 +78,9 @@ export class ApiService {
   }
 
   private handleError<T>(fallback: T) {
-    return (error: HttpErrorResponse): Observable<T> => {
-      console.error(`[ApiService] Error calling API:`, error.message);
+    return (_error: HttpErrorResponse): Observable<T> => {
+      // Silenciamos el error aquí para evitar ruido en consola; los componentes
+      // ya reciben el valor de fallback y pueden decidir si muestran feedback.
       return of(fallback);
     };
   }

@@ -15,7 +15,8 @@
     </div>
     <div class="type-filters">
       @for (type of filterTypes; track type) {
-      <button [class.active]="filterType() === type" (click)="setFilterType(type)">{{type}}</button>
+      <button type="button" [class.active]="filterType() === type" (click)="setFilterType(type)"
+        [attr.aria-pressed]="filterType() === type" [attr.aria-label]="'Filtrar por ' + type">{{type}}</button>
       }
     </div>
   </div>
@@ -83,8 +84,8 @@
         </div>
       </div>
       <div class="store-actions">
-        <button class="view-btn" [style.background-color]="store.color" (click)="viewProducts(store)">Ver productos
-          ›</button>
+        <button type="button" class="view-btn" [style.background-color]="store.color" (click)="viewProducts(store)"
+          [attr.aria-label]="'Ver productos de ' + store.name">Ver productos ›</button>
       </div>
     </div>
     }

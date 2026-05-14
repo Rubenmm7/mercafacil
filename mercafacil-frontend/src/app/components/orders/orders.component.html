@@ -10,9 +10,6 @@
         <polyline points="12 6 12 12 16 14" />
       </svg>
       Historial de pedidos
-      @if (historyOrders().length > 0) {
-        <span class="history-count">{{ historyOrders().length }}</span>
-      }
     </button>
   </div>
 
@@ -90,7 +87,10 @@
 
     <div class="history-header">
       <app-icon name="clock" [size]="20" />
-      <span>Pedidos entregados</span>
+      <span>Pedidos entregados y cancelados</span>
+      @if (historyOrders().length > 0) {
+        <span class="history-count">Total {{ historyOrders().length }}</span>
+      }
     </div>
 
     @if (historyOrders().length === 0) {

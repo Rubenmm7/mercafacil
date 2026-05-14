@@ -8,6 +8,7 @@ import { TrackingService } from '../../services/tracking.service';
 import { Order, OrderStatus, TrackingPosition } from '../../models/models';
 import { LiveMapComponent } from '../live-map/live-map.component';
 import { IconComponent } from '../icon/icon.component';
+import { formatMadridDateTime } from '../../utils/date-time';
 
 interface TimelineStep {
   key: OrderStatus;
@@ -116,10 +117,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   }
 
   formatDate(value?: string): string {
-    if (!value) return '—';
-    return new Date(value).toLocaleString('es-ES', {
-      day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
-    });
+    return formatMadridDateTime(value);
   }
 
   isUrl(value: string): boolean {
@@ -132,7 +130,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     const est = new Date(createdAt);
     est.setHours(est.getHours() + 2);
     return est.toLocaleString('es-ES', {
-      day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+      day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Madrid'
     });
   }
 
