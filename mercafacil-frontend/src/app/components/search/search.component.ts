@@ -40,6 +40,8 @@ export class SearchComponent implements OnInit {
   readonly selectedCategory = signal('');
   readonly categoryDisplay = computed(() => this.selectedCategory().replace(/\|/g, ' y '));
   readonly selectedStores = signal<number[]>([]);
+  readonly minPrice = signal<number | null>(null);
+  readonly maxPrice = signal<number | null>(null);
   readonly storeById = computed(() => new Map(this.stores().map(store => [store.id, store] as const)));
   readonly selectedStoreViews = computed(() =>
     this.selectedStores().map(id => ({ id, store: this.storeById().get(id) }))
@@ -67,6 +69,14 @@ export class SearchComponent implements OnInit {
     } else if (this.sortBy === 'stores') {
       result = [...result].sort((a, b) => b.storeOffers.length - a.storeOffers.length);
     }
+
+    if (this.minPrice() !== null) {
+      result = result.filter(p => this.minPriceOf(p) >= this.minPrice()!);
+    }
+    if (this.maxPrice() !== null) {
+      result = result.filter(p => this.minPriceOf(p) <= this.maxPrice()!);
+    }
+
     return result;
   });
 
@@ -124,6 +134,12 @@ export class SearchComponent implements OnInit {
         ? storeIds.split(',').map(id => +id).filter(id => Number.isFinite(id))
         : []
     );
+
+    const minP = params.get('precioMin');
+    const maxP = params.get('precioMax');
+    this.minPrice.set(minP !== null ? +minP : null);
+    this.maxPrice.set(maxP !== null ? +maxP : null);
+
     return query;
   }
 
@@ -133,7 +149,9 @@ export class SearchComponent implements OnInit {
       queryParams: {
         q: this.query() || null,
         categoria: this.selectedCategory() || null,
-        storeId: this.selectedStores().length ? this.selectedStores().join(',') : null
+        storeId: this.selectedStores().length ? this.selectedStores().join(',') : null,
+        precioMin: this.minPrice() ?? null,
+        precioMax: this.maxPrice() ?? null
       },
       queryParamsHandling: 'merge'
     });
@@ -195,6 +213,8 @@ export class SearchComponent implements OnInit {
   clearFilters(): void {
     this.selectedStores.set([]);
     this.selectedCategory.set('');
+    this.minPrice.set(null);
+    this.maxPrice.set(null);
     this.syncRoute();
   }
 
