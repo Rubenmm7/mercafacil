@@ -5,6 +5,7 @@ import { VendedorService } from '../../../services/vendedor.service';
 import { Order, OrderStatus } from '../../../models/models';
 import { IconComponent } from '../../icon/icon.component';
 import { formatMadridDateTime } from '../../../utils/date-time';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-vendedor-pedidos',
@@ -52,7 +53,7 @@ export class PedidosComponent implements OnInit {
     PENDIENTE: 'Iniciar preparación'
   };
 
-  constructor(private vendedorService: VendedorService, private router: Router) { }
+  constructor(private vendedorService: VendedorService, private router: Router, private toastService: ToastService) { }
 
   ngOnInit(): void {
     this.load();
@@ -97,8 +98,8 @@ export class PedidosComponent implements OnInit {
       o.total?.toFixed(2) ?? '0.00',
       (o.shippingAddress ?? '').replace(/,/g, ' '),
       o.postalCode ?? '',
-      o.createdAt ?? '',
-      o.deliveredAt ?? ''
+      this.formatDate(o.createdAt),
+      this.formatDate(o.deliveredAt)
     ]);
 
     const csvContent = [headers, ...rows]
@@ -112,5 +113,6 @@ export class PedidosComponent implements OnInit {
     a.download = `pedidos-${this.exportPeriod()}-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
+    this.toastService.showMessage({ body: `CSV exportado: ${orders.length} pedidos` });
   }
 }
