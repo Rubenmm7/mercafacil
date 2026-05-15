@@ -253,13 +253,13 @@ export class SearchComponent implements OnInit {
 
   onMinPriceChange(value: string | number | null): void {
     const n = value !== null && value !== '' ? +value : null;
-    this.minPrice.set(Number.isFinite(n!) ? n : null);
+    this.minPrice.set(n !== null && Number.isFinite(n) ? n : null);
     this.syncRoute();
   }
 
   onMaxPriceChange(value: string | number | null): void {
     const n = value !== null && value !== '' ? +value : null;
-    this.maxPrice.set(Number.isFinite(n!) ? n : null);
+    this.maxPrice.set(n !== null && Number.isFinite(n) ? n : null);
     this.syncRoute();
   }
 }
