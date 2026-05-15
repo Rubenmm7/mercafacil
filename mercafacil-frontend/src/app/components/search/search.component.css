@@ -119,3 +119,43 @@
   .product-header { flex-direction: column; }
   .product-price-summary { text-align: left; }
 }
+
+.price-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.price-input-group label {
+  font-size: 11px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.price-input-group input {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.price-input-group input:focus {
+  outline: none;
+  border-color: #6366f1;
+}
+
+.price-separator {
+  color: #9ca3af;
+  margin-top: 18px;
+  font-size: 14px;
+}

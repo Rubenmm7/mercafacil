@@ -250,4 +250,16 @@ export class SearchComponent implements OnInit {
     this.selectedStores.set([]);
     this.syncRoute();
   }
+
+  onMinPriceChange(value: string | number | null): void {
+    const n = value !== null && value !== '' ? +value : null;
+    this.minPrice.set(Number.isFinite(n!) ? n : null);
+    this.syncRoute();
+  }
+
+  onMaxPriceChange(value: string | number | null): void {
+    const n = value !== null && value !== '' ? +value : null;
+    this.maxPrice.set(Number.isFinite(n!) ? n : null);
+    this.syncRoute();
+  }
 }
