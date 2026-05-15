@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, computed, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { VendedorService } from '../../../services/vendedor.service';
@@ -18,6 +18,23 @@ export class PedidosComponent implements OnInit {
   loading = signal(true);
   error = signal('');
   updating = signal<number | null>(null);
+
+  exportPeriod = signal<'today' | 'week' | 'all'>('today');
+
+  readonly ordersForExport = computed(() => {
+    const period = this.exportPeriod();
+    const all = this.orders();
+    if (period === 'all') return all;
+    const now = new Date();
+    const cutoff = new Date(now);
+    if (period === 'today') {
+      cutoff.setHours(0, 0, 0, 0);
+    } else {
+      cutoff.setDate(now.getDate() - 7);
+      cutoff.setHours(0, 0, 0, 0);
+    }
+    return all.filter(o => o.createdAt && new Date(o.createdAt) >= cutoff);
+  });
 
   readonly statusLabels: Record<OrderStatus, string> = {
     PENDIENTE: 'Pendiente',
@@ -68,5 +85,32 @@ export class PedidosComponent implements OnInit {
 
   formatDate(d?: string): string {
     return formatMadridDateTime(d);
+  }
+
+  exportCsv(): void {
+    const orders = this.ordersForExport();
+    const headers = ['ID', 'Cliente', 'Estado', 'Total (EUR)', 'Direccion', 'CP', 'Fecha creacion', 'Fecha entrega'];
+    const rows = orders.map(o => [
+      o.id,
+      o.clientEmail ?? '',
+      this.statusLabels[o.status] ?? o.status,
+      o.total?.toFixed(2) ?? '0.00',
+      (o.shippingAddress ?? '').replace(/,/g, ' '),
+      o.postalCode ?? '',
+      o.createdAt ?? '',
+      o.deliveredAt ?? ''
+    ]);
+
+    const csvContent = [headers, ...rows]
+      .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+      .join('\r\n');
+
+    const blob = new Blob(['﻿' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `pedidos-${this.exportPeriod()}-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 }

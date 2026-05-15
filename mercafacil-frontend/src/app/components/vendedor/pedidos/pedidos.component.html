@@ -1,4 +1,16 @@
-<h1 class="page-title">Pedidos</h1>
+<div class="page-header">
+  <h1 class="page-title">Pedidos</h1>
+  <div class="export-controls">
+    <div class="period-toggle">
+      <button type="button" [class.active]="exportPeriod() === 'today'" (click)="exportPeriod.set('today')">Hoy</button>
+      <button type="button" [class.active]="exportPeriod() === 'week'" (click)="exportPeriod.set('week')">Semana</button>
+      <button type="button" [class.active]="exportPeriod() === 'all'" (click)="exportPeriod.set('all')">Todos</button>
+    </div>
+    <button type="button" class="btn-export" (click)="exportCsv()" [disabled]="ordersForExport().length === 0">
+      <app-icon name="file-text" [size]="14" /> Exportar CSV ({{ ordersForExport().length }})
+    </button>
+  </div>
+</div>
 
 @if (loading()) {
 <div class="loading">Cargando pedidos...</div>
