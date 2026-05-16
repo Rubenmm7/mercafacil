@@ -47,6 +47,9 @@ public class Order {
     @Column(name = "shipping_address", nullable = false, length = 500)
     private String shippingAddress = "";
 
+    @Column(name = "postal_code", length = 10)
+    private String postalCode;
+
     @Column(name = "delivery_notes", length = 500)
     private String deliveryNotes;
 
@@ -115,6 +118,14 @@ public class Order {
 
     public void setDeliveryNotes(String notes) {
         this.deliveryNotes = notes;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
     }
 
     public List<OrderItem> getItems() {

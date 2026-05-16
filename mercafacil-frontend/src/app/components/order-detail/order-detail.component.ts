@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 import { TrackingService } from '../../services/tracking.service';
+import { MapsLoaderService } from '../../services/maps-loader.service';
 import { Order, OrderStatus, TrackingPosition } from '../../models/models';
 import { LiveMapComponent } from '../live-map/live-map.component';
 import { IconComponent } from '../icon/icon.component';
@@ -29,6 +30,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   readonly error = signal<string | null>(null);
 
   readonly tracking = signal<TrackingPosition | null>(null);
+  readonly trackingHistory = signal<TrackingPosition[]>([]);
+  readonly routePath = signal<google.maps.LatLngLiteral[]>([]);
   readonly trackingLoading = signal(false);
 
   private readonly timeline: TimelineStep[] = [
@@ -45,7 +48,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     private router: Router,
     private api: ApiService,
     private authService: AuthService,
-    private trackingService: TrackingService
+    private trackingService: TrackingService,
+    private mapsLoader: MapsLoaderService
   ) { }
 
   ngOnInit(): void {
@@ -56,6 +60,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
       return;
     }
     this.loadOrder(orderId);
+    void this.mapsLoader.load();
   }
 
   ngOnDestroy(): void {
@@ -70,6 +75,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
       next: order => {
         this.order.set(order);
         this.loading.set(false);
+        void this.loadRoutePath(order);
         if (order.status !== 'ENTREGADO') {
           this.connectTracking(order.id);
         }
@@ -140,6 +146,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
 
   private connectTracking(orderId: number): void {
     this.loadLastTracking(orderId);
+    this.loadTrackingHistory(orderId);
     const token = this.authService.getToken();
     if (!token) return;
 
@@ -158,6 +165,68 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
       next: pos => { this.tracking.set(pos); this.trackingLoading.set(false); },
       error: () => { this.trackingLoading.set(false); }
     });
+  }
+
+  private loadTrackingHistory(orderId: number): void {
+    this.trackingService.getHistory(orderId).subscribe({
+      next: history => this.trackingHistory.set(history ?? []),
+      error: () => this.trackingHistory.set([])
+    });
+  }
+
+  private async loadRoutePath(order: Order): Promise<void> {
+    const ok = await this.mapsLoader.load();
+    if (!ok) return;
+
+    const destination = await this.resolveDestination(order);
+    if (!destination) return;
+
+    const origin = { lat: 37.7906159, lng: -3.7740386 };
+    const path = await this.fetchDirectionsPath(origin, destination);
+    if (path.length > 1) {
+      this.routePath.set(path);
+    }
+  }
+
+  private async resolveDestination(order: Order): Promise<{ lat: number; lng: number } | null> {
+    if (order.deliveryLat != null && order.deliveryLng != null) {
+      return { lat: order.deliveryLat, lng: order.deliveryLng };
+    }
+
+    if (!order.shippingAddress || typeof google === 'undefined' || !google?.maps?.Geocoder) {
+      return null;
+    }
+
+    const geocoder = new google.maps.Geocoder();
+    return await new Promise(resolve => {
+      geocoder.geocode({ address: order.shippingAddress! }, (results: any, status: any) => {
+        if (status === 'OK' && results?.[0]?.geometry?.location) {
+          const loc = results[0].geometry.location;
+          resolve({ lat: loc.lat(), lng: loc.lng() });
+        } else {
+          resolve(null);
+        }
+      });
+    });
+  }
+
+  private async fetchDirectionsPath(
+    origin: google.maps.LatLngLiteral,
+    destination: google.maps.LatLngLiteral
+  ): Promise<google.maps.LatLngLiteral[]> {
+    try {
+      const routesLib = await google.maps.importLibrary('routes') as google.maps.RoutesLibrary;
+      const service = new routesLib.DirectionsService();
+      const result = await service.route({
+        origin,
+        destination,
+        travelMode: google.maps.TravelMode.DRIVING
+      });
+      const route = result.routes[0];
+      return (route?.overview_path ?? []).map(point => ({ lat: point.lat(), lng: point.lng() }));
+    } catch {
+      return [origin, destination];
+    }
   }
 
   private subscribeTracking(orderId: number): void {

@@ -151,7 +151,7 @@
   gap: .5rem;
 }
 
-.demo-grid > div {
+.demo-card {
   background: var(--bg-alt);
   border: 1px solid var(--border-2);
   border-radius: 8px;
@@ -160,7 +160,14 @@
   display: flex;
   flex-direction: column;
   gap: .1rem;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
 }
 
-.demo-grid strong { color: #059669; }
-.demo-grid span   { color: var(--text-muted); }
+.demo-card:hover {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, .08);
+}
+
+.demo-card strong { color: #059669; }
+.demo-card span   { color: var(--text-muted); }

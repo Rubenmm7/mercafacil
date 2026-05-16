@@ -1,0 +1,91 @@
+<h1 class="page-title">Alertas de Stock</h1>
+
+@if (error()) { <div class="error-msg">{{ error() }}</div> }
+
+@if (loading()) {
+<div class="loading">Cargando alertas...</div>
+} @else if (offers().length === 0) {
+<div class="empty">
+  <app-icon name="check-circle" [size]="40" />
+  <p>Todo el stock está en niveles correctos.</p>
+</div>
+} @else {
+
+<div class="summary-badges">
+  <span class="badge badge-none">
+    <app-icon name="x" [size]="14" />
+    Sin stock: {{ offers().filter(o => o.stock === 0).length }}
+  </span>
+  <span class="badge badge-critical">
+    <app-icon name="alert-triangle" [size]="14" />
+    Crítico (&lt;5): {{ offers().filter(o => o.stock > 0 && o.stock < 5).length }}
+  </span>
+  <span class="badge badge-low">
+    <app-icon name="info" [size]="14" />
+    Bajo (&lt;10): {{ offers().filter(o => o.stock >= 5 && o.stock < 10).length }}
+  </span>
+</div>
+
+<div class="alerts-list">
+  @for (offer of offers(); track offer.id) {
+  <div class="alert-row" [class]="'level-' + stockLevel(offer.stock)">
+
+    <div class="level-bar"></div>
+
+    <div class="offer-info">
+      <span class="offer-name">{{ offer.productName }}</span>
+      <span class="offer-meta">{{ offer.storeName }} · {{ offer.productUnit }}</span>
+    </div>
+
+    <div class="stock-badge" [class]="'stock-' + stockLevel(offer.stock)">
+      @if (stockLevel(offer.stock) === 'none') { <app-icon name="x" [size]="13" /> }
+      @else { <app-icon name="alert-triangle" [size]="13" /> }
+      {{ offer.stock }} uds.
+    </div>
+
+    @if (editing()?.id === offer.id) {
+    <form [formGroup]="stockForm" (ngSubmit)="saveStock()" class="inline-edit">
+      <input formControlName="stock" type="number" min="0" class="stock-input" />
+      <button type="submit" class="btn-save" [disabled]="stockForm.invalid || saving() === offer.id">
+        @if (saving() === offer.id) { ... } @else { Guardar }
+      </button>
+      <button type="button" class="btn-cancel" (click)="cancelEdit()">✕</button>
+    </form>
+    } @else {
+    <div class="row-actions">
+      <button class="btn-edit" (click)="startEdit(offer)">
+        <app-icon name="edit" [size]="13" /> Editar stock
+      </button>
+      <button class="btn-request" (click)="openRequest(offer)">
+        <app-icon name="message-circle" [size]="13" /> Pedir al proveedor
+      </button>
+    </div>
+    }
+
+  </div>
+  }
+</div>
+}
+
+<!-- Modal pedir al proveedor -->
+@if (requesting()) {
+<div class="modal-overlay" (click)="cancelRequest()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h2 class="modal-title">Pedir al proveedor</h2>
+    <p class="modal-subtitle">
+      <strong>{{ requesting()!.productName }}</strong> — {{ requesting()!.storeName }}
+    </p>
+    <label class="modal-label">
+      Mensaje
+      <textarea [formControl]="requestControl" rows="4" class="modal-textarea"></textarea>
+    </label>
+    <div class="modal-actions">
+      <button class="btn-cancel-modal" (click)="cancelRequest()">Cancelar</button>
+      <button class="btn-send" (click)="sendRequest()"
+        [disabled]="requestControl.invalid || sending()">
+        @if (sending()) { Enviando... } @else { Enviar solicitud }
+      </button>
+    </div>
+  </div>
+</div>
+}

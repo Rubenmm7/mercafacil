@@ -224,6 +224,18 @@
           </div>
         </div>
 
+        @if (estimatedMinutes() !== null) {
+        <div class="delivery-estimate">
+          <app-icon name="clock" [size]="14" />
+          <span>Entrega estimada: <strong>aprox. {{ estimatedMinutes() }} min</strong></span>
+        </div>
+        } @else {
+        <div class="delivery-estimate delivery-estimate--neutral">
+          <app-icon name="clock" [size]="14" />
+          <span>Introduce un CP válido para ver el tiempo estimado</span>
+        </div>
+        }
+
         @if (submitError()) {
         <div class="submit-error">{{ submitError() }}</div>
         }

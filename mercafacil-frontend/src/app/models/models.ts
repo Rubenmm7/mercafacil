@@ -218,6 +218,7 @@ export interface Order {
   items: OrderItemDto[];
   createdAt?: string;
   shippingAddress?: string;
+  postalCode?: string;
   deliveryNotes?: string;
   deliveredAt?: string;
   deliveryLat?: number;
@@ -237,4 +238,26 @@ export interface TrackingPosition {
   latitud: number;
   longitud: number;
   ultimaActualizacion: string;
+}
+
+// --- Analytics dashboard ---
+export interface DayStat {
+  date: string;
+  orders: number;
+}
+
+export interface ProductStat {
+  productName: string;
+  units: number;
+}
+
+export interface StoreRevenue {
+  storeName: string;
+  revenue: number;
+}
+
+export interface AnalyticsData {
+  dailyOrders: DayStat[];
+  topProducts: ProductStat[];
+  revenueByStore: StoreRevenue[];
 }

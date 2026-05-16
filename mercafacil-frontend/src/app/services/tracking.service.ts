@@ -68,6 +68,24 @@ export class TrackingService {
     });
   }
 
+  subscribeToOrderEstado(orderId: number): Observable<string> {
+    const subject = new Subject<string>();
+    let stompSub: StompSubscription | undefined;
+
+    stompSub = this.client?.subscribe(
+      `/topic/pedido/${orderId}/estado`,
+      (msg: IMessage) => {
+        const notif = JSON.parse(msg.body) as { orderId: number; status: string };
+        subject.next(notif.status);
+      }
+    );
+
+    return new Observable(observer => {
+      const rxjsSub = subject.subscribe(observer);
+      return () => { rxjsSub.unsubscribe(); stompSub?.unsubscribe(); };
+    });
+  }
+
   disconnect(): void {
     this.client?.deactivate();
     this.client = null;

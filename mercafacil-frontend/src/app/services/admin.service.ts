@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AdminStats, StoreAdmin, UserAdmin, Role, CreateUserRequest, UpdateUserRequest } from '../models/models';
+import { AdminStats, AnalyticsData, StoreAdmin, UserAdmin, Role, CreateUserRequest, UpdateUserRequest } from '../models/models';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
@@ -39,5 +39,9 @@ export class AdminService {
 
   assignVendedor(storeId: number, vendedorId: number | null): Observable<StoreAdmin> {
     return this.http.put<StoreAdmin>(`${this.base}/stores/${storeId}/vendedor`, { vendedorId });
+  }
+
+  getAnalytics(period: number): Observable<AnalyticsData> {
+    return this.http.get<AnalyticsData>(`${this.base}/analytics?period=${period}`);
   }
 }

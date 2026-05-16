@@ -64,17 +64,18 @@
           <div class="price-input-group">
             <label>Mín</label>
             <input type="number" min="0" placeholder="0"
-              [ngModel]="minPrice()" (ngModelChange)="onMinPriceChange($event)"
+              [ngModel]="pendingMin()" (ngModelChange)="onPendingMinChange($event)"
               aria-label="Precio mínimo" />
           </div>
           <span class="price-separator">–</span>
           <div class="price-input-group">
             <label>Máx</label>
             <input type="number" min="0" placeholder="∞"
-              [ngModel]="maxPrice()" (ngModelChange)="onMaxPriceChange($event)"
+              [ngModel]="pendingMax()" (ngModelChange)="onPendingMaxChange($event)"
               aria-label="Precio máximo" />
           </div>
         </div>
+        <button type="button" class="price-apply-btn" (click)="applyPriceFilter()">Aplicar</button>
       </div>
     </aside>
 
@@ -103,7 +104,7 @@
       </div>
 
       <!-- Active filters -->
-      @if (selectedStores().length > 0 || selectedCategory()) {
+      @if (selectedStores().length > 0 || selectedCategory() || minPrice() !== null || maxPrice() !== null) {
       <div class="active-filters">
         @if (selectedCategory()) {
         <span class="filter-chip green">
@@ -117,6 +118,14 @@
           [style.color]="entry.store?.color">
           {{entry.store?.name}} <button type="button" (click)="toggleStore(entry.id)"
             [attr.aria-label]="'Quitar filtro de ' + (entry.store?.name || 'tienda')">
+            <app-icon name="x" [size]="12" />
+          </button>
+        </span>
+        }
+        @if (minPrice() !== null || maxPrice() !== null) {
+        <span class="filter-chip price-chip">
+          Precio: {{minPrice() !== null ? (minPrice() + '€') : '0€'}} – {{maxPrice() !== null ? (maxPrice() + '€') : '∞'}}
+          <button type="button" (click)="clearPriceFilter()" aria-label="Quitar filtro de precio">
             <app-icon name="x" [size]="12" />
           </button>
         </span>

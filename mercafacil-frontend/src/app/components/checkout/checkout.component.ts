@@ -5,6 +5,7 @@ import {
   AbstractControl, ValidationErrors, ReactiveFormsModule
 } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
+import { Subscription } from 'rxjs';
 import { CartService } from '../../services/cart.service';
 import { ApiService } from '../../services/api.service';
 import { MapsLoaderService } from '../../services/maps-loader.service';
@@ -60,7 +61,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   readonly selectedLat = signal<number | null>(null);
   readonly selectedLng = signal<number | null>(null);
 
+  readonly estimatedMinutes = signal<number | null>(null);
+
   private searchTimeout: ReturnType<typeof setTimeout> | null = null;
+  private cpSub: Subscription | null = null;
 
   readonly form: FormGroup;
 
@@ -88,10 +92,33 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.mapsLoader.load().then(ok => this.mapsReady.set(ok));
+    this.cpSub = this.form.get('cp')!.valueChanges.subscribe((cp: string) => {
+      this.estimatedMinutes.set(this.calcularMinutos(cp));
+    });
   }
 
   ngOnDestroy(): void {
     if (this.searchTimeout !== null) clearTimeout(this.searchTimeout);
+    this.cpSub?.unsubscribe();
+  }
+
+  private calcularMinutos(cp: string | null): number | null {
+    if (!cp || !/^\d{5}$/.test(cp.trim())) return null;
+    const clean = cp.trim();
+    if (clean.startsWith('230')) {
+      const lastTwo = parseInt(clean.substring(3, 5), 10);
+      if (lastTwo <= 19) return 14;
+      if (lastTwo <= 39) return 15;
+      if (lastTwo <= 59) return 16;
+      if (lastTwo <= 79) return 17;
+      return 18;
+    }
+    if (clean.startsWith('231')) return 19;
+    if (clean.startsWith('232')) return 20;
+    if (clean.startsWith('233')) return 21;
+    if (clean.startsWith('234')) return 22;
+    if (clean.startsWith('235')) return 23;
+    return 18;
   }
 
   onSearchInput(value: string): void {
@@ -198,11 +225,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     const deliveryNotes: string | undefined = (v.notas as string)?.trim() || undefined;
     const deliveryLat = this.selectedLat() ?? undefined;
     const deliveryLng = this.selectedLng() ?? undefined;
+    const postalCode = (v.cp as string)?.trim() || undefined;
 
     this.submitting.set(true);
     this.submitError.set(null);
 
-    this.api.createOrder(this.cartItems(), shippingAddress, deliveryNotes, deliveryLat, deliveryLng).subscribe({
+    this.api.createOrder(this.cartItems(), shippingAddress, deliveryNotes, deliveryLat, deliveryLng, postalCode).subscribe({
       next: () => {
         this.submitting.set(false);
         this.cartService.clear();

@@ -17,6 +17,20 @@ export class LoginComponent {
   readonly errorMsg = signal('');
   readonly loading = signal(false);
 
+  readonly demoAccounts = [
+    { role: 'Admin',       email: 'admin@mercafacil.com',       password: 'admin123' },
+    { role: 'Cliente',     email: 'cliente@mercafacil.com',     password: 'cliente123' },
+    { role: 'Vendedor',    email: 'vendedor@mercafacil.com',    password: 'vendedor123' },
+    { role: 'Repartidor',  email: 'repartidor@mercafacil.com',  password: 'repartidor123' },
+    { role: 'Proveedor',   email: 'proveedor@mercafacil.com',   password: 'proveedor123' },
+  ];
+
+  fillDemo(account: { email: string; password: string }): void {
+    this.email = account.email;
+    this.password = account.password;
+    this.errorMsg.set('');
+  }
+
   constructor(
     private auth: AuthService,
     private router: Router,

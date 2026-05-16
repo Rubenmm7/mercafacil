@@ -1,7 +1,11 @@
 package com.mercafacil.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,9 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mercafacil.dto.AdminStatsDto;
+import com.mercafacil.dto.AnalyticsDto;
 import com.mercafacil.dto.AssignVendedorRequest;
 import com.mercafacil.dto.CreateUserRequest;
+import com.mercafacil.dto.DayStatDto;
+import com.mercafacil.dto.ProductStatDto;
 import com.mercafacil.dto.StoreAdminDto;
+import com.mercafacil.dto.StoreRevenueDto;
 import com.mercafacil.dto.UpdateUserRequest;
 import com.mercafacil.dto.UserDto;
 import com.mercafacil.model.Role;
@@ -20,6 +28,7 @@ import com.mercafacil.model.User;
 import com.mercafacil.repository.OrderRepository;
 import com.mercafacil.repository.StoreRepository;
 import com.mercafacil.repository.UserRepository;
+import com.mercafacil.util.DateTimeUtils;
 
 @Service
 @Transactional(readOnly = true)
@@ -38,6 +47,40 @@ public class AdminService {
         this.storeRepository = storeRepository;
         this.orderRepository = orderRepository;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    public AnalyticsDto getAnalytics(int period) {
+        LocalDateTime since = DateTimeUtils.nowMadrid().minusDays(period);
+
+        List<DayStatDto> dailyOrders = orderRepository.countByDayGlobal(since)
+                .stream()
+                .map(row -> new DayStatDto(row[0].toString(), ((Number) row[1]).longValue()))
+                .toList();
+
+        List<ProductStatDto> topProducts = orderRepository.topProductsGlobal(since)
+                .stream()
+                .limit(5)
+                .map(row -> new ProductStatDto((String) row[0], ((Number) row[1]).longValue()))
+                .toList();
+
+        List<Object[]> revenueRows = orderRepository.revenueByStoreGlobal(since);
+        List<Long> storeIds = new ArrayList<>();
+        for (Object[] row : revenueRows) {
+            storeIds.add(((Number) row[0]).longValue());
+        }
+        Map<Long, String> storeNames = storeRepository.findAllById(storeIds)
+                .stream()
+                .collect(Collectors.toMap(Store::getId, Store::getName));
+
+        List<StoreRevenueDto> revenueByStore = revenueRows.stream()
+                .map(row -> {
+                    Long storeId = ((Number) row[0]).longValue();
+                    double revenue = ((Number) row[1]).doubleValue();
+                    return new StoreRevenueDto(storeNames.getOrDefault(storeId, "Tienda " + storeId), revenue);
+                })
+                .toList();
+
+        return new AnalyticsDto(dailyOrders, topProducts, revenueByStore);
     }
 
     public List<StoreAdminDto> getStores() {

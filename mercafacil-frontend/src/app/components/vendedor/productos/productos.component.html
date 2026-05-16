@@ -59,7 +59,13 @@
   @for (p of products(); track p.id) {
   <div class="product-card">
     <div class="product-image">
-      @if (p.image) { {{ p.image }} } @else { <app-icon name="package" [size]="32" /> }
+      @if (p.image && p.image.startsWith('http')) {
+        <img [src]="p.image" [alt]="p.name" class="product-img" />
+      } @else if (p.image) {
+        {{ p.image }}
+      } @else {
+        <app-icon name="package" [size]="32" />
+      }
     </div>
     <div class="product-body">
       <div class="product-name">{{ p.name }}</div>

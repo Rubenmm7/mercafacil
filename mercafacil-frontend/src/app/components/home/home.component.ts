@@ -60,7 +60,7 @@ const CATEGORY_META: Record<string, { bgColor: string; svg: string }> = {
   },
   'Deporte': {
     bgColor: '#14b8a6',
-    svg: `<svg ${SVG_ATTRS}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>`,
+    svg: `<svg ${SVG_ATTRS}><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg>`,
   },
   'Mascotas': {
     bgColor: '#f97316',
@@ -130,9 +130,9 @@ export class HomeComponent implements OnInit {
   ] satisfies ReadonlyArray<PopularTerm>;
 
   stats: { icon: IconName; value: string; label: string }[] = [
-    { icon: 'map-pin', value: '25+', label: 'Establecimientos en Jaén' },
-    { icon: 'tag', value: '+50.000', label: 'Productos comparados' },
-    { icon: 'check-circle', value: 'Gratis', label: 'Sin registro necesario' },
+    { icon: 'map-pin', value: '+ 10', label: 'Establecimientos en Jaén' },
+    { icon: 'tag', value: '+75', label: 'Productos comparados' },
+    { icon: 'check-circle', value: 'Compara gratis', label: 'Registrate solo al comprar' },
     { icon: 'refresh-cw', value: 'Diario', label: 'Precios actualizados' },
   ];
 
@@ -166,10 +166,6 @@ export class HomeComponent implements OnInit {
 
   searchCategory(name: string): void {
     this.router.navigate(['/buscar'], { queryParams: { categoria: name } });
-  }
-
-  searchCategories(names: string[]): void {
-    this.router.navigate(['/buscar'], { queryParams: { categoria: names.join('|') } });
   }
 
   selectMallStore(id: number): void {

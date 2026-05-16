@@ -1,5 +1,16 @@
 @if (mapsReady()) {
 <google-map height="100%" width="100%" [center]="center()" [zoom]="zoom()" [options]="options()">
+  @if (hasRoute()) {
+  <map-polyline [path]="routePath()" [options]="{
+    strokeColor: '#1a7a4a',
+    strokeOpacity: 0.95,
+    strokeWeight: 4,
+    geodesic: true
+  }" />
+  }
+  @if (routePath().length > 0) {
+  <map-advanced-marker [position]="routePath()[0]" title="Inicio de ruta" />
+  }
   <map-advanced-marker [position]="center()" [title]="label()" />
 </google-map>
 } @else if (mapsError()) {

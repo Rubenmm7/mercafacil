@@ -96,7 +96,11 @@
       <span class="live-dot"></span> En directo
     </div>
     <div class="tracking-map-wrapper">
-      <app-live-map [lat]="tracking()!.latitud" [lng]="tracking()!.longitud" [label]="'Repartidor — Pedido #' + o.id" />
+      <app-live-map
+        [lat]="tracking()!.latitud"
+        [lng]="tracking()!.longitud"
+        [routePoints]="routePath().length ? routePath() : trackingHistory().map(p => ({ lat: p.latitud, lng: p.longitud }))"
+        [label]="'Repartidor — Pedido #' + o.id" />
     </div>
     <div class="tracking-coords">
       <span class="coord-item">

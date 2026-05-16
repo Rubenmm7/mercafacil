@@ -34,10 +34,13 @@
     <div class="demo-accounts">
       <p class="demo-title">Cuentas de prueba</p>
       <div class="demo-grid">
-        <div><strong>Admin</strong><span>admin@mercafacil.com</span><span>admin123</span></div>
-        <div><strong>Cliente</strong><span>cliente@mercafacil.com</span><span>cliente123</span></div>
-        <div><strong>Vendedor</strong><span>vendedor@mercafacil.com</span><span>vendedor123</span></div>
-        <div><strong>Repartidor</strong><span>repartidor@mercafacil.com</span><span>repartidor123</span></div>
+        @for (account of demoAccounts; track account.role) {
+          <div class="demo-card" (click)="fillDemo(account)" title="Usar esta cuenta">
+            <strong>{{ account.role }}</strong>
+            <span>{{ account.email }}</span>
+            <span>{{ account.password }}</span>
+          </div>
+        }
       </div>
     </div>
   </div>

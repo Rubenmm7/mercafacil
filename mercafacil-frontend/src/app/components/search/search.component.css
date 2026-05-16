@@ -159,3 +159,21 @@
   margin-top: 18px;
   font-size: 14px;
 }
+
+.price-apply-btn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 7px 0;
+  background: #22c55e;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.price-apply-btn:hover {
+  background: #16a34a;
+}

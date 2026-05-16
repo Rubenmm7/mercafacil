@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mercafacil.dto.AdminStatsDto;
+import com.mercafacil.dto.AnalyticsDto;
 import com.mercafacil.dto.AssignVendedorRequest;
 import com.mercafacil.dto.CreateUserRequest;
 import com.mercafacil.dto.StoreAdminDto;
@@ -37,6 +39,11 @@ public class AdminController {
     @GetMapping("/stats")
     public ResponseEntity<AdminStatsDto> getStats() {
         return ResponseEntity.ok(adminService.getStats());
+    }
+
+    @GetMapping("/analytics")
+    public ResponseEntity<AnalyticsDto> getAnalytics(@RequestParam(defaultValue = "7") int period) {
+        return ResponseEntity.ok(adminService.getAnalytics(period));
     }
 
     @GetMapping("/users")

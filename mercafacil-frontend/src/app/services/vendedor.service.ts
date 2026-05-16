@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { Order, ProductDetail, Store, StoreOfferDetail, VendedorStats } from '../models/models';
+import { AnalyticsData, Order, ProductDetail, Store, StoreOfferDetail, VendedorStats } from '../models/models';
 import { attachStoreLogo } from './store-logo';
 
 @Injectable({ providedIn: 'root' })
@@ -56,5 +56,13 @@ export class VendedorService {
 
   updateOffer(id: number, data: { price: number; originalPrice?: number; stock: number; brand: string }): Observable<StoreOfferDetail> {
     return this.http.put<StoreOfferDetail>(`${this.base}/offers/${id}`, data);
+  }
+
+  pedirAlProveedor(offerId: number, mensaje: string): Observable<void> {
+    return this.http.post<void>(`${this.base}/offers/${offerId}/pedir-proveedor`, { mensaje });
+  }
+
+  getAnalytics(period: number): Observable<AnalyticsData> {
+    return this.http.get<AnalyticsData>(`${this.base}/analytics?period=${period}`);
   }
 }

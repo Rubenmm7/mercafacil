@@ -11,13 +11,13 @@
 
       <h1 class="hero-title">
         Compara precios<br>
-        en todos los<br>
+        en diferentes<br>
         <span class="hero-accent">comercios de Jaén</span>
       </h1>
 
       <p class="hero-subtitle">
-        Supermercados, tecnología, moda, restaurantes y deporte.<br>
-        Todo en un sitio. <strong>Sin coste adicional.</strong>
+        Tecnología, moda, restaurantes y deporte.<br>
+        Todo en un sitio.
       </p>
 
       <form class="hero-search-form" (ngSubmit)="handleSearch()">
@@ -99,7 +99,8 @@
     }
     } @else {
     @for (store of stores(); track store.id) {
-    <a [routerLink]="['/buscar']" [queryParams]="{ storeId: store.id }" class="store-card">
+    <a [routerLink]="['/buscar']" [queryParams]="{ storeId: store.id }" class="store-card"
+      [class.highlighted]="selectedMallStore() === store.id">
       <div class="store-logo" [class.has-logo]="!!store.logoUrl"
         [style.background-color]="store.logoUrl ? '#ffffff' : store.color">
         @if (store.logoUrl) {
@@ -132,48 +133,14 @@
         <h2>Encuéntranos en Jaén Plaza</h2>
         <p class="mall-address"><app-icon name="map-pin" [size]="14" /> Paraje de las Lagunillas, s/n · 23009 Jaén</p>
       </div>
-      <a routerLink="/tiendas" class="see-all">Ver todas las tiendas →</a>
     </div>
-    <div class="mall-layout">
-      <div class="mall-map-wrap">
-        @if (loading()) {
-        <div class="mall-skeleton"></div>
-        } @else {
-        <app-mall-map [stores]="stores()" [selectedId]="selectedMallStore()"
-          (storeSelected)="selectMallStore($event)" />
-        }
-      </div>
-      <div class="mall-store-panel">
-        @for (store of sortedStores(); track store.id) {
-        <button type="button" class="mall-store-row" [class.active]="selectedMallStore() === store.id"
-          (click)="selectMallStore(store.id)" [attr.aria-pressed]="selectedMallStore() === store.id"
-          [attr.aria-label]="'Seleccionar tienda ' + store.name">
-          <div class="mall-store-logo" [class.has-logo]="!!store.logoUrl"
-            [style.background-color]="store.logoUrl ? '#ffffff' : store.color">
-            @if (store.logoUrl) {
-            <img [src]="store.logoUrl" [alt]="store.name" />
-            } @else {
-            <span>{{ store.logo }}</span>
-            }
-          </div>
-          <div class="mall-store-info">
-            <span class="mall-store-name">{{ store.name }}</span>
-            <span class="mall-store-cat">{{ store.category }}</span>
-          </div>
-          <div class="mall-store-meta">
-            <div class="mall-store-rating">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="#f97316" stroke="#f97316" stroke-width="2">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-              {{ store.rating }}
-            </div>
-            <span class="mall-store-link" (click)="$event.stopPropagation(); viewProducts(store)"
-              [attr.aria-label]="'Ver productos de ' + store.name">Ver productos ›</span>
-          </div>
-        </button>
-        }
-      </div>
+    <div class="mall-map-wrap">
+      @if (loading()) {
+      <div class="mall-skeleton"></div>
+      } @else {
+      <app-mall-map [stores]="stores()" [selectedId]="selectedMallStore()"
+        (storeSelected)="selectMallStore($event)" />
+      }
     </div>
   </div>
 </section>
@@ -182,7 +149,7 @@
 <section class="section">
   <div class="section-header">
     <h2>Productos populares</h2>
-    <a routerLink="/buscar" class="see-all">Ver todas →</a>
+    <a routerLink="/buscar" class="see-all">Ver todos →</a>
   </div>
   <div class="products-grid">
     @if (featuredProducts().length === 0 && loading()) {
@@ -225,27 +192,6 @@
   </div>
 </section>
 
-<!-- ─── BANNERS PROMOCIONALES ─────────────────────────────────────── -->
-<section class="section promos-section">
-  <div class="promos-grid">
-    <div class="promo-card promo-red">
-      <h3>Comida Rápida</h3>
-      <p>Compara menús de McDonald's, Popeyes, Vips y Foster's Hollywood en un clic</p>
-        <button type="button" class="promo-btn" (click)="searchCategory('Comida Rápida')">Explorar</button>
-    </div>
-    <div class="promo-card promo-blue">
-      <h3>Tecnología y Videojuegos</h3>
-      <p>iPhone 17, PS5 Pro, Xbox Series X y Nintendo Switch en MediaMarkt y Game</p>
-      <button type="button" class="promo-btn" (click)="searchCategories(['Tecnología', 'Videojuegos'])">Explorar</button>
-    </div>
-    <div class="promo-card promo-green">
-      <h3>Moda</h3>
-      <p>Zara y Primark comparados: misma prenda, mejor precio garantizado</p>
-      <button type="button" class="promo-btn" (click)="searchCategory('Moda')">Explorar</button>
-    </div>
-  </div>
-</section>
-
 <!-- ─── CÓMO FUNCIONA ─────────────────────────────────────────────── -->
 <section class="how-section">
   <div class="how-inner">
@@ -277,7 +223,8 @@
       <div class="step-card">
         <div class="step-icon" style="background:#ffedd5">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            <circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" />
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
           </svg>
           <div class="step-num" style="background:#f97316">03</div>
         </div>
@@ -287,7 +234,8 @@
       <div class="step-card">
         <div class="step-icon" style="background:#ede9fe">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
           </svg>
           <div class="step-num" style="background:#8b5cf6">04</div>
         </div>

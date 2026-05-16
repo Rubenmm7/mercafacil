@@ -29,4 +29,8 @@ export class RepartidorService {
   updateOrderStatus(orderId: number, status: string): Observable<Order> {
     return this.http.patch<Order>(`${this.base}/orders/${orderId}/status`, { status });
   }
+
+  setOrderRoute(orderId: number, waypoints: { lat: number; lng: number }[]): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/tracking/orders/${orderId}/route`, waypoints);
+  }
 }

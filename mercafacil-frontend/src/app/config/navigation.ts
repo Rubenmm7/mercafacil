@@ -10,6 +10,7 @@ export interface NavLink {
 export const MAIN_NAV_LINKS: NavLink[] = [
   { path: '/', label: 'Inicio', exact: true },
   { path: '/tiendas', label: 'Tiendas' },
+  { path: '/buscar', label: 'Productos' },
   { path: '/envio', label: 'Envío' }
 ];
 

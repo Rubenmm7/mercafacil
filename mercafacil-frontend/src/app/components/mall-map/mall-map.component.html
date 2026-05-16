@@ -1,99 +1,52 @@
 <div class="mall-map-container">
-
-  <!-- Selector de planta -->
-  <div class="floor-tabs">
-    <button class="floor-tab" [class.active]="activeFloor() === 'baja'" (click)="setFloor('baja')">
+  <div class="floor-tabs" aria-label="Selector de planta">
+    <button class="floor-tab" [class.active]="activeFloor() === 'baja'" (click)="setFloor('baja')" type="button">
       Planta Baja
     </button>
-    <button class="floor-tab" [class.active]="activeFloor() === 'alta'" (click)="setFloor('alta')">
+    <button class="floor-tab" [class.active]="activeFloor() === 'alta'" (click)="setFloor('alta')" type="button">
       Planta Alta
     </button>
   </div>
 
-  <!-- Plano esquemático -->
-  <svg class="mall-svg" viewBox="0 0 556 290" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"
-    role="img" aria-label="Plano interactivo de Jaén Plaza">
+  <svg class="mall-svg" viewBox="0 0 943 320" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"
+    role="img" aria-label="Mapa interactivo de Jaén Plaza">
+    <defs>
+      <filter id="zoneShadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="1.5" stdDeviation="1.8" flood-color="#dc2626" flood-opacity="0.18" />
+      </filter>
+    </defs>
 
-    <!-- Fondo del edificio -->
-    <rect class="building-bg" x="0" y="0" width="556" height="290" rx="6" />
+    <image href="/Mapa-jaen-plaza.png" x="0" y="0" width="943" height="320" preserveAspectRatio="none"
+      aria-hidden="true" />
 
-    <!-- Muro divisor vertical (separa el anchor Decathlon) en Planta Baja -->
-    @if (activeFloor() === 'baja') {
-    <rect class="wall-v" x="376" y="0" width="10" height="290" />
-    }
+    <g class="zone-layer">
+      @for (zone of zones(); track zone.storeId) {
+      @if (zone.store) {
+      <g class="zone-group" [class.selected]="selectedId() === zone.storeId" [class.floor-zone]="zone.floor !== 'all'"
+        [class.floor-active]="zone.floor === activeFloor()" (click)="select(zone.storeId)"
+        (keydown)="onKeydown($event, zone.storeId)" tabindex="0" role="button"
+        [attr.aria-label]="'Seleccionar tienda ' + zone.store.name">
+        <polygon [attr.points]="zone.points" class="zone-polygon" [style.fill]="zoneFill(zone.store)"
+          [style.stroke]="zoneStroke(zone.store)" />
 
-    <!-- Pasillo principal (franja horizontal entre filas) -->
-    <rect class="corridor-strip" x="0" y="130" width="372" height="30" />
-    @if (activeFloor() === 'alta') {
-    <rect class="corridor-strip wide" x="0" y="130" width="556" height="30" />
-    }
-
-    <!-- Texto del pasillo / zona -->
-    @if (activeFloor() === 'baja') {
-    <text x="186" y="149" class="corridor-label" text-anchor="middle">PASILLO PRINCIPAL</text>
-    } @else {
-    <text x="278" y="149" class="corridor-label" text-anchor="middle">ZONA DE RESTAURACIÓN</text>
-    }
-
-    <!-- Zonas de tiendas -->
-    @for (zone of zones(); track zone.storeId) {
-    @if (zone.store) {
-    <g class="zone-group" [class.selected]="selectedId() === zone.storeId" (click)="select(zone.storeId)"
-      (keydown)="onKeydown($event, zone.storeId)" tabindex="0" role="button" [attr.aria-label]="zone.store.name">
-
-      <!-- Tile de la tienda -->
-      <rect [attr.x]="zone.x" [attr.y]="zone.y" [attr.width]="zone.w" [attr.height]="zone.h" rx="5" class="zone-rect"
-        [style.fill]="zone.store.color" [style.stroke]="zone.store.color" />
-
-      <!-- Círculo con logo/emoji -->
-      <circle [attr.cx]="zone.cx" [attr.cy]="zone.cy - 14" r="17" class="zone-icon-ring" />
-      <text [attr.x]="zone.cx" [attr.y]="zone.cy - 14" class="zone-icon" text-anchor="middle"
-        dominant-baseline="middle">{{ zone.store.logo }}</text>
-
-      <!-- Nombre de la tienda -->
-      @if (zone.labelLines.length === 1) {
-      <text [attr.x]="zone.cx" [attr.y]="zone.cy + 9" class="zone-label" text-anchor="middle"
-        dominant-baseline="middle">{{ zone.labelLines[0] }}</text>
-      } @else {
-      <text class="zone-label" text-anchor="middle">
-        <tspan [attr.x]="zone.cx" [attr.y]="zone.cy + 4">{{ zone.labelLines[0] }}</tspan>
-        <tspan [attr.x]="zone.cx" dy="1.25em">{{ zone.labelLines[1] }}</tspan>
-      </text>
-      }
-
-    </g>
-    }
-    }
-
-    <!-- Terraza/zona abierta en Planta Alta -->
-    @if (activeFloor() === 'alta') {
-    <g class="terrace-zone">
-      <rect x="268" y="154" width="284" height="128" rx="5" class="terrace-rect" />
-      <g class="terrace-icon" transform="translate(398 195)">
-        <path d="M18 8h1a4 4 0 0 1 0 8h-1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round" />
-        <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" fill="none" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round" stroke-linejoin="round" />
-        <line x1="6" y1="1" x2="6" y2="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        <line x1="10" y1="1" x2="10" y2="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        <line x1="14" y1="1" x2="14" y2="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        <g class="zone-label-group" [attr.transform]="'translate(' + zone.label.x + ' ' + zone.label.y + ')'">
+          <rect class="zone-label-bg" [attr.width]="zone.label.w" [attr.height]="zone.label.h"
+            [attr.rx]="zone.label.h / 4" [style.fill]="labelFill(zone.store)" [style.stroke]="zoneStroke(zone.store)" />
+          @if (logoUrl(zone.store)) {
+          <image class="zone-logo-image" [attr.href]="logoUrl(zone.store)" [attr.x]="2" [attr.y]="2"
+            [attr.width]="zone.label.w - 4" [attr.height]="zone.label.h - 4" preserveAspectRatio="xMidYMid meet"
+            [attr.alt]="zone.store.name" />
+          } @else {
+          <text class="zone-label-text" [attr.x]="zone.label.w / 2" [attr.y]="zone.label.h / 2 + 3"
+            text-anchor="middle">
+            {{ zone.store.logo }}
+          </text>
+          }
+        </g>
       </g>
-      <text x="410" y="236" class="terrace-label" text-anchor="middle">TERRAZA</text>
+      }
+      }
     </g>
-    }
-
-    <!-- Etiqueta de planta actual -->
-    <text x="8" y="282" class="floor-badge">
-      {{ activeFloor() === 'baja' ? '▸ PLANTA BAJA' : '▸ PLANTA ALTA' }}
-    </text>
-
-    <!-- Indicador de entrada principal -->
-    @if (activeFloor() === 'baja') {
-    <g class="entrance">
-      <rect x="218" y="284" width="120" height="6" rx="3" class="entrance-bar" />
-      <text x="278" y="280" class="entrance-label" text-anchor="middle">ENTRADA PRINCIPAL</text>
-    </g>
-    }
 
   </svg>
 </div>

@@ -49,7 +49,14 @@ export class ApiService {
     return this.deliveryZonesCache;
   }
 
-  createOrder(items: CartItem[], shippingAddress: string, deliveryNotes?: string, deliveryLat?: number, deliveryLng?: number): Observable<Order> {
+  createOrder(
+    items: CartItem[],
+    shippingAddress: string,
+    deliveryNotes?: string,
+    deliveryLat?: number,
+    deliveryLng?: number,
+    postalCode?: string
+  ): Observable<Order> {
     const payload = {
       items: items.map(i => ({
         productId: i.productId,
@@ -58,6 +65,7 @@ export class ApiService {
         unitPrice: i.price
       })),
       shippingAddress,
+      postalCode: postalCode ?? null,
       deliveryNotes: deliveryNotes ?? null,
       deliveryLat: deliveryLat ?? null,
       deliveryLng: deliveryLng ?? null

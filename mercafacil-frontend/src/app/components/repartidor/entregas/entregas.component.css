@@ -225,6 +225,12 @@
   background: rgba(245, 158, 11, 0.18);
 }
 
+.route-preview-note {
+  margin: 6px 0 10px;
+  font-size: 0.84rem;
+  color: var(--text-muted);
+}
+
 /* Modal overlay */
 .route-modal-overlay {
   position: fixed;

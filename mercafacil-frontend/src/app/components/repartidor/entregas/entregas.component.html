@@ -59,8 +59,8 @@
         <app-icon name="message-circle" [size]="14" /> Enviar mensaje a vendedor
       </button>
       }
-      @if (simulatingOrderId() === order.id) {
-      <span class="gps-active" title="Enviando ubicación GPS en tiempo real">
+      @if (order.status === 'EN_RUTA' && trackingPosition()) {
+      <span class="gps-active" title="Recibiendo ubicación GPS en tiempo real">
         <app-icon name="radio" [size]="14" /> GPS activo
       </span>
       }
@@ -88,15 +88,16 @@
     </div>
     }
 
-    @if (order.shippingAddress && ((activeTab() === 'mis' && order.status === 'PREPARACION') || activeTab() === 'disponibles')) {
+    @if (order.shippingAddress && ((activeTab() === 'mis' && order.status === 'PREPARACION') || activeTab() ===
+    'disponibles')) {
     <button class="btn-see-route" (click)="openRouteModal(order.id)">
       <app-icon name="map" [size]="14" /> Ver ruta de entrega
     </button>
     }
 
-    @if (simulatingOrderId() === order.id && simPosition(); as pos) {
+    @if (order.status === 'EN_RUTA' && trackingPosition(); as pos) {
     <div class="repartidor-map-wrapper">
-      <app-live-map [lat]="pos.lat" [lng]="pos.lng" [label]="'Mi posición — Pedido #' + order.id" />
+      <app-live-map [lat]="pos.lat" [lng]="pos.lng" [label]="'Posición en tiempo real — Pedido #' + order.id" />
     </div>
     }
 
@@ -143,13 +144,25 @@
       </div>
 
       @if (geocodedDestinations()[order.id]; as dest) {
-      <div class="route-map-wrapper">
-        <app-live-map [lat]="dest.lat" [lng]="dest.lng" [zoom]="13" [label]="'Destino pedido #' + order.id" />
-      </div>
+        @if (routePreviewPaths()[order.id]; as route) {
+          <div class="route-preview-note">
+            Ruta real calculada con Google Maps desde Jaén Plaza hasta destino.
+          </div>
+          <div class="route-map-wrapper">
+            <app-live-map [lat]="dest.lat" [lng]="dest.lng" [zoom]="13" [routePoints]="route"
+              [label]="'Destino pedido #' + order.id" />
+          </div>
+        } @else {
+        <div class="route-map-loading">
+          <div class="map-spinner-sm"></div>
+          Calculando ruta real...
+        </div>
+        }
       } @else {
       <div class="route-map-loading">
         <div class="map-spinner-sm"></div>
-        @if (mapsLoaded()) { Geocodificando dirección… } @else { Google Maps no disponible }
+        @if (mapsLoaded()) { Geocodificando dirección… } 
+        @else { Google Maps no disponible }
       </div>
       }
 

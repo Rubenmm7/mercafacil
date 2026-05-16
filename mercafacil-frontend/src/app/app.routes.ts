@@ -18,6 +18,8 @@ const loadVendedorResumen = () => import('./components/vendedor/resumen/resumen.
 const loadVendedorPedidos = () => import('./components/vendedor/pedidos/pedidos.component').then(m => m.PedidosComponent);
 const loadVendedorProductos = () => import('./components/vendedor/productos/productos.component').then(m => m.ProductosComponent);
 const loadVendedorOfertas = () => import('./components/vendedor/ofertas/ofertas.component').then(m => m.OfertasComponent);
+const loadVendedorStock = () => import('./components/vendedor/stock/stock.component').then(m => m.StockComponent);
+const loadVendedorAnalytics = () => import('./components/vendedor/analytics/analytics.component').then(m => m.VendedorAnalyticsComponent);
 const loadRepartidor = () => import('./components/repartidor/repartidor.component').then(m => m.RepartidorComponent);
 const loadRepartidorResumen = () => import('./components/repartidor/resumen/resumen.component').then(m => m.ResumenRepartidorComponent);
 const loadEntregas = () => import('./components/repartidor/entregas/entregas.component').then(m => m.EntregasComponent);
@@ -28,6 +30,7 @@ const loadAdmin = () => import('./components/admin/admin.component').then(m => m
 const loadAdminResumen = () => import('./components/admin/resumen/resumen.component').then(m => m.ResumenAdminComponent);
 const loadAdminUsuarios = () => import('./components/admin/usuarios/usuarios.component').then(m => m.UsuariosAdminComponent);
 const loadAdminTiendas = () => import('./components/admin/tiendas/tiendas.component').then(m => m.TiendasAdminComponent);
+const loadAdminAnalytics = () => import('./components/admin/analytics/analytics.component').then(m => m.AdminAnalyticsComponent);
 const loadCheckout = () => import('./components/checkout/checkout.component').then(m => m.CheckoutComponent);
 const loadInfoPage = () => import('./components/info-page/info-page.component').then(m => m.InfoPageComponent);
 
@@ -61,7 +64,9 @@ export const routes: Routes = [
       { path: 'resumen', loadComponent: loadVendedorResumen },
       { path: 'pedidos', loadComponent: loadVendedorPedidos },
       { path: 'productos', loadComponent: loadVendedorProductos },
-      { path: 'ofertas', loadComponent: loadVendedorOfertas }
+      { path: 'ofertas', loadComponent: loadVendedorOfertas },
+      { path: 'stock', loadComponent: loadVendedorStock },
+      { path: 'analytics', loadComponent: loadVendedorAnalytics }
     ]
   },
 
@@ -98,7 +103,8 @@ export const routes: Routes = [
       { path: '', redirectTo: 'resumen', pathMatch: 'full' },
       { path: 'resumen', loadComponent: loadAdminResumen },
       { path: 'usuarios', loadComponent: loadAdminUsuarios },
-      { path: 'tiendas', loadComponent: loadAdminTiendas }
+      { path: 'tiendas', loadComponent: loadAdminTiendas },
+      { path: 'analytics', loadComponent: loadAdminAnalytics }
     ]
   },
 

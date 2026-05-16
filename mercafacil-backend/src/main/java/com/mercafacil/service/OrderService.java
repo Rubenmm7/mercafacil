@@ -52,6 +52,7 @@ public class OrderService {
                 .sum();
         order.setTotal(Math.round(total * 100.0) / 100.0);
         order.setShippingAddress(req.shippingAddress());
+        order.setPostalCode(resolvePostalCode(req.shippingAddress(), req.postalCode()));
         order.setDeliveryNotes(req.deliveryNotes());
         order.setDeliveryLat(req.deliveryLat());
         order.setDeliveryLng(req.deliveryLng());
@@ -186,6 +187,17 @@ public class OrderService {
         String createdAt = DateTimeUtils.toApiString(o.getCreatedAt());
         String deliveredAt = DateTimeUtils.toApiString(o.getDeliveredAt());
         return new OrderResponse(o.getId(), clientEmail, o.getStatus().name(), o.getTotal(), items, createdAt,
-                o.getShippingAddress(), o.getDeliveryNotes(), deliveredAt, o.getDeliveryLat(), o.getDeliveryLng());
+                o.getShippingAddress(), o.getPostalCode(), o.getDeliveryNotes(), deliveredAt, o.getDeliveryLat(), o.getDeliveryLng());
+    }
+
+    private String resolvePostalCode(String shippingAddress, String postalCode) {
+        if (postalCode != null && !postalCode.isBlank()) {
+            return postalCode.trim();
+        }
+        if (shippingAddress == null) {
+            return null;
+        }
+        var matcher = java.util.regex.Pattern.compile("\\b(\\d{5})\\b").matcher(shippingAddress);
+        return matcher.find() ? matcher.group(1) : null;
     }
 }

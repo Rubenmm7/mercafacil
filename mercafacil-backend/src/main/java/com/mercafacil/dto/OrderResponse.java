@@ -10,6 +10,7 @@ public record OrderResponse(
         List<OrderItemResponse> items,
         String createdAt,
         String shippingAddress,
+        String postalCode,
         String deliveryNotes,
         String deliveredAt,
         Double deliveryLat,

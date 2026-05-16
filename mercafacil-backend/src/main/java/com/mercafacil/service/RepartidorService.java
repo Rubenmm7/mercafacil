@@ -28,9 +28,11 @@ public class RepartidorService {
     private static final Set<OrderStatus> REPARTIDOR_TRANSITIONS = Set.of(OrderStatus.EN_RUTA, OrderStatus.ENTREGADO);
 
     private final OrderRepository orderRepository;
+    private final SimulacionGpsService simulacionGpsService;
 
-    public RepartidorService(OrderRepository orderRepository) {
+    public RepartidorService(OrderRepository orderRepository, SimulacionGpsService simulacionGpsService) {
         this.orderRepository = orderRepository;
+        this.simulacionGpsService = simulacionGpsService;
     }
 
     @Transactional(readOnly = true)
@@ -99,7 +101,15 @@ public class RepartidorService {
         if (status == OrderStatus.ENTREGADO) {
             order.setDeliveredAt(DateTimeUtils.nowMadrid());
         }
-        return toOrderResponse(orderRepository.save(order));
+        Order saved = orderRepository.save(order);
+
+        if (status == OrderStatus.EN_RUTA) {
+            simulacionGpsService.iniciarSimulacion(saved);
+        } else if (status == OrderStatus.ENTREGADO || status == OrderStatus.CANCELADO) {
+            simulacionGpsService.detenerSimulacion(saved.getId());
+        }
+
+        return toOrderResponse(saved);
     }
 
     private @NonNull Long requireId(Long id, String fieldName) {
@@ -120,6 +130,6 @@ public class RepartidorService {
         String createdAt = DateTimeUtils.toApiString(o.getCreatedAt());
         String deliveredAt = DateTimeUtils.toApiString(o.getDeliveredAt());
         return new OrderResponse(o.getId(), clientEmail, o.getStatus().name(), o.getTotal(), items, createdAt,
-                o.getShippingAddress(), o.getDeliveryNotes(), deliveredAt, o.getDeliveryLat(), o.getDeliveryLng());
+                o.getShippingAddress(), o.getPostalCode(), o.getDeliveryNotes(), deliveredAt, o.getDeliveryLat(), o.getDeliveryLng());
     }
 }

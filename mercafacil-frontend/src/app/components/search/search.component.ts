@@ -42,6 +42,8 @@ export class SearchComponent implements OnInit {
   readonly selectedStores = signal<number[]>([]);
   readonly minPrice = signal<number | null>(null);
   readonly maxPrice = signal<number | null>(null);
+  readonly pendingMin = signal<number | null>(null);
+  readonly pendingMax = signal<number | null>(null);
   readonly storeById = computed(() => new Map(this.stores().map(store => [store.id, store] as const)));
   readonly selectedStoreViews = computed(() =>
     this.selectedStores().map(id => ({ id, store: this.storeById().get(id) }))
@@ -137,8 +139,12 @@ export class SearchComponent implements OnInit {
 
     const minP = params.get('precioMin');
     const maxP = params.get('precioMax');
-    this.minPrice.set(minP !== null ? +minP : null);
-    this.maxPrice.set(maxP !== null ? +maxP : null);
+    const minVal = minP !== null ? +minP : null;
+    const maxVal = maxP !== null ? +maxP : null;
+    this.minPrice.set(minVal);
+    this.maxPrice.set(maxVal);
+    this.pendingMin.set(minVal);
+    this.pendingMax.set(maxVal);
 
     return query;
   }
@@ -215,6 +221,8 @@ export class SearchComponent implements OnInit {
     this.selectedCategory.set('');
     this.minPrice.set(null);
     this.maxPrice.set(null);
+    this.pendingMin.set(null);
+    this.pendingMax.set(null);
     this.syncRoute();
   }
 
@@ -251,15 +259,28 @@ export class SearchComponent implements OnInit {
     this.syncRoute();
   }
 
-  onMinPriceChange(value: string | number | null): void {
+  onPendingMinChange(value: string | number | null): void {
     const n = value !== null && value !== '' ? +value : null;
-    this.minPrice.set(n !== null && Number.isFinite(n) ? n : null);
+    this.pendingMin.set(n !== null && Number.isFinite(n) ? n : null);
+  }
+
+  onPendingMaxChange(value: string | number | null): void {
+    const n = value !== null && value !== '' ? +value : null;
+    this.pendingMax.set(n !== null && Number.isFinite(n) ? n : null);
+  }
+
+  clearPriceFilter(): void {
+    this.minPrice.set(null);
+    this.maxPrice.set(null);
+    this.pendingMin.set(null);
+    this.pendingMax.set(null);
     this.syncRoute();
   }
 
-  onMaxPriceChange(value: string | number | null): void {
-    const n = value !== null && value !== '' ? +value : null;
-    this.maxPrice.set(n !== null && Number.isFinite(n) ? n : null);
+  applyPriceFilter(): void {
+    this.minPrice.set(this.pendingMin());
+    this.maxPrice.set(this.pendingMax());
     this.syncRoute();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }

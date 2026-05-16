@@ -259,6 +259,27 @@ input.error-input, textarea.error-input {
   margin-top: 0.2rem;
 }
 
+.delivery-estimate {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.8rem;
+  color: #1d4ed8;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+.delivery-estimate--neutral {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #94a3b8;
+  font-weight: 400;
+}
+
 .submit-error {
   background: #fee2e2;
   color: #dc2626;
@@ -420,6 +441,18 @@ input.error-input, textarea.error-input {
 
 :host-context(html.dark) .summary-total {
   color: #f3f4f6;
+}
+
+:host-context(html.dark) .delivery-estimate {
+  background: rgba(37,99,235,0.12);
+  border-color: rgba(96,165,250,0.3);
+  color: #60a5fa;
+}
+
+:host-context(html.dark) .delivery-estimate--neutral {
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.08);
+  color: #6b7280;
 }
 
 :host-context(html.dark) .submit-error {

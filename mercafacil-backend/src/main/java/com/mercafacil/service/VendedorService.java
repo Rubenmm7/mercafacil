@@ -2,21 +2,30 @@ package com.mercafacil.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mercafacil.dto.AnalyticsDto;
+import com.mercafacil.dto.DayStatDto;
+import com.mercafacil.dto.MessageRequest;
+import com.mercafacil.dto.MessageResponse;
 import com.mercafacil.dto.OrderItemResponse;
 import com.mercafacil.dto.OrderResponse;
 import com.mercafacil.dto.ProductDto;
 import com.mercafacil.dto.ProductRequest;
+import com.mercafacil.dto.ProductStatDto;
 import com.mercafacil.dto.StoreDto;
 import com.mercafacil.dto.StoreOfferDto;
 import com.mercafacil.dto.StoreOfferRequest;
+import com.mercafacil.dto.StoreRevenueDto;
 import com.mercafacil.dto.VendedorStatsDto;
+import com.mercafacil.model.ChatType;
 import com.mercafacil.model.Order;
 import com.mercafacil.model.OrderStatus;
 import com.mercafacil.model.Product;
@@ -39,15 +48,18 @@ public class VendedorService {
     private final StoreOfferRepository storeOfferRepository;
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
+    private final MessageService messageService;
 
     public VendedorService(StoreRepository storeRepository,
             StoreOfferRepository storeOfferRepository,
             ProductRepository productRepository,
-            OrderRepository orderRepository) {
+            OrderRepository orderRepository,
+            MessageService messageService) {
         this.storeRepository = storeRepository;
         this.storeOfferRepository = storeOfferRepository;
         this.productRepository = productRepository;
         this.orderRepository = orderRepository;
+        this.messageService = messageService;
     }
 
     @Transactional(readOnly = true)
@@ -191,6 +203,17 @@ public class VendedorService {
         productRepository.delete(product);
     }
 
+    public MessageResponse pedirAlProveedor(Long offerId, String mensaje, User vendedor) {
+        var storeIds = myStoreIds(vendedor);
+        Long safeOfferId = requireId(offerId, "offerId");
+        var offer = storeOfferRepository.findById(safeOfferId)
+                .orElseThrow(() -> new IllegalArgumentException("Oferta no encontrada: " + offerId));
+        if (!storeIds.contains(offer.getStoreId()))
+            throw new AccessDeniedException("No tienes permiso sobre esta oferta");
+        var req = new MessageRequest(ChatType.PROVEEDOR_VENDEDOR, null, offer.getStoreId(), mensaje);
+        return messageService.save(req, vendedor.getEmail());
+    }
+
     @Transactional(readOnly = true)
     public List<StoreOfferDto> getLowStockOffers(User vendedor) {
         var storeIds = myStoreIds(vendedor);
@@ -198,6 +221,41 @@ public class VendedorService {
             return List.of();
         return storeOfferRepository.findByStoreIdInAndStockLessThan(storeIds, LOW_STOCK_THRESHOLD)
                 .stream().map(this::toOfferDto).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public AnalyticsDto getAnalytics(User vendedor, int period) {
+        var storeIds = myStoreIds(vendedor);
+        if (storeIds.isEmpty()) {
+            return new AnalyticsDto(List.of(), List.of(), List.of());
+        }
+        LocalDateTime since = DateTimeUtils.nowMadrid().minusDays(period);
+
+        List<DayStatDto> dailyOrders = orderRepository.countByDayForStores(storeIds, since)
+                .stream()
+                .map(row -> new DayStatDto(row[0].toString(), ((Number) row[1]).longValue()))
+                .toList();
+
+        List<ProductStatDto> topProducts = orderRepository.topProductsForStores(storeIds, since)
+                .stream()
+                .limit(5)
+                .map(row -> new ProductStatDto((String) row[0], ((Number) row[1]).longValue()))
+                .toList();
+
+        Map<Long, String> storeNames = storeRepository.findAllById(storeIds)
+                .stream()
+                .collect(Collectors.toMap(Store::getId, Store::getName));
+
+        List<StoreRevenueDto> revenueByStore = orderRepository.revenueByStoreForStores(storeIds, since)
+                .stream()
+                .map(row -> {
+                    Long storeId = ((Number) row[0]).longValue();
+                    double revenue = ((Number) row[1]).doubleValue();
+                    return new StoreRevenueDto(storeNames.getOrDefault(storeId, "Tienda " + storeId), revenue);
+                })
+                .toList();
+
+        return new AnalyticsDto(dailyOrders, topProducts, revenueByStore);
     }
 
     @Transactional(readOnly = true)
@@ -242,7 +300,7 @@ public class VendedorService {
         String createdAt = DateTimeUtils.toApiString(o.getCreatedAt());
         String deliveredAt = DateTimeUtils.toApiString(o.getDeliveredAt());
         return new OrderResponse(o.getId(), clientEmail, o.getStatus().name(), o.getTotal(), items, createdAt,
-                o.getShippingAddress(), o.getDeliveryNotes(), deliveredAt, o.getDeliveryLat(), o.getDeliveryLng());
+                o.getShippingAddress(), o.getPostalCode(), o.getDeliveryNotes(), deliveredAt, o.getDeliveryLat(), o.getDeliveryLng());
     }
 
     private ProductDto toProductDto(Product p, List<Long> storeIds) {
