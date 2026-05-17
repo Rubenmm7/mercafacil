@@ -7,10 +7,10 @@ const STORE_LOGO_MAP: Record<string, string> = {
   'fosters hollywood': 'assets/store-logos/fosters-hollywood.svg',
   zara: 'assets/store-logos/zara.svg',
   primark: 'assets/store-logos/primark.svg',
-  mediamarkt: 'assets/store-logos/mediamarkt.svg',
+  mediamarkt: 'assets/store-logos/mediamarkt-icon.png',
   game: 'assets/store-logos/game.png',
-  decathlon: 'assets/store-logos/decathlon.svg',
-  tiendanimal: 'assets/store-logos/tiendanimal.ico',
+  decathlon: 'https://static.wikia.nocookie.net/logopedia/images/6/6e/Decathlon_%282024%29_stacked.svg/revision/latest?cb=20240312150334',
+  tiendanimal: 'assets/store-logos/tiendanimal.png',
 };
 
 function normalizeStoreName(name: string): string {

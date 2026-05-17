@@ -7,6 +7,46 @@
   color: #f87171;
 }
 
+/* Dark mode */
+:host-context(html.dark) .store-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+:host-context(html.dark) .store-header {
+  position: relative;
+  isolation: isolate;
+}
+
+:host-context(html.dark) .store-header::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 12, 24, 0.72);
+  z-index: 0;
+  pointer-events: none;
+}
+
+:host-context(html.dark) .store-header > * {
+  position: relative;
+  z-index: 1;
+}
+
+:host-context(html.dark) .store-name {
+  color: #f3f4f6 !important;
+}
+
+:host-context(html.dark) .store-category {
+  color: #9ca3af;
+}
+
+:host-context(html.dark) .chat-btn {
+  background: #6d28d9;
+}
+
+:host-context(html.dark) .chat-btn:hover {
+  background: #5b21b6;
+}
+
 .page-title {
   font-size: 1.5rem;
   font-weight: 700;

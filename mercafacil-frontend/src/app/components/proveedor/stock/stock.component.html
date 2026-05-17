@@ -1,0 +1,99 @@
+<h1 class="page-title">Gestionar Stock</h1>
+<p class="page-subtitle">Envía productos a las tiendas. El stock se actualiza automáticamente en 10 minutos.</p>
+
+@if (error()) {
+<div class="error-msg">{{ error() }}</div>
+}
+
+<!-- Envíos en curso -->
+@if (envios().length > 0) {
+<section class="envios-section">
+  <h2 class="section-title">
+    <app-icon name="truck" [size]="18" /> Envíos en curso
+  </h2>
+  <div class="envios-grid">
+    @for (envio of envios(); track envio.id) {
+    <div class="envio-card">
+      <div class="envio-header">
+        <span class="envio-store">{{ envio.storeName }}</span>
+        <span class="envio-countdown">
+          <app-icon name="clock" [size]="14" /> {{ countdown(envio.llegadaEstimada) }}
+        </span>
+      </div>
+      <ul class="envio-items">
+        @for (item of envio.items; track item.productName) {
+        <li>{{ item.productName }} <strong>+{{ item.cantidad }}</strong></li>
+        }
+      </ul>
+    </div>
+    }
+  </div>
+</section>
+}
+
+<!-- Formulario de envío -->
+<section class="form-section">
+  <h2 class="section-title">
+    <app-icon name="package" [size]="18" /> Enviar stock a una tienda
+  </h2>
+
+  <!-- Selector de tienda -->
+  <div class="store-selector">
+    @for (store of stores(); track store.id) {
+    <button class="store-btn" [class.active]="selectedStore()?.id === store.id" (click)="selectStore(store)">
+      <span class="store-btn-logo" [style.background]="store.color">{{ store.logo }}</span>
+      {{ store.name }}
+    </button>
+    }
+  </div>
+
+  <!-- Tabla de productos -->
+  @if (selectedStore()) {
+  <div class="products-panel">
+    @if (loadingOffers()) {
+    <div class="loading">Cargando productos...</div>
+    } @else if (offers().length === 0) {
+    <div class="empty-state">Esta tienda no tiene productos registrados.</div>
+    } @else {
+    <table class="offers-table">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Unidad</th>
+          <th>Stock actual</th>
+          <th>Cantidad a enviar</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (offer of offers(); track offer.id) {
+        <tr [class.low]="offer.stock < 10">
+          <td class="product-name">{{ offer.productName }}</td>
+          <td class="product-unit">{{ offer.productUnit }}</td>
+          <td>
+            <span class="stock-badge" [class.stock-zero]="offer.stock === 0" [class.stock-low]="offer.stock > 0 && offer.stock < 10">
+              {{ offer.stock }}
+            </span>
+          </td>
+          <td>
+            <input class="qty-input" type="number" min="0"
+              [(ngModel)]="cantidades[offer.id]"
+              [placeholder]="'0'" />
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="actions">
+      <button class="send-btn" (click)="enviar()" [disabled]="!tieneItems() || sending()">
+        @if (sending()) {
+          Enviando...
+        } @else {
+          <app-icon name="truck" [size]="16" /> Enviar reavastecimiento
+        }
+      </button>
+    </div>
+    }
+  </div>
+  }
+</section>

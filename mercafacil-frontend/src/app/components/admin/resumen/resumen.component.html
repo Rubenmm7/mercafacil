@@ -1,61 +1,101 @@
 @if (loading()) {
-<div class="loading">Cargando estadísticas...</div>
+  <div class="loading">Cargando estadísticas...</div>
 } @else if (error()) {
-<div class="error-msg">{{ error() }}</div>
+  <div class="error-msg">{{ error() }}</div>
 } @else {
-<h1 class="page-title">Resumen del sistema</h1>
 
-<!-- KPI principales -->
-<div class="kpi-grid">
-  <div class="kpi-card blue">
-    <div class="kpi-icon"><app-icon name="users" [size]="28" /></div>
-    <div class="kpi-value">{{ stats()?.totalUsers }}</div>
-    <div class="kpi-label">Usuarios totales</div>
-  </div>
-  <div class="kpi-card green">
-    <div class="kpi-icon"><app-icon name="store" [size]="28" /></div>
-    <div class="kpi-value">{{ stats()?.totalStores }}</div>
-    <div class="kpi-label">Tiendas activas</div>
-  </div>
-  <div class="kpi-card purple">
-    <div class="kpi-icon"><app-icon name="package" [size]="28" /></div>
-    <div class="kpi-value">{{ stats()?.totalOrders }}</div>
-    <div class="kpi-label">Pedidos totales</div>
-  </div>
-</div>
+  <h1 class="page-title">Resumen del sistema</h1>
 
-<!-- Distribución por rol -->
-<h2 class="section-title">Usuarios por rol</h2>
-<div class="role-grid">
-  <div class="role-card">
-    <span class="role-icon"><app-icon name="shopping-bag" [size]="22" /></span>
-    <span class="role-count">{{ stats()?.clienteCount }}</span>
-    <span class="role-name">Clientes</span>
+  <div class="kpi-grid">
+    <div class="kpi-card blue">
+      <div class="kpi-icon"><app-icon name="users" [size]="28" /></div>
+      <div class="kpi-value">{{ stats()?.totalUsers }}</div>
+      <div class="kpi-label">Usuarios totales</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-icon"><app-icon name="store" [size]="28" /></div>
+      <div class="kpi-value">{{ stats()?.totalStores }}</div>
+      <div class="kpi-label">Tiendas activas</div>
+    </div>
+    <div class="kpi-card purple">
+      <div class="kpi-icon"><app-icon name="package" [size]="28" /></div>
+      <div class="kpi-value">{{ stats()?.totalOrders }}</div>
+      <div class="kpi-label">Pedidos totales</div>
+    </div>
   </div>
-  <div class="role-card">
-    <span class="role-icon"><app-icon name="store" [size]="22" /></span>
-    <span class="role-count">{{ stats()?.vendedorCount }}</span>
-    <span class="role-name">Vendedores</span>
-  </div>
-  <div class="role-card">
-    <span class="role-icon"><app-icon name="bike" [size]="22" /></span>
-    <span class="role-count">{{ stats()?.repartidorCount }}</span>
-    <span class="role-name">Repartidores</span>
-  </div>
-  <div class="role-card">
-    <span class="role-icon"><app-icon name="package" [size]="22" /></span>
-    <span class="role-count">{{ stats()?.proveedorCount }}</span>
-    <span class="role-name">Proveedores</span>
-  </div>
-  <div class="role-card">
-    <span class="role-icon"><app-icon name="shield" [size]="22" /></span>
-    <span class="role-count">{{ stats()?.adminCount }}</span>
-    <span class="role-name">Admins</span>
-  </div>
-</div>
 
-<!-- Accesos rápidos -->
-<div class="quick-links">
-  <a routerLink="../usuarios" class="quick-card"><app-icon name="users" /> Gestionar usuarios</a>
-</div>
+  <div class="analytics-header">
+    <h2 class="section-title">Analytics</h2>
+    <div class="period-toggle">
+      <button [class.active]="period() === 7" (click)="setPeriod(7)">7 días</button>
+      <button [class.active]="period() === 30" (click)="setPeriod(30)">30 días</button>
+    </div>
+  </div>
+
+  @if (analyticsLoading()) {
+    <div class="loading">Cargando datos...</div>
+  } @else {
+
+    <div class="card">
+      <div class="card-title">Pedidos por día (global)</div>
+      <div class="bar-chart-vertical">
+        @for (bar of dailyBars(); track bar.date) {
+          <div class="bar-col">
+            <span class="bar-label-top">{{ bar.orders }}</span>
+            <div class="bar-fill" [style.height.%]="bar.heightPct"></div>
+            <span class="bar-label-bottom">{{ bar.date | slice:5 }}</span>
+          </div>
+        }
+        @if (dailyBars().length === 0) {
+          <p class="empty">Sin datos para este período.</p>
+        }
+      </div>
+      <div class="card-footer">Total: <strong>{{ totalOrders() }} pedidos</strong> en {{ period() }} días</div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Top 5 productos vendidos</div>
+        <div class="bar-list">
+          @for (bar of productBars(); track bar.name) {
+            <div class="bar-row">
+              <div class="bar-row-header">
+                <span>{{ bar.name }}</span>
+                <span class="bar-value">{{ bar.units }}</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill-h bar-fill-h--indigo" [style.width.%]="bar.widthPct"></div>
+              </div>
+            </div>
+          }
+          @if (productBars().length === 0) {
+            <p class="empty">Sin datos.</p>
+          }
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Ingresos por tienda</div>
+        <div class="bar-list">
+          @for (bar of revenueBars(); track bar.name) {
+            <div class="bar-row">
+              <div class="bar-row-header">
+                <span>{{ bar.name }}</span>
+                <span class="bar-value bar-value--green">{{ bar.revenue | number:'1.2-2' }} €</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill-h bar-fill-h--green" [style.width.%]="bar.widthPct"></div>
+              </div>
+            </div>
+          }
+          @if (revenueBars().length === 0) {
+            <p class="empty">Sin datos.</p>
+          }
+        </div>
+        <div class="card-footer">Total: <strong class="text-green">{{ totalRevenue() | number:'1.2-2' }} €</strong></div>
+      </div>
+    </div>
+
+  }
+
 }

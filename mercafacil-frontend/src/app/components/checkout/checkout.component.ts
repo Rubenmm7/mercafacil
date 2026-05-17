@@ -236,8 +236,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.cartService.clear();
         this.router.navigate(['/pedidos']);
       },
-      error: () => {
-        this.submitError.set('No se pudo procesar el pedido. Inténtalo de nuevo.');
+      error: (err) => {
+        const msg = err?.error?.message;
+        this.submitError.set(msg ?? 'No se pudo procesar el pedido. Inténtalo de nuevo.');
         this.submitting.set(false);
       }
     });

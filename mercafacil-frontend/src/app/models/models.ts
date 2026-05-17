@@ -81,6 +81,29 @@ export interface ProveedorStats {
   totalProducts: number;
 }
 
+export interface EnvioItem {
+  productName: string;
+  cantidad: number;
+}
+
+export interface EnvioStock {
+  id: string;
+  storeId: number;
+  storeName: string;
+  items: EnvioItem[];
+  llegadaEstimada: string; // ISO datetime, e.g. "2026-05-17T10:35:00+02:00"
+}
+
+export interface ReponerItemRequest {
+  offerId: number;
+  cantidad: number;
+}
+
+export interface ReponerRequest {
+  storeId: number;
+  items: ReponerItemRequest[];
+}
+
 // --- Repartidor dashboard ---
 export interface RepartidorStats {
   myOrders: number;

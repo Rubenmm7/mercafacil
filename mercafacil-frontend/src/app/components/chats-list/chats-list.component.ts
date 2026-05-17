@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ChatThread, ChatType } from '../../models/models';
 import { environment } from '../../../environments/environment';
@@ -27,7 +27,7 @@ export class ChatsListComponent implements OnInit {
     PROVEEDOR_VENDEDOR: 'Proveedor · Vendedor'
   };
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.http.get<ChatThread[]>(`${environment.apiUrl}/messages/threads`).subscribe({
@@ -61,10 +61,11 @@ export class ChatsListComponent implements OnInit {
   }
 
   open(thread: ChatThread): void {
+    const base: string = this.route.snapshot.data['chatBasePath'] ?? '/chat';
     if (thread.orderId != null) {
-      this.router.navigate(['/chat/order', thread.orderId, thread.chatType]);
+      this.router.navigate([base + '/order', thread.orderId, thread.chatType]);
     } else if (thread.shopId != null) {
-      this.router.navigate(['/chat/shop', thread.shopId]);
+      this.router.navigate([base + '/shop', thread.shopId]);
     }
   }
 }

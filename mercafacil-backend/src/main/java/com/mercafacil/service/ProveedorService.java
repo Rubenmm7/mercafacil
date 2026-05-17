@@ -7,9 +7,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mercafacil.dto.ProveedorStatsDto;
 import com.mercafacil.dto.StoreDto;
+import com.mercafacil.dto.StoreOfferDto;
 import com.mercafacil.model.ChatType;
 import com.mercafacil.model.Message;
 import com.mercafacil.model.Store;
+import com.mercafacil.model.StoreOffer;
 import com.mercafacil.model.User;
 import com.mercafacil.repository.MessageRepository;
 import com.mercafacil.repository.StoreOfferRepository;
@@ -52,9 +54,25 @@ public class ProveedorService {
         return new ProveedorStatsDto((int) totalStores, activeChats, totalProducts);
     }
 
+    @Transactional
+    public List<StoreOfferDto> getStoreOffers(Long storeId) {
+        return storeOfferRepository.findByStoreId(storeId).stream()
+                .map(this::toOfferDto)
+                .toList();
+    }
+
     private StoreDto toStoreDto(Store s) {
         return new StoreDto(s.getId(), s.getName(), s.getLogo(), s.getColor(), s.getBgColor(),
                 s.getAddress(), s.getCity(), s.getPhone(), s.getHours(), s.getRating(),
                 s.getDeliveryTime(), s.getMinOrder(), s.getDeliveryFee(), s.getCategory());
+    }
+
+    private StoreOfferDto toOfferDto(StoreOffer o) {
+        String productName = o.getProduct() != null ? o.getProduct().getName() : null;
+        String productUnit = o.getProduct() != null ? o.getProduct().getUnit() : null;
+        Long productId = o.getProduct() != null ? o.getProduct().getId() : null;
+        return new StoreOfferDto(o.getId(), productId, productName, productUnit,
+                o.getStoreId(), o.getStoreName(), o.getPrice(), o.getOriginalPrice(),
+                o.getStock(), o.isInStock(), o.getBrand());
     }
 }

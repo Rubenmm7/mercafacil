@@ -39,13 +39,13 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Object[]> countByDayGlobal(@Param("since") LocalDateTime since);
 
     @Query("SELECT i.productName, SUM(i.quantity) FROM OrderItem i " +
-           "WHERE i.storeId IN :storeIds AND i.order.createdAt >= :since " +
+           "WHERE i.storeId IN :storeIds AND i.order.createdAt >= :since AND i.productName IS NOT NULL " +
            "GROUP BY i.productName ORDER BY SUM(i.quantity) DESC")
     List<Object[]> topProductsForStores(@Param("storeIds") List<Long> storeIds,
                                         @Param("since") LocalDateTime since);
 
     @Query("SELECT i.productName, SUM(i.quantity) FROM OrderItem i " +
-           "WHERE i.order.createdAt >= :since " +
+           "WHERE i.order.createdAt >= :since AND i.productName IS NOT NULL " +
            "GROUP BY i.productName ORDER BY SUM(i.quantity) DESC")
     List<Object[]> topProductsGlobal(@Param("since") LocalDateTime since);
 

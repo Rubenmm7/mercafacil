@@ -24,6 +24,7 @@ import com.mercafacil.model.User;
 import com.mercafacil.repository.OrderRepository;
 import com.mercafacil.repository.MessageRepository;
 import com.mercafacil.repository.ProductRepository;
+import com.mercafacil.repository.StoreOfferRepository;
 import com.mercafacil.repository.StoreRepository;
 import com.mercafacil.util.DateTimeUtils;
 
@@ -34,13 +35,15 @@ public class OrderService {
     private final MessageRepository messageRepository;
     private final StoreRepository storeRepository;
     private final ProductRepository productRepository;
+    private final StoreOfferRepository storeOfferRepository;
 
     public OrderService(OrderRepository orderRepository, MessageRepository messageRepository, StoreRepository storeRepository,
-            ProductRepository productRepository) {
+            ProductRepository productRepository, StoreOfferRepository storeOfferRepository) {
         this.orderRepository = orderRepository;
         this.messageRepository = messageRepository;
         this.storeRepository = storeRepository;
         this.productRepository = productRepository;
+        this.storeOfferRepository = storeOfferRepository;
     }
 
     public OrderResponse create(OrderRequest req, User client) {
@@ -56,6 +59,15 @@ public class OrderService {
         order.setDeliveryNotes(req.deliveryNotes());
         order.setDeliveryLat(req.deliveryLat());
         order.setDeliveryLng(req.deliveryLng());
+
+        for (OrderItemRequest ir : req.items()) {
+            storeOfferRepository.findByProduct_IdAndStoreId(ir.productId(), ir.storeId()).ifPresent(offer -> {
+                if (offer.getStock() < ir.quantity()) {
+                    String productName = offer.getProduct() != null ? offer.getProduct().getName() : "ID " + ir.productId();
+                    throw new IllegalStateException("Stock insuficiente para \"" + productName + "\": hay " + offer.getStock() + " unidades y se piden " + ir.quantity());
+                }
+            });
+        }
 
         for (OrderItemRequest ir : req.items()) {
             OrderItem item = new OrderItem();

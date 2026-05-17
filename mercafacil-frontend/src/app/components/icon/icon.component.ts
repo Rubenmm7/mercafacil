@@ -8,7 +8,8 @@ export type IconName =
   | 'shopping-bag' | 'trash' | 'tag' | 'refresh-cw' | 'search'
   | 'bike' | 'credit-card' | 'lock' | 'sun' | 'moon'
   | 'map' | 'coffee' | 'user' | 'radio' | 'file-text'
-  | 'calendar' | 'lightbulb' | 'phone' | 'euro' | 'info';
+  | 'calendar' | 'lightbulb' | 'phone' | 'euro' | 'info'
+  | 'chevron-up' | 'chevron-down';
 
 const ICON_PATHS: Record<IconName, string> = {
   'package':
@@ -81,6 +82,10 @@ const ICON_PATHS: Record<IconName, string> = {
     '<path d="M4 10h12"/><path d="M4 14h9"/><path d="M19 6a7.7 7.7 0 0 0-5.2-2A7.9 7.9 0 0 0 6 12c0 4.4 3.5 8 7.8 8 2 0 3.8-.8 5.2-2"/>',
   'info':
     '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>',
+  'chevron-up':
+    '<polyline points="18 15 12 9 6 15"/>',
+  'chevron-down':
+    '<polyline points="6 9 12 15 18 9"/>',
 };
 
 @Component({

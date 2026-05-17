@@ -255,6 +255,7 @@
 .store-logo {
   width: 52px; height: 52px;
   border-radius: 14px;
+  overflow: hidden;
   color: white;
   font-weight: 700;
   font-size: 1rem;
@@ -262,6 +263,15 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 6px;
+}
+.store-logo span {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1;
+  text-align: center;
+  padding: 2px;
+  word-break: break-all;
 }
 .store-logo.has-logo,
 .mall-store-logo.has-logo {

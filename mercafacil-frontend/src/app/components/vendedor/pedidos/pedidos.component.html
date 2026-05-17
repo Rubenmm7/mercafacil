@@ -30,8 +30,17 @@
     </div>
 
     <div class="order-items">
-      @for (item of order.items; track item.productId) {
-      <span class="item-chip">{{ item.quantity }}× prod. #{{ item.productId }}</span>
+      <button class="btn-products" type="button" (click)="toggleProducts(order.id)">
+        <app-icon name="package" [size]="13" />
+        Ver productos ({{ order.items.length }})
+        <app-icon [name]="expandedOrders().has(order.id) ? 'chevron-up' : 'chevron-down'" [size]="13" />
+      </button>
+      @if (expandedOrders().has(order.id)) {
+        <div class="products-expanded">
+          @for (item of order.items; track item.productId) {
+            <span class="item-chip">{{ item.quantity }}× {{ item.productName ?? 'Producto #' + item.productId }}</span>
+          }
+        </div>
       }
     </div>
 

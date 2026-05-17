@@ -55,10 +55,33 @@
 
 .order-items {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 0.4rem;
   margin-bottom: 0.5rem;
 }
+
+.btn-products {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--border-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.8rem;
+  color: var(--text-2);
+  cursor: pointer;
+  width: fit-content;
+  transition: background 0.15s;
+}
+.btn-products:hover { background: var(--border); }
+
+.products-expanded {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
 .item-chip {
   background: var(--border-2);
   border: 1px solid var(--border);

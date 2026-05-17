@@ -65,7 +65,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   goBack(): void {
-    this.router.navigate(['/chats']);
+    const backPath: string = this.route.snapshot.data['backPath'] ?? '/chats';
+    this.router.navigate([backPath]);
   }
 
   send(): void {

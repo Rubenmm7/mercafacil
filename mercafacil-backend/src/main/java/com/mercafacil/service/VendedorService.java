@@ -125,6 +125,15 @@ public class VendedorService {
         if (order.getStatus() != OrderStatus.PENDIENTE)
             throw new IllegalStateException("Solo se pueden preparar pedidos en estado PENDIENTE");
 
+        for (var item : order.getItems()) {
+            storeOfferRepository.findByProduct_IdAndStoreId(item.getProductId(), item.getStoreId()).ifPresent(offer -> {
+                int nuevoStock = Math.max(0, offer.getStock() - item.getQuantity());
+                offer.setStock(nuevoStock);
+                offer.setInStock(nuevoStock > 0);
+                storeOfferRepository.save(offer);
+            });
+        }
+
         order.setStatus(status);
         return toOrderResponse(orderRepository.save(order));
     }
@@ -291,10 +300,30 @@ public class VendedorService {
     }
 
     private OrderResponse toOrderResponse(Order o) {
+        List<Long> missingIds = o.getItems().stream()
+                .filter(i -> i.getProductName() == null)
+                .map(i -> i.getProductId())
+                .distinct().collect(Collectors.toList());
+
+        Map<Long, Product> productMap = missingIds.isEmpty()
+                ? Map.of()
+                : productRepository.findAllById(missingIds).stream()
+                        .collect(Collectors.toMap(Product::getId, p -> p));
+
         var items = o.getItems().stream()
-                .map(i -> new OrderItemResponse(i.getProductId(), i.getStoreId(),
-                        i.getQuantity(),
-                        i.getUnitPrice(), i.getProductName(), i.getProductImage()))
+                .map(i -> {
+                    String name = i.getProductName();
+                    String image = i.getProductImage();
+                    if (name == null) {
+                        Product p = productMap.get(i.getProductId());
+                        if (p != null) {
+                            name = p.getName();
+                            image = p.getImage();
+                        }
+                    }
+                    return new OrderItemResponse(i.getProductId(), i.getStoreId(),
+                            i.getQuantity(), i.getUnitPrice(), name, image);
+                })
                 .toList();
         String clientEmail = o.getClient() != null ? o.getClient().getEmail() : null;
         String createdAt = DateTimeUtils.toApiString(o.getCreatedAt());

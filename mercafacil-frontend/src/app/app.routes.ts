@@ -19,18 +19,17 @@ const loadVendedorPedidos = () => import('./components/vendedor/pedidos/pedidos.
 const loadVendedorProductos = () => import('./components/vendedor/productos/productos.component').then(m => m.ProductosComponent);
 const loadVendedorOfertas = () => import('./components/vendedor/ofertas/ofertas.component').then(m => m.OfertasComponent);
 const loadVendedorStock = () => import('./components/vendedor/stock/stock.component').then(m => m.StockComponent);
-const loadVendedorAnalytics = () => import('./components/vendedor/analytics/analytics.component').then(m => m.VendedorAnalyticsComponent);
 const loadRepartidor = () => import('./components/repartidor/repartidor.component').then(m => m.RepartidorComponent);
 const loadRepartidorResumen = () => import('./components/repartidor/resumen/resumen.component').then(m => m.ResumenRepartidorComponent);
 const loadEntregas = () => import('./components/repartidor/entregas/entregas.component').then(m => m.EntregasComponent);
 const loadProveedor = () => import('./components/proveedor/proveedor.component').then(m => m.ProveedorComponent);
 const loadProveedorResumen = () => import('./components/proveedor/resumen/resumen.component').then(m => m.ResumenProveedorComponent);
 const loadProveedorTiendas = () => import('./components/proveedor/tiendas/tiendas.component').then(m => m.TiendasProveedorComponent);
+const loadProveedorStock = () => import('./components/proveedor/stock/stock.component').then(m => m.StockProveedorComponent);
 const loadAdmin = () => import('./components/admin/admin.component').then(m => m.AdminComponent);
 const loadAdminResumen = () => import('./components/admin/resumen/resumen.component').then(m => m.ResumenAdminComponent);
 const loadAdminUsuarios = () => import('./components/admin/usuarios/usuarios.component').then(m => m.UsuariosAdminComponent);
 const loadAdminTiendas = () => import('./components/admin/tiendas/tiendas.component').then(m => m.TiendasAdminComponent);
-const loadAdminAnalytics = () => import('./components/admin/analytics/analytics.component').then(m => m.AdminAnalyticsComponent);
 const loadCheckout = () => import('./components/checkout/checkout.component').then(m => m.CheckoutComponent);
 const loadInfoPage = () => import('./components/info-page/info-page.component').then(m => m.InfoPageComponent);
 
@@ -65,8 +64,7 @@ export const routes: Routes = [
       { path: 'pedidos', loadComponent: loadVendedorPedidos },
       { path: 'productos', loadComponent: loadVendedorProductos },
       { path: 'ofertas', loadComponent: loadVendedorOfertas },
-      { path: 'stock', loadComponent: loadVendedorStock },
-      { path: 'analytics', loadComponent: loadVendedorAnalytics }
+      { path: 'stock', loadComponent: loadVendedorStock }
     ]
   },
 
@@ -78,7 +76,10 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'resumen', pathMatch: 'full' },
       { path: 'resumen', loadComponent: loadRepartidorResumen },
-      { path: 'entregas', loadComponent: loadEntregas }
+      { path: 'entregas', loadComponent: loadEntregas },
+      { path: 'chats', loadComponent: loadChatsList, data: { chatBasePath: '/repartidor/chats' } },
+      { path: 'chats/order/:orderId/:chatType', loadComponent: loadChat, data: { backPath: '/repartidor/chats' } },
+      { path: 'chats/shop/:shopId', loadComponent: loadChat, data: { backPath: '/repartidor/chats' } }
     ]
   },
 
@@ -90,7 +91,10 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'resumen', pathMatch: 'full' },
       { path: 'resumen', loadComponent: loadProveedorResumen },
-      { path: 'tiendas', loadComponent: loadProveedorTiendas }
+      { path: 'tiendas', loadComponent: loadProveedorTiendas },
+      { path: 'stock', loadComponent: loadProveedorStock },
+      { path: 'chats', loadComponent: loadChatsList, data: { chatBasePath: '/proveedor/chats' } },
+      { path: 'chats/shop/:shopId', loadComponent: loadChat, data: { backPath: '/proveedor/chats' } }
     ]
   },
 
@@ -104,7 +108,6 @@ export const routes: Routes = [
       { path: 'resumen', loadComponent: loadAdminResumen },
       { path: 'usuarios', loadComponent: loadAdminUsuarios },
       { path: 'tiendas', loadComponent: loadAdminTiendas },
-      { path: 'analytics', loadComponent: loadAdminAnalytics }
     ]
   },
 

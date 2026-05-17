@@ -40,9 +40,15 @@ export function getRoleNavLinks(role: Role | undefined): NavLink[] {
     case 'VENDEDOR':
       return [{ path: '/vendedor', label: 'Mi panel' }];
     case 'REPARTIDOR':
-      return [{ path: '/repartidor', label: 'Mi panel' }];
+      return [
+        { path: '/repartidor', label: 'Mi panel' },
+        { path: '/repartidor/chats', label: 'Chats', unreadBadge: true }
+      ];
     case 'PROVEEDOR':
-      return [{ path: '/proveedor', label: 'Mi panel' }];
+      return [
+        { path: '/proveedor', label: 'Mi panel' },
+        { path: '/proveedor/chats', label: 'Chats', unreadBadge: true }
+      ];
     case 'ADMIN':
       return [{ path: '/admin', label: 'Panel Admin' }];
     default:

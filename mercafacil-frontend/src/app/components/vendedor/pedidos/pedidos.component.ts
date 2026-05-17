@@ -19,6 +19,7 @@ export class PedidosComponent implements OnInit {
   loading = signal(true);
   error = signal('');
   updating = signal<number | null>(null);
+  expandedOrders = signal<Set<number>>(new Set());
 
   exportPeriod = signal<'today' | 'week' | 'all'>('today');
 
@@ -77,6 +78,15 @@ export class PedidosComponent implements OnInit {
         this.updating.set(null);
       },
       error: () => this.updating.set(null)
+    });
+  }
+
+  toggleProducts(orderId: number): void {
+    this.expandedOrders.update(set => {
+      const next = new Set(set);
+      if (next.has(orderId)) next.delete(orderId);
+      else next.add(orderId);
+      return next;
     });
   }
 
