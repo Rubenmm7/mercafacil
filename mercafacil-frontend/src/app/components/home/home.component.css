@@ -409,39 +409,6 @@
 .step-card h4 { color: var(--text, #111827); margin-bottom: 8px; }
 .step-card p { color: var(--text-muted, #6b7280); font-size: 0.875rem; line-height: 1.6; }
 
-/* ── CTA ─────────────────────────────────────────────────────────── */
-.cta-section { padding: 0 16px 64px; }
-.cta-card {
-  max-width: 860px;
-  margin: 0 auto;
-  text-align: center;
-  background: linear-gradient(140deg, #1a5c32 0%, #0d3d21 100%);
-  border-radius: 24px;
-  padding: 56px 40px;
-  position: relative;
-  overflow: hidden;
-}
-.cta-circle {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.06);
-  pointer-events: none;
-}
-.cta-circle-1 { width: 320px; height: 320px; bottom: -110px; left: -80px; }
-.cta-circle-2 { width: 200px; height: 200px; top: -60px; right: -40px; }
-.cta-title { color: white; font-size: 1.8rem; font-weight: 700; margin: 16px 0 12px; position: relative; }
-.cta-desc { color: rgba(167,243,208,0.85); font-size: 0.95rem; margin-bottom: 28px; max-width: 520px; margin-left: auto; margin-right: auto; position: relative; }
-.cta-btn {
-  background: #f97316;
-  color: white;
-  padding: 14px 36px;
-  border-radius: 12px;
-  font-weight: 700;
-  font-size: 1rem;
-  transition: all 0.2s;
-  position: relative;
-}
-.cta-btn:hover { background: #ea6c0a; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(249,115,22,0.4); }
 
 /* ── Dark mode overrides ─────────────────────────────────────────── */
 :host-context(html.dark) .stats-bar { background: var(--bg-card, #161b22); border-color: var(--border, #30363d); }
@@ -482,5 +449,4 @@
   .stores-grid { grid-template-columns: repeat(2, 1fr); }
   .products-grid { grid-template-columns: 1fr 1fr; }
   .steps-grid { grid-template-columns: 1fr; }
-  .cta-card { padding: 36px 20px; }
 }

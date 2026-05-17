@@ -31,9 +31,9 @@ export class TiendasAdminComponent implements OnInit {
     this.adminService.getStores().subscribe({
       next: stores => {
         this.stores.set(stores);
-        this.adminService.getUsers().subscribe({
+        this.adminService.getUsers({ size: 100 }).subscribe({
           next: users => {
-            this.vendedores.set(users.filter(u => u.rol === 'VENDEDOR'));
+            this.vendedores.set(users.content.filter(u => u.rol === 'VENDEDOR'));
             this.loading.set(false);
           },
           error: () => { this.error.set('Error al cargar usuarios'); this.loading.set(false); }

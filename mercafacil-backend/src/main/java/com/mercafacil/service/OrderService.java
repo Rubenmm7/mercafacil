@@ -119,13 +119,28 @@ public class OrderService {
         if (!Objects.equals(order.getClient() != null ? order.getClient().getId() : null, clientId)) {
             throw new AccessDeniedException("No tienes permiso para cancelar este pedido");
         }
-        if (order.getStatus() != OrderStatus.PENDIENTE) {
-            throw new IllegalStateException("Solo se pueden cancelar pedidos en estado PENDIENTE");
+        if (order.getStatus() != OrderStatus.PENDIENTE && order.getStatus() != OrderStatus.PREPARACION) {
+            throw new IllegalStateException("Solo se pueden cancelar pedidos en estado PENDIENTE o EN PREPARACIÓN");
+        }
+
+        if (order.getStatus() == OrderStatus.PREPARACION) {
+            restoreStock(order);
         }
 
         messageRepository.deleteByOrderId(safeId);
         order.setStatus(OrderStatus.CANCELADO);
         orderRepository.save(order);
+    }
+
+    private void restoreStock(Order order) {
+        for (OrderItem item : order.getItems()) {
+            storeOfferRepository.findByProduct_IdAndStoreId(item.getProductId(), item.getStoreId())
+                    .ifPresent(offer -> {
+                        offer.setStock(offer.getStock() + item.getQuantity());
+                        offer.setInStock(true);
+                        storeOfferRepository.save(offer);
+                    });
+        }
     }
 
     @Transactional

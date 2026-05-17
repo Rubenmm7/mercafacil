@@ -45,7 +45,10 @@ public class StoreVendedorInitializer {
     @EventListener(ApplicationReadyEvent.class)
     @Transactional
     public void assignVendors() {
-        List<com.mercafacil.model.Store> sinVendedor = storeRepository.findByVendedorIsNull();
+        List<com.mercafacil.model.Store> sinVendedor = storeRepository.findByVendedorIsNull()
+                .stream()
+                .filter(s -> s.getId() != 5L)
+                .toList();
         for (int i = 0; i < sinVendedor.size(); i++) {
             var store = sinVendedor.get(i);
             String email = "vendedor." + store.getId() + "@mercafacil.com";

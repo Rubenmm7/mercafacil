@@ -58,6 +58,14 @@ export interface UserAdmin {
   rol: Role;
 }
 
+export interface UserPage {
+  content: UserAdmin[];
+  totalElements: number;
+  totalPages: number;
+  page: number;
+  size: number;
+}
+
 export interface CreateUserRequest {
   nombre: string;
   apellidos: string;

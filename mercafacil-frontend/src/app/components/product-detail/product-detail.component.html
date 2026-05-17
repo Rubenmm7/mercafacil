@@ -1,0 +1,140 @@
+<!-- Loading -->
+@if (loading()) {
+<div class="pd-loading">
+  <div class="pd-skeleton-hero"></div>
+  <div class="pd-skeleton-offers">
+    @for (i of [1,2,3]; track i) {
+    <div class="pd-skeleton-row"></div>
+    }
+  </div>
+</div>
+}
+
+<!-- Error -->
+@if (!loading() && error()) {
+<div class="pd-error">
+  <app-icon name="alert-triangle" [size]="48" />
+  <h2>Producto no encontrado</h2>
+  <p>Este producto no existe o ya no está disponible.</p>
+  <button type="button" class="btn-primary" (click)="goBack()">Volver a la búsqueda</button>
+</div>
+}
+
+<!-- Content -->
+@if (!loading() && !error() && product()) {
+<div class="pd-page">
+
+  <!-- Breadcrumb -->
+  <nav class="pd-breadcrumb">
+    <a routerLink="/">Inicio</a>
+    <span class="sep">›</span>
+    <a routerLink="/buscar">Buscar</a>
+    <span class="sep">›</span>
+    <span>{{ product()!.name }}</span>
+  </nav>
+
+  <!-- Hero -->
+  <div class="pd-hero">
+    <div class="pd-image-wrap">
+      <img [src]="product()!.image" [alt]="product()!.name" class="pd-image" />
+    </div>
+
+    <div class="pd-info">
+      <span class="pd-category-badge">{{ product()!.category }}</span>
+      <h1 class="pd-name">{{ product()!.name }}</h1>
+      <p class="pd-unit">{{ product()!.unit }}</p>
+      <p class="pd-description">{{ product()!.description }}</p>
+
+      <div class="pd-price-summary">
+        @if (minPrice() !== null) {
+        <div class="pd-price-from">
+          <span class="pd-price-label">Desde</span>
+          <span class="pd-price-value">{{ minPrice() | number:'1.2-2' }}€</span>
+          <span class="pd-price-stores">en {{ availableCount() }} {{ availableCount() === 1 ? 'tienda' : 'tiendas' }}</span>
+        </div>
+        } @else {
+        <div class="pd-out-of-stock-msg">
+          <app-icon name="alert-triangle" [size]="16" /> No disponible en ninguna tienda
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Store offers -->
+  <section class="pd-section">
+    <h2 class="pd-section-title">Tiendas que lo venden</h2>
+
+    @if (offerViews().length === 0) {
+    <p class="pd-no-offers">No hay tiendas con este producto en este momento.</p>
+    } @else {
+    <div class="pd-offers-list">
+      @for (ov of offerViews(); track ov.offer.storeId) {
+      <div class="pd-offer-row" [class.best]="ov.isBest" [class.out-of-stock]="!ov.offer.inStock">
+
+        <div class="pd-offer-logo" [class.has-logo]="!!ov.store?.logoUrl"
+          [style.background-color]="ov.store?.logoUrl ? '#fff' : (ov.store?.color || '#999')">
+          @if (ov.store?.logoUrl) {
+          <img [src]="ov.store!.logoUrl" [alt]="ov.store!.name" />
+          } @else {
+          {{ ov.store?.logo }}
+          }
+        </div>
+
+        <div class="pd-offer-info">
+          <div class="pd-offer-store">
+            {{ ov.offer.storeName }}
+            @if (ov.isBest) { <span class="best-badge">MEJOR PRECIO</span> }
+          </div>
+          <div class="pd-offer-brand">{{ ov.offer.brand }}</div>
+        </div>
+
+        <div class="pd-offer-price-col">
+          @if (ov.offer.originalPrice) {
+          <span class="pd-original-price">{{ ov.offer.originalPrice | number:'1.2-2' }}€</span>
+          }
+          <span class="pd-price" [class.best-price]="ov.isBest">
+            {{ ov.offer.inStock ? (ov.offer.price | number:'1.2-2') + '€' : 'Agotado' }}
+          </span>
+          @if (ov.offer.inStock && (!authService.loggedIn() || authService.user()?.rol === 'CLIENTE')) {
+          <button type="button" class="add-btn" [class.added]="isAdded(ov.offer.storeId)"
+            (click)="addToCart(ov.offer)">
+            @if (isAdded(ov.offer.storeId)) {
+            <app-icon name="check" [size]="14" /> Añadido
+            } @else {
+            <app-icon name="shopping-cart" [size]="14" /> Añadir
+            }
+          </button>
+          }
+        </div>
+
+      </div>
+      }
+    </div>
+    }
+  </section>
+
+  <!-- Related products -->
+  @if (relatedProducts().length > 0) {
+  <section class="pd-section pd-related">
+    <h2 class="pd-section-title">Productos relacionados</h2>
+    <div class="pd-related-grid">
+      @for (rp of relatedProducts(); track rp.id) {
+      <button type="button" class="pd-related-card" (click)="goToRelated(rp.id)">
+        <img [src]="rp.image" [alt]="rp.name" class="pd-related-img" />
+        <div class="pd-related-info">
+          <span class="pd-related-name">{{ rp.name }}</span>
+          @if (relatedMinPrice(rp) !== null) {
+          <span class="pd-related-price">Desde {{ relatedMinPrice(rp) | number:'1.2-2' }}€</span>
+          } @else {
+          <span class="pd-related-price agotado">Sin stock</span>
+          }
+        </div>
+      </button>
+      }
+    </div>
+  </section>
+  }
+
+</div>
+}

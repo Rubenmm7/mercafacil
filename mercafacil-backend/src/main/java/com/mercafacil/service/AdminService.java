@@ -7,6 +7,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +26,7 @@ import com.mercafacil.dto.StoreAdminDto;
 import com.mercafacil.dto.StoreRevenueDto;
 import com.mercafacil.dto.UpdateUserRequest;
 import com.mercafacil.dto.UserDto;
+import com.mercafacil.dto.UserPageDto;
 import com.mercafacil.model.Role;
 import com.mercafacil.model.Store;
 import com.mercafacil.model.User;
@@ -126,10 +131,16 @@ public class AdminService {
                 countByRole(users, Role.ADMIN));
     }
 
-    public List<UserDto> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(this::toDto)
-                .toList();
+    public UserPageDto getUsersPage(String search, int page, int size, String sortField, String dir) {
+        Sort.Direction direction = "desc".equalsIgnoreCase(dir) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = "nombre".equals(sortField)
+                ? Sort.by(direction, "nombre", "apellidos")
+                : Sort.by(direction, sortField);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        String safeSearch = search == null ? "" : search.trim();
+        Page<User> result = userRepository.searchUsers(safeSearch, pageable);
+        List<UserDto> content = result.getContent().stream().map(this::toDto).toList();
+        return new UserPageDto(content, result.getTotalElements(), result.getTotalPages(), page, size);
     }
 
     @Transactional

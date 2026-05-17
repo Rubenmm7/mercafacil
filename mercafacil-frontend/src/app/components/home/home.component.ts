@@ -176,7 +176,4 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/buscar'], { queryParams: { storeId: store.id } });
   }
 
-  goToSearch(): void {
-    this.router.navigate(['/buscar']);
-  }
 }

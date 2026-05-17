@@ -30,6 +30,6 @@ export class TiendasProveedorComponent implements OnInit {
   }
 
   openChat(storeId: number): void {
-    this.router.navigate(['/chat/shop', storeId]);
+    this.router.navigate(['/proveedor/chats/shop', storeId]);
   }
 }

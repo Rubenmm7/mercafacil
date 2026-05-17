@@ -252,6 +252,33 @@
 
 .text-green { color: #059669; }
 
+.chart-card--revenue {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.revenue-total {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 0;
+}
+
+.revenue-amount {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #059669;
+}
+
+.revenue-period {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
 .chart-empty {
   color: var(--text-muted);
   font-size: 12px;

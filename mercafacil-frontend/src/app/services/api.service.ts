@@ -33,6 +33,12 @@ export class ApiService {
     );
   }
 
+  getProductById(id: number): Observable<Product | null> {
+    return this.http.get<Product>(`${this.baseUrl}/products/${id}`).pipe(
+      catchError(this.handleError<Product | null>(null))
+    );
+  }
+
   getCategories(): Observable<Category[]> {
     this.categoriesCache ??= this.http.get<Category[]>(`${this.baseUrl}/categories`).pipe(
       catchError(this.handleError<Category[]>([])),

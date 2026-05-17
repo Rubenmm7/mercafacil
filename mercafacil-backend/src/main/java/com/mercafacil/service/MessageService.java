@@ -150,7 +150,14 @@ public class MessageService {
     private ChatThreadDto toThreadDto(Message m) {
         Long orderId = m.getOrder() != null ? m.getOrder().getId() : null;
         Long shopId = m.getShop() != null ? m.getShop().getId() : null;
-        String title = orderId != null ? "Pedido #" + orderId : "Tienda #" + shopId;
+        String title;
+        if (orderId != null) {
+            title = "Pedido #" + orderId;
+        } else if (m.getShop() != null) {
+            title = m.getShop().getName();
+        } else {
+            title = "Tienda #" + shopId;
+        }
         String preview = m.getMensaje().length() > 80
                 ? m.getMensaje().substring(0, 77) + "..."
                 : m.getMensaje();

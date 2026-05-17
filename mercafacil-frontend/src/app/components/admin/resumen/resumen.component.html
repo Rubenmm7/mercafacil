@@ -42,7 +42,7 @@
         @for (bar of dailyBars(); track bar.date) {
           <div class="bar-col">
             <span class="bar-label-top">{{ bar.orders }}</span>
-            <div class="bar-fill" [style.height.%]="bar.heightPct"></div>
+            <div class="bar-fill" [style.height.px]="bar.heightPx"></div>
             <span class="bar-label-bottom">{{ bar.date | slice:5 }}</span>
           </div>
         }

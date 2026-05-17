@@ -106,17 +106,19 @@ export class PedidosComponent implements OnInit {
       o.clientEmail ?? '',
       this.statusLabels[o.status] ?? o.status,
       o.total?.toFixed(2) ?? '0.00',
-      (o.shippingAddress ?? '').replace(/,/g, ' '),
+      o.shippingAddress ?? '',
       o.postalCode ?? '',
-      this.formatDate(o.createdAt),
-      this.formatDate(o.deliveredAt)
+      this.formatDateCsv(o.createdAt),
+      this.formatDateCsv(o.deliveredAt)
     ]);
 
-    const csvContent = [headers, ...rows]
-      .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+    const sep = ';';
+    const csvContent = 'sep=;\r\n' + [headers, ...rows]
+      .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(sep))
       .join('\r\n');
 
-    const blob = new Blob(['﻿' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const bytes = this.toWindows1252(csvContent);
+    const blob = new Blob([bytes.buffer as ArrayBuffer], { type: 'text/csv;charset=windows-1252;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -124,5 +126,27 @@ export class PedidosComponent implements OnInit {
     a.click();
     URL.revokeObjectURL(url);
     this.toastService.showMessage({ body: `CSV exportado: ${orders.length} pedidos` });
+  }
+
+  private toWindows1252(str: string): Uint8Array {
+    const bytes = new Uint8Array(str.length);
+    for (let i = 0; i < str.length; i++) {
+      const code = str.charCodeAt(i);
+      bytes[i] = code < 256 ? code : 63; // '?' para caracteres fuera de Latin-1
+    }
+    return bytes;
+  }
+
+  private formatDateCsv(value?: string): string {
+    if (!value) return '-';
+    const d = new Date(value);
+    const fmt = new Intl.DateTimeFormat('es-ES', {
+      timeZone: 'Europe/Madrid',
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit', hour12: false
+    });
+    const p: Record<string, string> = {};
+    for (const part of fmt.formatToParts(d)) p[part.type] = part.value;
+    return `${p['day']}/${p['month']}/${p['year']} ${p['hour']}:${p['minute']}`;
   }
 }

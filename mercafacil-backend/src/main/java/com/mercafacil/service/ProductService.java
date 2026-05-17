@@ -1,6 +1,8 @@
 package com.mercafacil.service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -21,5 +23,9 @@ public class ProductService {
             return productRepository.search(query.toLowerCase());
         }
         return productRepository.findAll();
+    }
+
+    public Optional<Product> findById(Long id) {
+        return productRepository.findById(Objects.requireNonNull(id));
     }
 }

@@ -28,7 +28,7 @@ export class ResumenComponent implements OnInit {
     return daily.map(d => ({
       date: d.date,
       orders: d.orders,
-      heightPct: Math.round((d.orders / max) * 100)
+      heightPx: Math.max(Math.round((d.orders / max) * 80), 2)
     }));
   });
 
@@ -39,16 +39,6 @@ export class ResumenComponent implements OnInit {
       name: p.productName,
       units: p.units,
       widthPct: Math.round((p.units / max) * 100)
-    }));
-  });
-
-  revenueBars = computed(() => {
-    const stores = this.analyticsData()?.revenueByStore ?? [];
-    const max = Math.max(...stores.map(s => s.revenue), 1);
-    return stores.map(s => ({
-      name: s.storeName,
-      revenue: s.revenue,
-      widthPct: Math.round((s.revenue / max) * 100)
     }));
   });
 

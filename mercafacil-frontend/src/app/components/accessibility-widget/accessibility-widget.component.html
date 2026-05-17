@@ -1,0 +1,105 @@
+<div class="a11y-widget">
+
+  <!-- Bola flotante -->
+  <button
+    class="a11y-fab"
+    (click)="togglePanel()"
+    [attr.aria-expanded]="open"
+    [attr.aria-label]="(open ? 'Cerrar' : 'Abrir') + ' opciones de accesibilidad'"
+    title="Accesibilidad">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="4.5" r="1.8" fill="currentColor" stroke="none"/>
+      <path d="M5 9h14M9 9l-2 11M15 9l2 11M12 9v5l-2 4"/>
+    </svg>
+  </button>
+
+  <!-- Panel de opciones -->
+  @if (open) {
+  <div class="a11y-panel" role="dialog" aria-modal="false" aria-label="Opciones de accesibilidad">
+
+    <div class="a11y-panel-header">
+      <div class="a11y-panel-title">
+        <span class="a11y-dot"></span>
+        Accesibilidad
+      </div>
+      <button class="a11y-close" (click)="togglePanel()" aria-label="Cerrar panel">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2.5" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Tamaño de fuente -->
+    <div class="a11y-section">
+      <p class="a11y-label" id="font-group-label">Tamaño del texto</p>
+      <div class="a11y-font-group" role="group" aria-labelledby="font-group-label">
+        <button
+          class="font-btn"
+          [class.font-btn--on]="fontSize === 'normal'"
+          (click)="setFontSize('normal')"
+          [attr.aria-pressed]="fontSize === 'normal'">
+          <span class="font-btn-a" style="font-size:.9rem">A</span>
+          <span class="font-btn-name">Normal</span>
+        </button>
+        <button
+          class="font-btn"
+          [class.font-btn--on]="fontSize === 'large'"
+          (click)="setFontSize('large')"
+          [attr.aria-pressed]="fontSize === 'large'">
+          <span class="font-btn-a" style="font-size:1.1rem">A</span>
+          <span class="font-btn-name">Grande</span>
+        </button>
+        <button
+          class="font-btn"
+          [class.font-btn--on]="fontSize === 'xl'"
+          (click)="setFontSize('xl')"
+          [attr.aria-pressed]="fontSize === 'xl'">
+          <span class="font-btn-a" style="font-size:1.3rem">A</span>
+          <span class="font-btn-name">Mayor</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Alto contraste -->
+    <div class="a11y-section">
+      <div class="a11y-toggle-row">
+        <div class="a11y-toggle-info">
+          <span class="a11y-label">Alto contraste</span>
+          <span class="a11y-desc">Blanco y negro intenso</span>
+        </div>
+        <button
+          class="a11y-switch"
+          role="switch"
+          [attr.aria-checked]="highContrast"
+          (click)="toggleContrast()"
+          [attr.aria-label]="(highContrast ? 'Desactivar' : 'Activar') + ' alto contraste'">
+          <span class="switch-thumb"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Modo daltónico -->
+    <div class="a11y-section a11y-section--last">
+      <div class="a11y-toggle-row">
+        <div class="a11y-toggle-info">
+          <span class="a11y-label">Modo daltónico</span>
+          <span class="a11y-desc">Deuteranopia (rojo/verde)</span>
+        </div>
+        <button
+          class="a11y-switch"
+          role="switch"
+          [attr.aria-checked]="colorblind"
+          (click)="toggleColorblind()"
+          [attr.aria-label]="(colorblind ? 'Desactivar' : 'Activar') + ' modo daltónico'">
+          <span class="switch-thumb"></span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+  }
+
+</div>

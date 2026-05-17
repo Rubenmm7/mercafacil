@@ -3,6 +3,8 @@ package com.mercafacil.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.mercafacil.dto.UserPageDto;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,8 +49,13 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        return ResponseEntity.ok(adminService.getAllUsers());
+    public ResponseEntity<UserPageDto> getAllUsers(
+            @RequestParam(defaultValue = "") String search,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String dir) {
+        return ResponseEntity.ok(adminService.getUsersPage(search, page, size, sort, dir));
     }
 
     @PostMapping("/users")

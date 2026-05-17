@@ -159,13 +159,14 @@
         @for (view of productViews(); track view.product.id) {
         <div class="product-result">
           <div class="product-header">
-            <div class="product-thumb">
+            <div class="product-thumb clickable" (click)="goToProduct(view.product.id)" role="button" [attr.aria-label]="'Ver detalle de ' + view.product.name">
               <img [src]="view.product.image" [alt]="view.product.name" />
             </div>
             <div class="product-meta">
               <span class="product-cat-badge">{{view.product.category}}</span>
               <h3>{{view.product.name}}</h3>
               <p class="product-desc">{{view.product.description}}</p>
+              <button type="button" class="detail-link" (click)="goToProduct(view.product.id)">Ver detalle ›</button>
             </div>
             <div class="product-price-summary">
               @if (view.hasDiscount) {
@@ -212,7 +213,7 @@
                 <span class="offer-price" [class.best-price]="offerView.isBest">
                   {{offerView.offer.inStock ? (offerView.offer.price | number:'1.2-2') + '€' : 'Agotado'}}
                 </span>
-                @if (offerView.offer.inStock) {
+                @if (offerView.offer.inStock && (!authService.loggedIn() || authService.user()?.rol === 'CLIENTE')) {
                 <button type="button" class="add-btn" [class.added]="isAdded(view.product.id, offerView.offer.storeId)"
                   (click)="addToCart(view.product, offerView.offer)"
                   [attr.aria-label]="isAdded(view.product.id, offerView.offer.storeId) ? 'Producto añadido al carrito' : 'Añadir al carrito'">

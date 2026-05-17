@@ -14,6 +14,8 @@ const loadChatsList = () => import('./components/chats-list/chats-list.component
 const loadOrders = () => import('./components/orders/orders.component').then(m => m.OrdersComponent);
 const loadOrderDetail = () => import('./components/order-detail/order-detail.component').then(m => m.OrderDetailComponent);
 const loadVendedor = () => import('./components/vendedor/vendedor.component').then(m => m.VendedorComponent);
+const loadVendedorChatsList = () => import('./components/chats-list/chats-list.component').then(m => m.ChatsListComponent);
+const loadVendedorChat = () => import('./components/chat/chat.component').then(m => m.ChatComponent);
 const loadVendedorResumen = () => import('./components/vendedor/resumen/resumen.component').then(m => m.ResumenComponent);
 const loadVendedorPedidos = () => import('./components/vendedor/pedidos/pedidos.component').then(m => m.PedidosComponent);
 const loadVendedorProductos = () => import('./components/vendedor/productos/productos.component').then(m => m.ProductosComponent);
@@ -31,6 +33,7 @@ const loadAdminResumen = () => import('./components/admin/resumen/resumen.compon
 const loadAdminUsuarios = () => import('./components/admin/usuarios/usuarios.component').then(m => m.UsuariosAdminComponent);
 const loadAdminTiendas = () => import('./components/admin/tiendas/tiendas.component').then(m => m.TiendasAdminComponent);
 const loadCheckout = () => import('./components/checkout/checkout.component').then(m => m.CheckoutComponent);
+const loadProductDetail = () => import('./components/product-detail/product-detail.component').then(m => m.ProductDetailComponent);
 const loadInfoPage = () => import('./components/info-page/info-page.component').then(m => m.InfoPageComponent);
 
 export const routes: Routes = [
@@ -38,8 +41,9 @@ export const routes: Routes = [
   { path: 'buscar', loadComponent: loadSearch },
   { path: 'tiendas', loadComponent: loadStores },
   { path: 'envio', loadComponent: loadShipping },
-  { path: 'carrito', loadComponent: loadCart, canActivate: [authGuard] },
+  { path: 'carrito', loadComponent: loadCart, canActivate: [roleGuard('CLIENTE')] },
   { path: 'pago', loadComponent: loadCheckout, canActivate: [roleGuard('CLIENTE')] },
+  { path: 'producto/:id', loadComponent: loadProductDetail },
   { path: 'pedidos', loadComponent: loadOrders, canActivate: [roleGuard('CLIENTE')] },
   { path: 'pedidos/:id', loadComponent: loadOrderDetail, canActivate: [roleGuard('CLIENTE')] },
   { path: 'login', loadComponent: loadLogin },
@@ -64,7 +68,10 @@ export const routes: Routes = [
       { path: 'pedidos', loadComponent: loadVendedorPedidos },
       { path: 'productos', loadComponent: loadVendedorProductos },
       { path: 'ofertas', loadComponent: loadVendedorOfertas },
-      { path: 'stock', loadComponent: loadVendedorStock }
+      { path: 'stock', loadComponent: loadVendedorStock },
+      { path: 'chats', loadComponent: loadVendedorChatsList, data: { chatBasePath: '/vendedor/chats' } },
+      { path: 'chats/order/:orderId/:chatType', loadComponent: loadVendedorChat, data: { backPath: '/vendedor/chats' } },
+      { path: 'chats/shop/:shopId', loadComponent: loadVendedorChat, data: { backPath: '/vendedor/chats' } }
     ]
   },
 

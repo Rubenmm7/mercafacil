@@ -49,7 +49,7 @@ public class StockReposicionService {
         List<EnvioItemDto> items = new ArrayList<>();
         for (var item : req.items()) {
             if (item.cantidad() <= 0) continue;
-            storeOfferRepository.findById(item.offerId()).ifPresent(offer -> {
+            storeOfferRepository.findById(Objects.requireNonNull(item.offerId())).ifPresent(offer -> {
                 String productName = offer.getProduct() != null ? offer.getProduct().getName() : "Producto " + item.offerId();
                 items.add(new EnvioItemDto(productName, item.cantidad()));
             });
@@ -65,7 +65,8 @@ public class StockReposicionService {
         enviosPendientes.put(id, envio);
 
         // Programar el incremento de stock tras 10 minutos
-        taskScheduler.schedule(() -> aplicarStock(id, req), Instant.now().plusSeconds(DELAY_SEGUNDOS));
+        Instant executeAt = Objects.requireNonNull(Instant.now().plusSeconds(DELAY_SEGUNDOS));
+        taskScheduler.schedule(() -> aplicarStock(id, req), executeAt);
 
         return envio;
     }
@@ -77,7 +78,7 @@ public class StockReposicionService {
     private void aplicarStock(String envioId, ReponerRequest req) {
         for (var item : req.items()) {
             if (item.cantidad() <= 0) continue;
-            storeOfferRepository.findById(item.offerId()).ifPresent(offer -> {
+            storeOfferRepository.findById(Objects.requireNonNull(item.offerId())).ifPresent(offer -> {
                 offer.setStock(offer.getStock() + item.cantidad());
                 offer.setInStock(true);
                 storeOfferRepository.save(offer);

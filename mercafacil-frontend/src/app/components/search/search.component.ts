@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { CartService } from '../../services/cart.service';
+import { AuthService } from '../../services/auth.service';
 import { Product, Store, Category, StoreOffer } from '../../models/models';
 import { IconComponent } from '../icon/icon.component';
 
@@ -106,6 +107,7 @@ export class SearchComponent implements OnInit {
   constructor(
     private api: ApiService,
     public cartService: CartService,
+    public authService: AuthService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
@@ -282,5 +284,9 @@ export class SearchComponent implements OnInit {
     this.maxPrice.set(this.pendingMax());
     this.syncRoute();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  goToProduct(id: number): void {
+    this.router.navigate(['/producto', id]);
   }
 }

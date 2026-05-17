@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AdminStats, AnalyticsData, StoreAdmin, UserAdmin, Role, CreateUserRequest, UpdateUserRequest } from '../models/models';
+import { AdminStats, AnalyticsData, StoreAdmin, UserAdmin, UserPage, Role, CreateUserRequest, UpdateUserRequest } from '../models/models';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
@@ -13,8 +13,14 @@ export class AdminService {
     return this.http.get<AdminStats>(`${this.base}/stats`);
   }
 
-  getUsers(): Observable<UserAdmin[]> {
-    return this.http.get<UserAdmin[]>(`${this.base}/users`);
+  getUsers(opts: { search?: string; page?: number; size?: number; sort?: string; dir?: string } = {}): Observable<UserPage> {
+    const params = new HttpParams()
+      .set('search', opts.search ?? '')
+      .set('page', opts.page ?? 0)
+      .set('size', opts.size ?? 10)
+      .set('sort', opts.sort ?? 'id')
+      .set('dir', opts.dir ?? 'asc');
+    return this.http.get<UserPage>(`${this.base}/users`, { params });
   }
 
   createUser(req: CreateUserRequest): Observable<UserAdmin> {

@@ -2,6 +2,7 @@ package com.mercafacil.controller;
 
 import com.mercafacil.model.Product;
 import com.mercafacil.service.ProductService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,5 +20,12 @@ public class ProductController {
     @GetMapping
     public List<Product> getAll(@RequestParam(required = false) String q) {
         return productService.findAll(q);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getById(@PathVariable Long id) {
+        return productService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

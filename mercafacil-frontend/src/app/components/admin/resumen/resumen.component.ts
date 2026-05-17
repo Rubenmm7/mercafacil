@@ -26,7 +26,7 @@ export class ResumenAdminComponent implements OnInit {
     return daily.map(d => ({
       date: d.date,
       orders: d.orders,
-      heightPct: Math.round((d.orders / max) * 100)
+      heightPx: Math.max(Math.round((d.orders / max) * 80), 2)
     }));
   });
 

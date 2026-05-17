@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { ChatService } from '../../services/chat.service';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
+import { ApiService } from '../../services/api.service';
 import { ChatType, MarkReadRequest, MessageRequest, MessageResponse } from '../../models/models';
 import { environment } from '../../../environments/environment';
 import { formatMadridTime } from '../../utils/date-time';
@@ -24,6 +25,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   orderId = signal<number | null>(null);
   shopId = signal<number | null>(null);
+  shopName = signal<string>('');
   chatType = signal<ChatType>('CLIENTE_REPARTIDOR');
 
   messages = signal<MessageResponse[]>([]);
@@ -39,7 +41,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private chatService: ChatService,
     public authService: AuthService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private apiService: ApiService
   ) { }
 
   ngOnInit(): void {
@@ -52,6 +55,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     } else if (params['shopId']) {
       this.shopId.set(+params['shopId']);
       this.chatType.set('PROVEEDOR_VENDEDOR');
+      this.apiService.getStores().subscribe(stores => {
+        const store = stores.find(s => s.id === this.shopId());
+        if (store) this.shopName.set(store.name);
+      });
     }
 
     this.markThreadRead();
@@ -108,7 +115,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   chatTitle(): string {
     if (this.orderId() != null) return `Pedido #${this.orderId()}`;
-    if (this.shopId() != null) return `Tienda #${this.shopId()}`;
+    if (this.shopId() != null) return this.shopName() || `Tienda #${this.shopId()}`;
     return 'Chat';
   }
 

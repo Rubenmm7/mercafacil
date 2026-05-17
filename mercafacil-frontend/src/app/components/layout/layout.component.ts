@@ -6,7 +6,6 @@ import { NotificationService } from '../../services/notification.service';
 import { ApiService } from '../../services/api.service';
 import { Store } from '../../models/models';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { IconComponent } from '../icon/icon.component';
 import { FREE_DELIVERY_THRESHOLD_EUR } from '../../utils/business-rules';
 import { FOOTER_NAV_LINKS, FOOTER_SUPPORT_LINKS, MAIN_NAV_LINKS, getRoleNavLinks } from '../../config/navigation';
@@ -14,13 +13,12 @@ import { FOOTER_NAV_LINKS, FOOTER_SUPPORT_LINKS, MAIN_NAV_LINKS, getRoleNavLinks
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, FormsModule, IconComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, IconComponent],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'
 })
 export class LayoutComponent implements OnInit {
   mobileMenuOpen = false;
-  searchQuery = '';
   readonly freeDeliveryThreshold = FREE_DELIVERY_THRESHOLD_EUR;
 
   readonly isDark = signal(
@@ -70,12 +68,6 @@ export class LayoutComponent implements OnInit {
     this.isDark.set(next);
     document.documentElement.classList.toggle('dark', next);
     localStorage.setItem('mf-dark', next ? '1' : '0');
-  }
-
-  handleSearch(): void {
-    if (this.searchQuery.trim()) {
-      this.router.navigate(['/buscar'], { queryParams: { q: this.searchQuery.trim() } });
-    }
   }
 
   toggleMobileMenu(): void { this.mobileMenuOpen = !this.mobileMenuOpen; }

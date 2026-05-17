@@ -3,19 +3,33 @@
   <button class="btn-new" (click)="openCreateModal()">+ Nuevo usuario</button>
 </div>
 
+<div class="search-bar">
+  <span class="search-icon">&#128269;</span>
+  <input
+    type="text"
+    placeholder="Buscar por nombre o email…"
+    [value]="searchQuery()"
+    (keydown.enter)="$event.preventDefault()"
+    (input)="onSearchInput($any($event.target).value)" />
+  @if (searchQuery()) {
+    <button class="search-clear" (click)="onSearchInput('')">&#10005;</button>
+  }
+</div>
+
 @if (loading()) {
 <div class="loading">Cargando usuarios...</div>
 } @else if (error()) {
 <div class="error-msg">{{ error() }}</div>
 } @else {
+
 <div class="table-wrapper">
   <table class="users-table">
     <thead>
       <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Email</th>
-        <th>Rol</th>
+        <th class="th-sortable" (click)="sortBy('id')">ID <span class="sort-icon">{{ sortIcon('id') }}</span></th>
+        <th class="th-sortable" (click)="sortBy('nombre')">Nombre <span class="sort-icon">{{ sortIcon('nombre') }}</span></th>
+        <th class="th-sortable" (click)="sortBy('email')">Email <span class="sort-icon">{{ sortIcon('email') }}</span></th>
+        <th class="th-sortable" (click)="sortBy('rol')">Rol <span class="sort-icon">{{ sortIcon('rol') }}</span></th>
         <th>Acciones</th>
       </tr>
     </thead>
@@ -42,8 +56,31 @@
   </table>
 </div>
 
-<div class="total-info">{{ users().length }} usuario{{ users().length !== 1 ? 's' : '' }} registrado{{ users().length
-  !== 1 ? 's' : '' }}</div>
+<div class="table-footer">
+  <div class="total-info">
+    @if (totalElements() > 0) {
+      Mostrando {{ rangeStart() }}–{{ rangeEnd() }} de {{ totalElements() }} usuario{{ totalElements() !== 1 ? 's' : '' }}
+    } @else {
+      Sin resultados
+    }
+  </div>
+
+  @if (totalPages() > 1) {
+  <nav class="pagination">
+    <button class="page-btn" [disabled]="currentPage() === 0" (click)="goToPage(currentPage() - 1)">&#8592;</button>
+
+    @for (n of pageNumbers(); track $index) {
+      @if (n === -1) {
+        <span class="page-ellipsis">…</span>
+      } @else {
+        <button class="page-btn" [class.page-active]="n === currentPage()" (click)="goToPage(n)">{{ n + 1 }}</button>
+      }
+    }
+
+    <button class="page-btn" [disabled]="currentPage() === totalPages() - 1" (click)="goToPage(currentPage() + 1)">&#8594;</button>
+  </nav>
+  }
+</div>
 }
 
 @if (showModal()) {

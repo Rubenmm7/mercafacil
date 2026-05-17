@@ -1,0 +1,223 @@
+/* ── Contenedor fijo ────────────────────────────────────────────── */
+.a11y-widget {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 8500;
+}
+
+/* ── Bola flotante ──────────────────────────────────────────────── */
+.a11y-fab {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #16a34a;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.45), 0 2px 6px rgba(0,0,0,0.15);
+  transition: background .2s, transform .15s, box-shadow .2s;
+}
+
+.a11y-fab:hover {
+  background: #15803d;
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(22, 163, 74, 0.55), 0 3px 8px rgba(0,0,0,0.2);
+}
+
+.a11y-fab:active { transform: scale(.96); }
+
+/* ── Panel ──────────────────────────────────────────────────────── */
+.a11y-panel {
+  position: absolute;
+  bottom: 66px;
+  left: 0;
+  width: 268px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 12px 36px rgba(0,0,0,.16), 0 4px 12px rgba(0,0,0,.08);
+  overflow: hidden;
+  animation: a11y-in .18s cubic-bezier(.34,1.56,.64,1);
+}
+
+@keyframes a11y-in {
+  from { opacity: 0; transform: translateY(10px) scale(.95); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);   }
+}
+
+/* ── Header del panel ───────────────────────────────────────────── */
+.a11y-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 14px 11px;
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--border);
+}
+
+.a11y-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: .75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--text-muted);
+}
+
+.a11y-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #16a34a;
+  flex-shrink: 0;
+}
+
+.a11y-close {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: background .15s, color .15s;
+}
+
+.a11y-close:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+/* ── Secciones ──────────────────────────────────────────────────── */
+.a11y-section {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-2);
+}
+
+.a11y-section--last { border-bottom: none; }
+
+.a11y-label {
+  display: block;
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--text-2);
+  margin: 0 0 10px;
+}
+
+.a11y-desc {
+  display: block;
+  font-size: .72rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ── Botones de fuente ──────────────────────────────────────────── */
+.a11y-font-group {
+  display: flex;
+  gap: 8px;
+}
+
+.font-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 9px 4px 8px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  transition: border-color .15s, background .15s, color .15s;
+  cursor: pointer;
+}
+
+.font-btn:hover {
+  border-color: #16a34a;
+  background: var(--bg-alt);
+}
+
+.font-btn-a {
+  font-weight: 700;
+  line-height: 1;
+}
+
+.font-btn-name {
+  font-size: .62rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--text-muted);
+}
+
+.font-btn--on {
+  border-color: #16a34a;
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.font-btn--on .font-btn-name { color: #16a34a; }
+
+html.dark .font-btn--on {
+  background: rgba(22, 163, 74, .15);
+  color: #4ade80;
+}
+
+html.dark .font-btn--on .font-btn-name { color: #4ade80; }
+
+/* ── Fila toggle ────────────────────────────────────────────────── */
+.a11y-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.a11y-toggle-info { flex: 1; }
+
+.a11y-toggle-info .a11y-label { margin: 0; }
+
+/* ── Switch ─────────────────────────────────────────────────────── */
+.a11y-switch {
+  position: relative;
+  width: 46px;
+  height: 26px;
+  border-radius: 999px;
+  background: var(--border);
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background .22s;
+}
+
+.a11y-switch[aria-checked="true"] { background: #16a34a; }
+
+.switch-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,.25);
+  transition: transform .22s cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+}
+
+.a11y-switch[aria-checked="true"] .switch-thumb { transform: translateX(20px); }
+
+/* ── Focus visible ──────────────────────────────────────────────── */
+.a11y-fab:focus-visible,
+.a11y-close:focus-visible,
+.font-btn:focus-visible,
+.a11y-switch:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+}

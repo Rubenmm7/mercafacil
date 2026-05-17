@@ -73,6 +73,45 @@ h4 { font-size: 1rem;    font-weight: 500; }
 .skeleton-row { height: 32px; min-height: 32px; width: 100%; }
 .skeleton-product { min-height: 260px; }
 
+/* ── Teclado: foco visible global ────────────────────────────────── */
+*:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* ── Accesibilidad: tamaño de fuente ─────────────────────────────── */
+html.font-large { font-size: 112.5%; }
+html.font-xl    { font-size: 125%;   }
+
+/* ── Accesibilidad: alto contraste ──────────────────────────────── */
+html.high-contrast {
+  --bg:            #000;
+  --bg-card:       #0a0a0a;
+  --bg-alt:        #111;
+  --bg-input:      #000;
+  --text:          #fff;
+  --text-2:        #fff;
+  --text-muted:    #ff0;
+  --text-light:    #ccc;
+  --border:        #fff;
+  --border-2:      #888;
+  --green-light:   #003300;
+  --header-bg:     #000;
+  --header-border: rgba(255,255,255,0.9);
+}
+
+html.high-contrast body { background: #000; color: #fff; }
+
+html.high-contrast *:focus-visible {
+  outline-color: #ff0;
+}
+
+/* ── Accesibilidad: modo daltónico (deuteranopia) ────────────────── */
+html.colorblind body {
+  filter: url('#a11y-colorblind-filter');
+}
+
 /* ── Fade-in ──────────────────────────────────────────────────────── */
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(4px); }
