@@ -11,7 +11,7 @@
   gap: 40px;
   align-items: center;
 }
-.hero-left { padding-right: 8px; }
+.hero-left { padding-right: 8px; min-width: 0; }
 
 /* Location badge */
 .hero-location-badge {
@@ -59,6 +59,7 @@
 .hero-search-form { max-width: 460px; margin-bottom: 16px; }
 .hero-search-box {
   display: flex;
+  width: 100%;
   background: white;
   border-radius: 12px;
   overflow: hidden;
@@ -74,6 +75,7 @@
 }
 .hero-search-box input {
   flex: 1;
+  min-width: 0;
   padding: 14px 14px 14px 42px;
   border: none;
   outline: none;
@@ -118,6 +120,7 @@
   border-radius: 18px;
   padding: 6px;
   box-shadow: 0 24px 64px rgba(0,0,0,0.28);
+  min-width: 0;
 }
 .panel-label {
   font-size: 0.68rem;
@@ -437,16 +440,28 @@
 @media (max-width: 1024px) {
   .hero-inner { grid-template-columns: 1fr; }
   .hero-left { padding-right: 0; }
-  .hero-panel { max-width: 480px; }
+  .hero-panel { max-width: 480px; width: 100%; }
   .stores-grid { grid-template-columns: repeat(3, 1fr); }
   .products-grid { grid-template-columns: repeat(2, 1fr); }
   .steps-grid { grid-template-columns: repeat(2, 1fr); }
   .mall-map-wrap { width: 100%; aspect-ratio: 943 / 320; height: auto; min-height: 260px; }
 }
 @media (max-width: 640px) {
-  .hero { padding: 40px 16px 48px; }
-  .stats-inner { grid-template-columns: repeat(2, 1fr); }
-  .stores-grid { grid-template-columns: repeat(2, 1fr); }
-  .products-grid { grid-template-columns: 1fr 1fr; }
+  .hero { padding: 32px 14px 40px; }
+  .hero-inner { gap: 20px; }
+  .hero-title { font-size: clamp(1.7rem, 7vw, 2.4rem); }
+  .hero-search-form { max-width: 100%; }
+  .hero-search-box input { font-size: 0.85rem; padding: 12px 12px 12px 38px; }
+  .hero-search-btn { padding: 12px 16px; font-size: 0.82rem; }
+  .hero-panel { max-width: 100%; }
+  .panel-row-badge { font-size: 0.62rem; padding: 2px 6px; }
+  .stats-inner { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 14px; }
+  .stat-val { font-size: 1rem; }
+  .stat-lbl { font-size: 0.68rem; }
+  .section { padding: 32px 14px; }
+  .stores-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .products-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
   .steps-grid { grid-template-columns: 1fr; }
+  .how-section { padding: 40px 14px; }
+  .mall-map-wrap { min-height: 200px; }
 }

@@ -37,12 +37,15 @@ html.dark {
 /* ── Reset ───────────────────────────────────────────────────────── */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+html { overflow-x: hidden; }
+
 body {
   font-family: 'Inter', sans-serif;
   background-color: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   transition: background-color 0.25s, color 0.25s;
+  overflow-x: hidden;
 }
 
 a { text-decoration: none; color: inherit; }
@@ -108,7 +111,12 @@ html.high-contrast *:focus-visible {
 }
 
 /* ── Accesibilidad: modo daltónico (deuteranopia) ────────────────── */
-html.colorblind body {
+/* Aplicado solo a los elementos de contenido, NO al body, para que
+   los elementos con position:fixed (widget, toasts, modales) sigan
+   posicionándose relativo al viewport y no al documento completo */
+html.colorblind .header,
+html.colorblind .main-content,
+html.colorblind .footer {
   filter: url('#a11y-colorblind-filter');
 }
 

@@ -360,8 +360,6 @@ input.error-input, textarea.error-input {
   background: linear-gradient(180deg, #161b22 0%, #11161d 100%);
   border-color: rgba(255,255,255,0.08);
   box-shadow: 0 18px 42px rgba(0,0,0,0.35);
-  max-height: calc(100vh - 120px);
-  overflow: auto;
 }
 
 :host-context(html.dark) .section-header h2,
@@ -628,6 +626,20 @@ input.error-input, textarea.error-input {
   color: #4ade80;
 }
 :host-context(html.dark) .btn-change-address { color: #60a5fa; }
+
+/* ── Mobile ─────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .checkout-page { padding: 1rem 0.75rem; }
+  .form-section { padding: 1rem; }
+  .form-grid { grid-template-columns: 1fr; }
+  .section-header { gap: 0.4rem; }
+  .card-brands { margin-left: 0; order: 3; }
+  .btn-autofill { order: 4; }
+  .card-number-display { font-size: 0.9rem; letter-spacing: 2px; }
+  .card-preview { padding: 0.875rem 1rem; }
+  .card-holder { font-size: 0.78rem; }
+  .summary-card { padding: 1rem; }
+}
 
 :host-context(html.dark) .address-search-input {
   background: #0f1620;

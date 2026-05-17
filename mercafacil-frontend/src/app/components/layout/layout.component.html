@@ -123,6 +123,12 @@
       <app-icon name="moon" [size]="16" /> Modo oscuro
       }
     </button>
+    @if (authService.loggedIn()) {
+    <div class="mobile-auth-user">Hola, {{ authService.user()?.nombre }}</div>
+    <button type="button" class="mobile-auth-logout" (click)="logout(); closeMobileMenu()">Cerrar sesión</button>
+    } @else {
+    <a routerLink="/login" class="mobile-auth-login" (click)="closeMobileMenu()">Iniciar sesión</a>
+    }
   </div>
   }
 </header>

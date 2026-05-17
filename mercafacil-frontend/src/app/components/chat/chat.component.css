@@ -243,3 +243,16 @@ html.dark .sender-name { color: #4ade80; }
   background: var(--border);
   cursor: not-allowed;
 }
+
+@media (max-width: 640px) {
+  .chat-wrapper {
+    margin: 0;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    height: calc(100dvh - 120px);
+  }
+  .bubble { max-width: 85%; }
+  .messages-area { padding: 12px 10px 16px; }
+  .input-area { padding: 10px 12px; gap: 8px; }
+}

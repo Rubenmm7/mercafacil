@@ -559,8 +559,11 @@
 .store-assign-meta { font-size: 0.78rem; white-space: nowrap; }
 
 @media (max-width: 640px) {
+  .page-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+  .btn-new { align-self: stretch; text-align: center; }
   .form-row    { grid-template-columns: 1fr; }
   .td-email    { display: none; }
+  .table-footer { flex-direction: column; align-items: center; }
   .modal-card  { max-width: 100%; border-radius: 12px 12px 0 0; align-self: flex-end; }
   .modal-overlay { align-items: flex-end; padding: 0; }
 }

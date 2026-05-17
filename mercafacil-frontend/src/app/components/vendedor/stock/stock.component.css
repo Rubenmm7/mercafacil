@@ -153,3 +153,12 @@
 }
 .btn-send:hover:not(:disabled) { background: #1d4ed8; }
 .btn-send:disabled { opacity: 0.6; cursor: not-allowed; }
+
+@media (max-width: 640px) {
+  .alert-row { gap: 0.6rem; }
+  .offer-name { white-space: normal; }
+  .row-actions { width: 100%; justify-content: flex-end; }
+  .modal { padding: 1.25rem; }
+  .modal-actions { flex-direction: column-reverse; }
+  .btn-cancel-modal, .btn-send { width: 100%; text-align: center; }
+}

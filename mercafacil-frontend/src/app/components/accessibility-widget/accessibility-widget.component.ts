@@ -1,4 +1,6 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, inject, signal } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 type FontSize = 'normal' | 'large' | 'xl';
 
@@ -15,6 +17,13 @@ export class AccessibilityWidgetComponent implements OnInit {
   highContrast = false;
   colorblind = false;
 
+  readonly hidden = signal(false);
+  private router = inject(Router);
+
+  private isChatRoute(url: string): boolean {
+    return url.includes('/chat');
+  }
+
   ngOnInit(): void {
     try {
       const saved = localStorage.getItem('a11y');
@@ -26,6 +35,13 @@ export class AccessibilityWidgetComponent implements OnInit {
       }
     } catch { /* ignorar datos corruptos */ }
     this.applyAll();
+
+    this.hidden.set(this.isChatRoute(this.router.url));
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd)
+    ).subscribe((e: NavigationEnd) => {
+      this.hidden.set(this.isChatRoute(e.urlAfterRedirects));
+    });
   }
 
   @HostListener('document:keydown.escape')
