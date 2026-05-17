@@ -104,7 +104,7 @@
       <div class="store-logo" [class.has-logo]="!!store.logoUrl"
         [style.background-color]="store.logoUrl ? '#ffffff' : store.color">
         @if (store.logoUrl) {
-        <img [src]="store.logoUrl" [alt]="store.name" />
+        <img [src]="store.logoUrl" [alt]="store.name" width="52" height="52" loading="lazy" />
         } @else {
         <span>{{ store.logo }}</span>
         }
@@ -161,7 +161,7 @@
     <a [routerLink]="['/buscar']" [queryParams]="{q: card.product.name}" class="product-card">
       <div class="product-image">
         @if (card.product.image) {
-        <img [src]="card.product.image" [alt]="card.product.name" />
+        <img [src]="card.product.image" [alt]="card.product.name" width="200" height="150" loading="lazy" />
         } @else {
         <div class="product-placeholder">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a7c4b5" stroke-width="1.5">

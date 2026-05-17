@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
 /* ── CSS Variables (light mode) ──────────────────────────────────── */
 :root {
   --bg:            #f5f7f5;
@@ -58,23 +56,32 @@ h3 { font-size: 1.1rem;  font-weight: 600; }
 h4 { font-size: 1rem;    font-weight: 500; }
 
 /* ── Skeleton loaders ─────────────────────────────────────────────── */
-@keyframes skeleton-shimmer {
-  0%   { background-position: -400px 0; }
-  100% { background-position:  400px 0; }
+@keyframes skeleton-slide {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(200%); }
 }
 
 .skeleton-card,
 .skeleton-row {
-  background: linear-gradient(90deg, var(--border-2, #eef2ef) 0%, var(--bg-card, #f7faf8) 50%, var(--border-2, #eef2ef) 100%);
-  background-size: 800px 100%;
-  animation: skeleton-shimmer 1.4s infinite linear;
+  background: var(--border-2, #eef2ef);
   border-radius: 12px;
-  min-height: 140px;
+  min-height: 175px;
   border: 1px solid var(--border, #e5e7eb);
   pointer-events: none;
+  position: relative;
+  overflow: hidden;
 }
 .skeleton-row { height: 32px; min-height: 32px; width: 100%; }
 .skeleton-product { min-height: 260px; }
+
+.skeleton-card::after,
+.skeleton-row::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--bg-card, #f7faf8) 50%, transparent);
+  animation: skeleton-slide 1.4s infinite linear;
+}
 
 /* ── Teclado: foco visible global ────────────────────────────────── */
 *:focus-visible {
